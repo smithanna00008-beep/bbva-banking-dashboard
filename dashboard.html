@@ -73,7 +73,6 @@
     <h2>Hola, <span id="greeting">Alejandro</span></h2>
     <p id="date" style="opacity:0.7;"></p>
 
-    <!-- Main Account -->
     <div class="card">
       <div style="display:flex; justify-content:space-between;">
         <div>
@@ -89,7 +88,6 @@
       </button>
     </div>
 
-    <!-- Quick Actions -->
     <div class="btn-grid">
       <div class="btn" onclick="goTo('transfer.html')">↔ Transferir</div>
       <div class="btn">📄 Pagar servicios</div>
@@ -98,7 +96,6 @@
       <div class="btn">🏦 Préstamos</div>
     </div>
 
-    <!-- Cards -->
     <div style="display:flex; gap:10px; padding:0 15px;">
       <div class="card" style="flex:1; background:linear-gradient(135deg, #003087, #001233);">
         <div>BBVA Débito</div>
@@ -112,7 +109,6 @@
       </div>
     </div>
 
-    <!-- Recent Movements -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
         <strong>Movimientos recientes</strong>
@@ -140,28 +136,41 @@
       document.getElementById('greeting').textContent = localStorage.getItem('fullName') || 'Alejandro';
       document.getElementById('date').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getDashboardData', userId })
-      });
-      const data = await res.json();
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'getDashboardData', userId })
+        });
+        const data = await res.json();
 
-      if (data.success) {
-        document.getElementById('balance').textContent = '$ ' + data.balance.toLocaleString('es-MX');
-        document.getElementById('accountNum').textContent = data.accountNumber;
+        if (data.success) {
+          const numBalance = Number(data.balance);
+          document.getElementById('balance').textContent = '$ ' + (isNaN(numBalance) ? '0.00' : numBalance.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+          document.getElementById('accountNum').textContent = data.accountNumber;
 
-        const transContainer = document.getElementById('transactions');
-        transContainer.innerHTML = data.transactions.map(t => `
-          <div class="transaction">
-            <div>
-              <div>${t.description}</div>
-              <div style="font-size:0.85rem; opacity:0.7;">${t.date}</div>
-            </div>
-            <div class="${t.amount > 0 ? 'positive' : 'negative'}">
-              ${t.amount > 0 ? '+' : ''}$${Math.abs(t.amount).toLocaleString('es-MX')}
-            </div>
-          </div>
-        `).join('');
+          const transContainer = document.getElementById('transactions');
+          if (data.transactions && data.transactions.length > 0) {
+            transContainer.innerHTML = data.transactions.map(t => {
+              const amt = Number(t.amount);
+              return `
+                <div class="transaction">
+                  <div>
+                    <div>${t.description}</div>
+                    <div style="font-size:0.85rem; opacity:0.7;">${t.date}</div>
+                  </div>
+                  <div class="${amt > 0 ? 'positive' : 'negative'}">
+                    ${amt > 0 ? '+' : ''}$${Math.abs(amt).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else {
+            transContainer.innerHTML = '<div style="opacity:0.5; text-align:center; padding:10px;">No hay movimientos recientes</div>';
+          }
+        }
+      } catch (err) {
+        console.error("Error cargando el dashboard:", err);
       }
     }
 
