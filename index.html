@@ -75,7 +75,6 @@
   <div class="container">
     <div class="logo">BBVA</div>
     
-    <!-- Login Form -->
     <div id="loginForm" class="card">
       <h2 style="text-align:center; margin-bottom:1.5rem;">Bienvenido de nuevo</h2>
       <input type="text" id="loginUser" placeholder="Usuario o Email" required>
@@ -84,7 +83,6 @@
       <div class="toggle" onclick="toggleForms()">¿No tienes cuenta? Regístrate</div>
     </div>
 
-    <!-- Register Form -->
     <div id="registerForm" class="card hidden">
       <h2 style="text-align:center; margin-bottom:1.5rem;">Crear Cuenta</h2>
       <input type="text" id="regFullName" placeholder="Nombre completo">
@@ -107,10 +105,10 @@
 
     async function register() {
       const data = {
-        fullName: document.getElementById('regFullName').value,
-        username: document.getElementById('regUsername').value,
-        email: document.getElementById('regEmail').value,
-        phone: document.getElementById('regPhone').value,
+        fullName: document.getElementById('regFullName').value.trim(),
+        username: document.getElementById('regUsername').value.trim(),
+        email: document.getElementById('regEmail').value.trim(),
+        phone: document.getElementById('regPhone').value.trim(),
         password: document.getElementById('regPass').value
       };
 
@@ -122,6 +120,7 @@
       try {
         const res = await fetch(WEB_APP_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'createUser', data })
         });
         const result = await res.json();
@@ -139,13 +138,19 @@
 
     async function login() {
       const data = {
-        username: document.getElementById('loginUser').value,
+        username: document.getElementById('loginUser').value.trim(),
         password: document.getElementById('loginPass').value
       };
+
+      if (!data.username || !data.password) {
+        alert("Por favor ingresa tu usuario y contraseña");
+        return;
+      }
 
       try {
         const res = await fetch(WEB_APP_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'loginUser', data })
         });
         const result = await res.json();
