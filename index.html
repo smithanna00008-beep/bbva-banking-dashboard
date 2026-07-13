@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBVA - Iniciar Sesión</title>
+  <style>
+    :root {
+      --primary: #004A8F;
+      --accent: #00B2A9;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a1f3d, #001233);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    .logo {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: white;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+    }
+    input::placeholder { color: #aaa; }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.accent { background: var(--accent); }
+    .toggle {
+      text-align: center;
+      margin-top: 1rem;
+      color: #00B2A9;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">BBVA</div>
+    
+    <!-- Login Form -->
+    <div id="loginForm" class="card">
+      <h2 style="text-align:center; margin-bottom:1.5rem;">Bienvenido de nuevo</h2>
+      <input type="text" id="loginUser" placeholder="Usuario o Email" required>
+      <input type="password" id="loginPass" placeholder="Contraseña" required>
+      <button onclick="login()">Iniciar Sesión</button>
+      <div class="toggle" onclick="toggleForms()">¿No tienes cuenta? Regístrate</div>
+    </div>
 
+    <!-- Register Form -->
+    <div id="registerForm" class="card hidden">
+      <h2 style="text-align:center; margin-bottom:1.5rem;">Crear Cuenta</h2>
+      <input type="text" id="regFullName" placeholder="Nombre completo">
+      <input type="text" id="regUsername" placeholder="Usuario">
+      <input type="email" id="regEmail" placeholder="Email">
+      <input type="tel" id="regPhone" placeholder="Teléfono">
+      <input type="password" id="regPass" placeholder="Contraseña">
+      <button onclick="register()" class="accent">Crear Cuenta</button>
+      <div class="toggle" onclick="toggleForms()">¿Ya tienes cuenta? Inicia sesión</div>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby5pUGL7oWB5TZmjnNCt1GJIYvLKtyL1tNde-JypZaIkWcJBbQkXGvgjlKjiZBND7Q/exec';
+
+    function toggleForms() {
+      document.getElementById('loginForm').classList.toggle('hidden');
+      document.getElementById('registerForm').classList.toggle('hidden');
+    }
+
+    async function register() {
+      const data = {
+        fullName: document.getElementById('regFullName').value,
+        username: document.getElementById('regUsername').value,
+        email: document.getElementById('regEmail').value,
+        phone: document.getElementById('regPhone').value,
+        password: document.getElementById('regPass').value
+      };
+
+      if (!data.username || !data.email || !data.password) {
+        alert("Por favor completa los campos obligatorios");
+        return;
+      }
+
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'createUser', data })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          alert(`¡Cuenta creada! Tu número de cuenta es: ${result.accountNumber}`);
+          toggleForms();
+        } else {
+          alert(result.message || "Error al crear cuenta");
+        }
+      } catch (err) {
+        alert("Error de conexión con el servidor.");
+      }
+    }
+
+    async function login() {
+      const data = {
+        username: document.getElementById('loginUser').value,
+        password: document.getElementById('loginPass').value
+      };
+
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'loginUser', data })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          localStorage.setItem('userId', result.userId);
+          localStorage.setItem('fullName', result.fullName);
+          window.location.href = 'dashboard.html';
+        } else {
+          alert(result.message || "Credenciales inválidas");
+        }
+      } catch (err) {
+        alert("Error de conexión con el servidor.");
+      }
+    }
+  </script>
+</body>
+</html>
