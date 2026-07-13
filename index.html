@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: #041530; /* Deep blue theme */
+            background: #041530; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -41,7 +41,6 @@
         .card-glow-gold {
             background: linear-gradient(135deg, #a48130 0%, #cca356 100%);
         }
-        /* Sticky Bottom Navigation */
         .bottom-nav {
             background-color: #030d1e;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -50,21 +49,32 @@
             background: radial-gradient(circle, #2575fc 0%, #1a4cb0 100%);
             box-shadow: 0 4px 20px rgba(37, 117, 252, 0.6);
         }
+        /* Custom scrollbar for beautiful lists */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(20, 117, 217, 0.3);
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden">
 
+    <!-- LANGUAGE TOGGLE -->
     <div class="absolute top-4 right-4 z-50">
         <button id="langBtn" onclick="toggleLanguage()" class="bg-black bg-opacity-40 text-xs font-bold px-3 py-1 rounded border border-blue-500 tracking-wider">
             IS
         </button>
     </div>
 
+    <!-- AUTH CONTAINER (SIGN UP / LOGIN) -->
     <div id="authContainer" class="w-full max-w-md glow-box p-8 rounded-xl mt-12 mx-4">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold tracking-widest text-white brightness-125">BBVA</h1>
         </div>
 
+        <!-- Sign Up Form -->
         <div id="signUpForm">
             <h2 id="signUpTitle" class="text-2xl font-normal mb-6 text-gray-100">Create Account</h2>
             <div class="space-y-4">
@@ -81,6 +91,7 @@
             </p>
         </div>
 
+        <!-- Login Form -->
         <div id="loginForm" class="hidden">
             <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Iniciar Sesión</h2>
             <div class="space-y-4">
@@ -95,8 +106,10 @@
         </div>
     </div>
 
+    <!-- PREMIUM DASHBOARD CONTAINER -->
     <div id="dashboardContainer" class="w-full max-w-md hidden px-4 mt-4">
         
+        <!-- App Top Header -->
         <div class="flex justify-between items-center mb-6">
             <i class="fa-solid fa-bars text-xl cursor-pointer"></i>
             <h1 class="text-2xl font-bold tracking-wider">BBVA</h1>
@@ -106,6 +119,7 @@
             </div>
         </div>
 
+        <!-- Greeting -->
         <div class="flex justify-between items-end mb-4">
             <div>
                 <div class="flex items-center gap-1 text-gray-300 text-lg">
@@ -117,11 +131,13 @@
             <button onclick="logout()" class="bg-gray-900 bg-opacity-40 text-gray-400 hover:text-white text-xs px-3 py-1 rounded border border-gray-700">Logout</button>
         </div>
 
+        <!-- Section: Products -->
         <div class="flex justify-between items-center mb-3">
             <span class="text-sm font-semibold text-gray-200" id="lblProducts">Mis productos</span>
             <span class="text-xs text-blue-400 cursor-pointer" id="lblSeeAll1">Ver todos</span>
         </div>
 
+        <!-- Checking Card Block -->
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 mb-5 relative overflow-hidden shadow-xl">
             <div class="flex justify-between items-start">
                 <div>
@@ -152,8 +168,10 @@
             </div>
         </div>
 
+        <!-- Main Action Grid -->
         <div class="grid grid-cols-5 gap-2 mb-6 text-center">
-            <div class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer">
+            <!-- TRANSFER BUTTON -->
+            <div onclick="openTransferScreen()" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-arrow-right-arrow-left text-blue-400 text-xs"></i></div>
                 <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">Transferir</span>
             </div>
@@ -175,6 +193,7 @@
             </div>
         </div>
 
+        <!-- Section: Cards -->
         <div class="flex justify-between items-center mb-3">
             <span class="text-sm font-semibold text-gray-200" id="lblCards">Tarjetas</span>
             <span class="text-xs text-blue-400 cursor-pointer" id="lblSeeAll2">Ver todas</span>
@@ -190,6 +209,7 @@
             </div>
         </div>
 
+        <!-- Section: Recent Transactions (Movimientos) -->
         <div class="flex justify-between items-center mb-3">
             <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Movimientos recientes</span>
             <span class="text-xs text-blue-400 cursor-pointer" id="lblSeeAllMovements">Ver todas</span>
@@ -236,6 +256,7 @@
             </div>
         </div>
 
+        <!-- Section: Split Dashboard Columns (Apartados & Investments) -->
         <div class="grid grid-cols-2 gap-3 mb-6">
             <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between">
                 <div>
@@ -278,6 +299,7 @@
             </div>
         </div>
 
+        <!-- Section: Security Center Banner -->
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 flex justify-between items-center shadow-md mb-8 cursor-pointer hover:bg-blue-950/20 transition">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full flex items-center justify-center text-blue-400 text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
@@ -291,8 +313,9 @@
 
     </div>
 
+    <!-- STICKY BOTTOM NAVIGATION BAR -->
     <div id="stickyBottomNav" class="fixed bottom-0 left-0 right-0 z-40 hidden flex justify-around items-center h-16 bottom-nav max-w-md mx-auto">
-        <div class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
+        <div onclick="closeAllModals()" class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[9px] mt-1" id="navStart">Inicio</span>
         </div>
@@ -300,7 +323,7 @@
             <i class="fa-solid fa-wallet text-sm"></i>
             <span class="text-[9px] mt-1" id="navProducts">Productos</span>
         </div>
-        <div class="flex flex-col items-center justify-center -mt-6 cursor-pointer">
+        <div onclick="openTransferScreen()" class="flex flex-col items-center justify-center -mt-6 cursor-pointer">
             <div class="w-12 h-12 rounded-full operar-btn flex items-center justify-center text-white text-lg">
                 <i class="fa-solid fa-dollar-sign"></i>
             </div>
@@ -316,10 +339,196 @@
         </div>
     </div>
 
+
+    <!-- ========================================== -->
+    <!--          PREMIUM TRANSFER SCREEN           -->
+    <!-- ========================================== -->
+    <div id="transferScreen" class="fixed inset-0 bg-[#041530] z-50 hidden flex-col max-w-md mx-auto overflow-y-auto pb-6">
+        <!-- Top Custom Header -->
+        <div class="flex justify-between items-center p-4 border-b border-blue-950">
+            <button onclick="closeTransferScreen()" class="text-gray-300 text-lg"><i class="fa-solid fa-chevron-left"></i></button>
+            <h2 id="transTitle" class="text-base font-bold">Transfer to Bank Account</h2>
+            <span class="text-xs text-blue-400 cursor-pointer font-semibold" id="transHistory">History</span>
+        </div>
+
+        <!-- System Screen Alert (Top banner like video) -->
+        <div class="bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 flex items-start gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm mt-0.5"></i>
+            <div>
+                <p class="text-[10px] text-amber-500 font-medium leading-tight" id="securityWarning">Your screen recording feature is active. Ensure your personal banking keys and inputs are protected.</p>
+            </div>
+        </div>
+
+        <!-- Free transfers info badge -->
+        <div class="mx-4 mt-4 bg-indigo-950/40 border border-indigo-900 rounded-lg p-2.5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded-full bg-indigo-500/20 flex items-center justify-center text-[10px] text-indigo-400"><i class="fa-solid fa-bolt"></i></span>
+                <span class="text-[10px] text-indigo-300" id="lblFreeTrans">Free transfers left today</span>
+            </div>
+            <span class="text-xs font-bold text-indigo-400">2</span>
+        </div>
+
+        <!-- Input Form Area -->
+        <div class="p-4 space-y-4">
+            <div>
+                <label id="lblRecipientAcc" class="text-xs text-gray-400 uppercase tracking-wider block mb-2">Recipient Account</label>
+                <input type="number" id="transferAccNum" placeholder="Enter 10 digits Account Number" class="w-full p-4 rounded-xl premium-input text-white placeholder-gray-500 text-lg tracking-widest" oninput="validateTransferForm()">
+            </div>
+
+            <!-- Choose Bank Button (Triggers Select Bank Modal) -->
+            <div>
+                <label id="lblSelectBank" class="text-xs text-gray-400 uppercase tracking-wider block mb-2">Select Bank</label>
+                <div onclick="openBankListModal()" class="w-full p-4 rounded-xl premium-input text-white flex justify-between items-center cursor-pointer text-base">
+                    <span id="selectedBankText" class="text-gray-500">Choose Destination Bank</span>
+                    <i class="fa-solid fa-chevron-right text-gray-500 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Amount Input field -->
+            <div>
+                <label id="lblAmount" class="text-xs text-gray-400 uppercase tracking-wider block mb-2">Amount</label>
+                <input type="number" id="transferAmount" placeholder="$0.00" class="w-full p-4 rounded-xl premium-input text-white placeholder-gray-500 text-lg font-bold" oninput="validateTransferForm()">
+            </div>
+
+            <!-- Next Proceed Button -->
+            <button id="transferNextBtn" onclick="processTransfer()" disabled class="w-full py-4 rounded-xl text-center bg-gray-800 text-gray-500 font-bold transition mt-6 cursor-not-allowed">Next</button>
+        </div>
+
+        <!-- Recent Transferees block (Like OPay favorites) -->
+        <div class="px-4 mt-2">
+            <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2" id="lblRecentsTitle">Recents</h3>
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 space-y-3 shadow-md">
+                <div class="flex justify-between items-center p-2 hover:bg-blue-950/40 rounded-lg cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-xs font-bold">IW</div>
+                        <div>
+                            <p class="text-xs font-semibold text-white">Ivar Wise</p>
+                            <p class="text-[9px] text-gray-400">1029384756 • Banorte</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+                </div>
+                <div class="flex justify-between items-center p-2 hover:bg-blue-950/40 rounded-lg cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-xs font-bold">AM</div>
+                        <div>
+                            <p class="text-xs font-semibold text-white">Alvaro M.</p>
+                            <p class="text-[9px] text-gray-400">9876543210 • BBVA Bancomer</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!--           SELECT BANK SLIDING MODAL        -->
+    <!-- ========================================== -->
+    <div id="bankModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex-col max-w-md mx-auto p-4 transition-all duration-300">
+        <div class="flex justify-between items-center mb-4">
+            <h3 id="lblSelectBankModal" class="text-lg font-bold">Select Bank</h3>
+            <button onclick="closeBankListModal()" class="text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mb-4">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-500 text-sm"></i>
+            <input type="text" id="bankSearch" onkeyup="filterBanks()" placeholder="Search Bank Name..." class="w-full p-3 pl-10 rounded-xl premium-input text-white placeholder-gray-500">
+        </div>
+
+        <!-- Country Toggle Tabs -->
+        <div class="grid grid-cols-3 gap-2 mb-4 text-xs">
+            <button onclick="switchBankCountry('MX')" id="tabMX" class="py-2.5 rounded-lg border border-blue-500 bg-blue-950 font-bold">Mexico</button>
+            <button onclick="switchBankCountry('US')" id="tabUS" class="py-2.5 rounded-lg border border-blue-900 bg-transparent text-gray-400">USA / Canada</button>
+            <button onclick="switchBankCountry('EU')" id="tabEU" class="py-2.5 rounded-lg border border-blue-900 bg-transparent text-gray-400">UK / Europe</button>
+        </div>
+
+        <!-- Frequently Used Block -->
+        <p id="lblFreqUsed" class="text-xs text-gray-400 uppercase tracking-wider mb-2">Frequently Used Banks</p>
+        <div id="freqBanksArea" class="grid grid-cols-4 gap-2 mb-4">
+            <!-- Populated Dynamically -->
+        </div>
+
+        <!-- Master Bank List Container -->
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-2" id="lblAllBanks">All Banks</p>
+        <div id="masterBankList" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1">
+            <!-- Populated Dynamically -->
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!--            SUCCESS RECEIPT DIALOG          -->
+    <!-- ========================================== -->
+    <div id="receiptModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4 max-w-md mx-auto">
+        <div class="bg-[#072146] border border-blue-900 rounded-2xl p-6 w-full text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-emerald-950 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-2 animate-bounce">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 class="text-xl font-bold" id="recpSuccess">Transfer Successful</h3>
+            <p class="text-xs text-gray-400" id="recpSubtitle">Your transaction process was processed instantly</p>
+            
+            <div class="bg-blue-950/40 p-4 rounded-xl text-left text-xs space-y-2.5 border border-blue-900/40">
+                <div class="flex justify-between"><span class="text-gray-400" id="recpLabelDest">Destination:</span><span class="font-bold" id="recpDest">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400" id="recpLabelAcc">Account:</span><span class="font-bold" id="recpAcc">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400" id="recpLabelAmt">Amount:</span><span class="font-bold text-emerald-400 text-sm" id="recpAmount">--</span></div>
+            </div>
+
+            <button onclick="closeReceipt()" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm">Got it</button>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!--               CORE JS LOGIC                -->
+    <!-- ========================================== -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
         let currentLang = 'en';
         let allUsers = [];
+        let currentUser = null;
+
+        // Structured Bank Data Array
+        const bankData = {
+            MX: {
+                freq: [
+                    { name: "BBVA Bancomer", short: "BBVA" },
+                    { name: "Banorte", short: "Banorte" },
+                    { name: "Santander México", short: "Santander" },
+                    { name: "Citibanamex", short: "Banamex" }
+                ],
+                all: [
+                    "Alineación Financiera", "Azteca", "BBVA Bancomer", "BanCoppel", "Banjercito", "Banorte", "Banregio", "Bansi", "Citibanamex", "Compartamos", "HSBC México", "Inbursa", "Intercam", "Mifel", "Multiva", "Santander México", "Scotiabank"
+                ]
+            },
+            US: {
+                freq: [
+                    { name: "Chase Bank", short: "Chase" },
+                    { name: "Bank of America", short: "BofA" },
+                    { name: "Wells Fargo", short: "Wells" },
+                    { name: "Royal Bank of Canada", short: "RBC" }
+                ],
+                all: [
+                    "Bank of America", "Bank of Montreal (BMO)", "Barclays US", "Capital One", "Chase Bank", "CIBC", "Citi US", "Fifth Third Bank", "Goldman Sachs", "KeyBank", "PNC Bank", "Royal Bank of Canada (RBC)", "Scotiabank Canada", "TD Bank Canada", "US Bank", "Wells Fargo"
+                ]
+            },
+            EU: {
+                freq: [
+                    { name: "Barclays", short: "Barclays" },
+                    { name: "HSBC UK", short: "HSBC" },
+                    { name: "Deutsche Bank", short: "Deutsche" },
+                    { name: "Santander UK", short: "Santander" }
+                ],
+                all: [
+                    "Barclays", "BNP Paribas", "BPCE", "Crédit Agricole", "Deutsche Bank", "HSBC UK", "ING Group", "Intesa Sanpaolo", "Lloyds Banking Group", "NatWest Group", "Revolut", "Santander UK", "Société Générale", "UBS"
+                ]
+            }
+        };
+
+        let selectedCountry = 'MX';
+        let selectedBank = null;
 
         const translations = {
             es: {
@@ -365,7 +574,29 @@
                 navOperate: "Operar",
                 navHelp: "Ayuda",
                 navMenu: "Menú",
-                dateLabel: "Miércoles 22 de mayo, 2024"
+                dateLabel: "Miércoles 22 de mayo, 2024",
+
+                // Transfer translations
+                transTitle: "Transferir a Cuenta Bancaria",
+                transHistory: "Historial",
+                securityWarning: "Su grabador de pantalla está activo. Proteja sus accesos.",
+                lblFreeTrans: "Transferencias gratuitas hoy",
+                lblRecipientAcc: "Cuenta Destinatario",
+                placeholderAcc: "Ingrese número de cuenta de 10 dígitos",
+                lblSelectBank: "Seleccione Banco",
+                chooseDestBank: "Elegir Banco Destino",
+                lblAmount: "Cantidad a enviar",
+                transferNextBtn: "Continuar",
+                lblRecentsTitle: "Recientes",
+                lblSelectBankModal: "Seleccionar Banco",
+                placeholderSearch: "Buscar nombre de banco...",
+                lblFreqUsed: "Bancos frecuentes",
+                lblAllBanks: "Todos los bancos",
+                recpSuccess: "Transferencia Realizada",
+                recpSubtitle: "Su transacción fue procesada exitosamente",
+                recpLabelDest: "Destino:",
+                recpLabelAcc: "Cuenta:",
+                recpLabelAmt: "Importe:"
             },
             en: {
                 langBtn: "EN",
@@ -410,7 +641,29 @@
                 navOperate: "Operate",
                 navHelp: "Help",
                 navMenu: "Menu",
-                dateLabel: "Wednesday May 22, 2024"
+                dateLabel: "Wednesday May 22, 2024",
+
+                // Transfer translations
+                transTitle: "Transfer to Bank Account",
+                transHistory: "History",
+                securityWarning: "Your screen recording feature is active. Ensure your personal banking keys and inputs are protected.",
+                lblFreeTrans: "Free transfers left today",
+                lblRecipientAcc: "Recipient Account",
+                placeholderAcc: "Enter 10 digits Account Number",
+                lblSelectBank: "Select Bank",
+                chooseDestBank: "Choose Destination Bank",
+                lblAmount: "Amount",
+                transferNextBtn: "Next",
+                lblRecentsTitle: "Recents",
+                lblSelectBankModal: "Select Bank",
+                placeholderSearch: "Search Bank Name...",
+                lblFreqUsed: "Frequently Used Banks",
+                lblAllBanks: "All Banks",
+                recpSuccess: "Transfer Successful",
+                recpSubtitle: "Your transaction process was processed instantly",
+                recpLabelDest: "Destination:",
+                recpLabelAcc: "Account:",
+                recpLabelAmt: "Amount:"
             }
         };
 
@@ -436,7 +689,6 @@
             document.getElementById('noAccountText').innerText = translations[lang].noAccountText;
             document.getElementById('signUpLinkText').innerText = translations[lang].signUpLinkText;
             
-            // Placeholders
             document.getElementById('regUser').placeholder = lang === 'es' ? "Usuario" : "Username";
             document.getElementById('regName').placeholder = lang === 'es' ? "Nombre Completo" : "Full Name";
             document.getElementById('regEmail').placeholder = lang === 'es' ? "E-mail" : "E-mail";
@@ -445,7 +697,6 @@
             document.getElementById('loginUser').placeholder = lang === 'es' ? "Usuario" : "Username";
             document.getElementById('loginPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
 
-            // Translate dashboard
             document.getElementById('greetingDay').innerText = translations[lang].greetingDay;
             document.getElementById('dateLabel').innerText = translations[lang].dateLabel;
             document.getElementById('lblProducts').innerText = translations[lang].lblProducts;
@@ -475,12 +726,36 @@
             document.getElementById('secTitle').innerText = translations[lang].secTitle;
             document.getElementById('secDesc').innerText = translations[lang].secDesc;
             
-            // Translate Bottom Nav
             document.getElementById('navStart').innerText = translations[lang].navStart;
             document.getElementById('navProducts').innerText = translations[lang].navProducts;
             document.getElementById('navOperate').innerText = translations[lang].navOperate;
             document.getElementById('navHelp').innerText = translations[lang].navHelp;
             document.getElementById('navMenu').innerText = translations[lang].navMenu;
+
+            // Transfer interface Translations
+            document.getElementById('transTitle').innerText = translations[lang].transTitle;
+            document.getElementById('transHistory').innerText = translations[lang].transHistory;
+            document.getElementById('securityWarning').innerText = translations[lang].securityWarning;
+            document.getElementById('lblFreeTrans').innerText = translations[lang].lblFreeTrans;
+            document.getElementById('lblRecipientAcc').innerText = translations[lang].lblRecipientAcc;
+            document.getElementById('transferAccNum').placeholder = translations[lang].placeholderAcc;
+            document.getElementById('lblSelectBank').innerText = translations[lang].lblSelectBank;
+            if(!selectedBank) {
+                document.getElementById('selectedBankText').innerText = translations[lang].chooseDestBank;
+            }
+            document.getElementById('lblAmount').innerText = translations[lang].lblAmount;
+            document.getElementById('lblRecentsTitle').innerText = translations[lang].lblRecentsTitle;
+            document.getElementById('lblSelectBankModal').innerText = translations[lang].lblSelectBankModal;
+            document.getElementById('bankSearch').placeholder = translations[lang].placeholderSearch;
+            document.getElementById('lblFreqUsed').innerText = translations[lang].lblFreqUsed;
+            document.getElementById('lblAllBanks').innerText = translations[lang].lblAllBanks;
+
+            // Receipt modal translations
+            document.getElementById('recpSuccess').innerText = translations[lang].recpSuccess;
+            document.getElementById('recpSubtitle').innerText = translations[lang].recpSubtitle;
+            document.getElementById('recpLabelDest').innerText = translations[lang].recpLabelDest;
+            document.getElementById('recpLabelAcc').innerText = translations[lang].recpLabelAcc;
+            document.getElementById('recpLabelAmt').innerText = translations[lang].recpLabelAmt;
         }
 
         function toggleLanguage() {
@@ -502,7 +777,7 @@
                 const res = await fetch(API_URL);
                 allUsers = await res.json();
             } catch (err) {
-                console.error("Failed syncing sheet data:", err);
+                console.error("Engine failed syncing Google sheet data:", err);
             }
         }
 
@@ -543,25 +818,174 @@
             const user = allUsers.find(u => u.username === userVal && String(u.password) === passVal);
 
             if (user) {
+                currentUser = user;
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 document.getElementById('stickyBottomNav').classList.remove('hidden');
                 
                 document.getElementById('userGreetingName').innerText = user.fullName;
-                
-                const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-                document.getElementById('dashBalance').innerText = fmt.format(user.balance);
-                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
-                document.getElementById('dashInvestments').innerText = fmt.format(user.investments);
+                updateUIPrices();
             } else {
                 alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
             }
         }
 
+        function updateUIPrices() {
+            if(!currentUser) return;
+            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('dashBalance').innerText = fmt.format(currentUser.balance);
+            document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(currentUser.balance)}`;
+            document.getElementById('dashInvestments').innerText = fmt.format(currentUser.investments);
+        }
+
         function logout() {
+            currentUser = null;
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('stickyBottomNav').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
+        }
+
+        // ==========================================
+        //         TRANSFER FLOW CONTROLLERS
+        // ==========================================
+        function openTransferScreen() {
+            document.getElementById('transferScreen').classList.remove('hidden');
+            document.getElementById('dashboardContainer').classList.add('hidden');
+        }
+
+        function closeTransferScreen() {
+            document.getElementById('transferScreen').classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
+        }
+
+        function openBankListModal() {
+            document.getElementById('bankModal').classList.remove('hidden');
+            renderBankLists();
+        }
+
+        function closeBankListModal() {
+            document.getElementById('bankModal').classList.add('hidden');
+        }
+
+        function switchBankCountry(countryCode) {
+            selectedCountry = countryCode;
+            document.getElementById('tabMX').className = "py-2.5 rounded-lg border border-blue-900 bg-transparent text-gray-400";
+            document.getElementById('tabUS').className = "py-2.5 rounded-lg border border-blue-900 bg-transparent text-gray-400";
+            document.getElementById('tabEU').className = "py-2.5 rounded-lg border border-blue-900 bg-transparent text-gray-400";
+
+            document.getElementById(`tab${countryCode}`).className = "py-2.5 rounded-lg border border-blue-500 bg-blue-950 font-bold";
+            renderBankLists();
+        }
+
+        function renderBankLists() {
+            const freqArea = document.getElementById('freqBanksArea');
+            const masterArea = document.getElementById('masterBankList');
+            const currentCountryData = bankData[selectedCountry];
+
+            // Render Frequently Used
+            freqArea.innerHTML = '';
+            currentCountryData.freq.forEach(item => {
+                const btn = document.createElement('div');
+                btn.className = "bg-blue-950/60 p-2 rounded-xl text-center border border-blue-900/60 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95";
+                btn.onclick = () => selectBank(item.name);
+                btn.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-200 border border-blue-700/50 mb-1">
+                        ${item.short.substring(0, 3)}
+                    </div>
+                    <span class="text-[9px] font-medium leading-tight truncate w-full block text-gray-300">${item.short}</span>
+                `;
+                freqArea.appendChild(btn);
+            });
+
+            // Render Master Bank List
+            masterArea.innerHTML = '';
+            currentCountryData.all.forEach(name => {
+                const row = document.createElement('div');
+                row.className = "flex items-center gap-3 p-3 hover:bg-blue-950/40 rounded-xl cursor-pointer transition border border-transparent hover:border-blue-900/30";
+                row.onclick = () => selectBank(name);
+                row.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-xs font-bold text-blue-300 border border-blue-800/50">
+                        ${name.substring(0, 2)}
+                    </div>
+                    <span class="text-sm font-medium text-gray-200">${name}</span>
+                `;
+                masterArea.appendChild(row);
+            });
+        }
+
+        function filterBanks() {
+            const query = document.getElementById('bankSearch').value.toLowerCase();
+            const rows = document.getElementById('masterBankList').children;
+            for (let i = 0; i < rows.length; i++) {
+                const name = rows[i].querySelector('span').innerText.toLowerCase();
+                if (name.includes(query)) {
+                    rows[i].classList.remove('hidden');
+                } else {
+                    rows[i].classList.add('hidden');
+                }
+            }
+        }
+
+        function selectBank(name) {
+            selectedBank = name;
+            document.getElementById('selectedBankText').innerText = name;
+            document.getElementById('selectedBankText').className = "text-white font-semibold";
+            closeBankListModal();
+            validateTransferForm();
+        }
+
+        function validateTransferForm() {
+            const accNum = document.getElementById('transferAccNum').value;
+            const amount = document.getElementById('transferAmount').value;
+            const btn = document.getElementById('transferNextBtn');
+
+            // 10 digits verification
+            if (accNum.length === 10 && parseFloat(amount) > 0 && selectedBank !== null) {
+                btn.disabled = false;
+                btn.className = "w-full py-4 rounded-xl text-center bg-blue-600 text-white font-bold transition mt-6 hover:bg-blue-500 cursor-pointer shadow-lg";
+            } else {
+                btn.disabled = true;
+                btn.className = "w-full py-4 rounded-xl text-center bg-gray-800 text-gray-500 font-bold transition mt-6 cursor-not-allowed";
+            }
+        }
+
+        function processTransfer() {
+            const accNum = document.getElementById('transferAccNum').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+
+            // Subtract balance locally
+            if (currentUser && currentUser.balance >= amount) {
+                currentUser.balance -= amount;
+                updateUIPrices();
+            }
+
+            // Fill receipt
+            document.getElementById('recpDest').innerText = selectedBank;
+            document.getElementById('recpAcc').innerText = `•••• ${accNum.slice(-4)}`;
+            
+            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('recpAmount').innerText = fmt.format(amount);
+
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        function closeReceipt() {
+            document.getElementById('receiptModal').classList.add('hidden');
+            // Clean inputs
+            document.getElementById('transferAccNum').value = '';
+            document.getElementById('transferAmount').value = '';
+            selectedBank = null;
+            document.getElementById('selectedBankText').innerText = translations[currentLang].chooseDestBank;
+            document.getElementById('selectedBankText').className = "text-gray-500";
+            validateTransferForm();
+            closeTransferScreen();
+        }
+
+        function closeAllModals() {
+            document.getElementById('transferScreen').classList.add('hidden');
+            document.getElementById('bankModal').classList.add('hidden');
+            document.getElementById('receiptModal').classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
         }
 
         window.onload = () => {
