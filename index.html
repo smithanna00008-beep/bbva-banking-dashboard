@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: #041530; /* Deep blue theme */
+            background: #041530; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -41,7 +41,6 @@
         .card-glow-gold {
             background: linear-gradient(135deg, #a48130 0%, #cca356 100%);
         }
-        /* Sticky Bottom Navigation */
         .bottom-nav {
             background-color: #030d1e;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -50,7 +49,6 @@
             background: radial-gradient(circle, #2575fc 0%, #1a4cb0 100%);
             box-shadow: 0 4px 20px rgba(37, 117, 252, 0.6);
         }
-        /* Overlay slide animation */
         .standard-overlay {
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             transform: translateY(100%);
@@ -299,9 +297,7 @@
 
     </div>
 
-    <!-- STANDARD SLIDE PANELS (ALL MODULES) -->
-    
-    <!-- 1. TRANSFER / ENTER MANUALLY ACCOUNT OVERLAY -->
+    <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
     <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('transferOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -309,18 +305,42 @@
             <div></div>
         </div>
         <div class="space-y-4">
-            <label class="block text-xs text-gray-400 font-semibold uppercase">Select Bank</label>
-            <select id="transferBankSelect" onchange="checkManualBankOption()" class="w-full p-3 rounded bg-[#020b18] border border-blue-900 text-white text-sm focus:outline-none focus:border-blue-500">
-                <option value="bbva">BBVA Bancomer</option>
-                <option value="santander">Santander</option>
-                <option value="banamex">Citibanamex</option>
-                <option value="hsbc">HSBC</option>
+            <label class="block text-xs text-gray-400 font-semibold uppercase">Select Recipient Bank</label>
+            <select id="transferBankSelect" onchange="checkManualBankOption()" class="w-full p-3 rounded bg-[#020b18] border border-blue-900 text-white text-xs focus:outline-none focus:border-blue-500">
+                <optgroup label="Mexico">
+                    <option value="bbva">BBVA México</option>
+                    <option value="banamex">Citibanamex</option>
+                    <option value="santander_mx">Santander México</option>
+                    <option value="banorte">Banorte</option>
+                </optgroup>
+                <optgroup label="United States">
+                    <option value="chase">Chase Bank</option>
+                    <option value="bofa">Bank of America</option>
+                    <option value="wf">Wells Fargo</option>
+                    <option value="citi_us">Citigroup</option>
+                </optgroup>
+                <optgroup label="United Kingdom">
+                    <option value="barclays">Barclays</option>
+                    <option value="hsbc_uk">HSBC UK</option>
+                    <option value="lloyds">Lloyds Bank</option>
+                </optgroup>
+                <optgroup label="Canada">
+                    <option value="rbc">Royal Bank of Canada (RBC)</option>
+                    <option value="td">TD Bank Canada</option>
+                    <option value="bmo">Bank of Montreal (BMO)</option>
+                </optgroup>
+                <optgroup label="Brazil">
+                    <option value="itau">Itaú Unibanco</option>
+                    <option value="bradesco">Banco Bradesco</option>
+                    <option value="banco_brasil">Banco do Brasil</option>
+                    <option value="nubank">Nubank</option>
+                </optgroup>
                 <option value="manual">-- Other Bank (Enter Manually) --</option>
             </select>
             
             <div id="manualBankInputs" class="hidden space-y-4 pt-2">
                 <input type="text" id="manualBankName" placeholder="Enter Bank Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
-                <input type="text" id="manualRouteNumber" placeholder="Routing / CLABE Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+                <input type="text" id="manualRouteNumber" placeholder="Routing / Sort Code / CLABE / Swift" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             </div>
 
             <input type="text" id="transferAccount" placeholder="Account Number / Card Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
@@ -453,12 +473,12 @@
         </ul>
     </div>
 
-    <!-- DYNAMIC BANKING SYSTEM POPUPS (PIN SETUP / ALERT SIMULATORS) -->
+    <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS (ONCE CREATION AND RE-VERIFY SYSTEM) -->
     <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <i class="fa-solid fa-key text-3xl text-blue-400 mb-3"></i>
             <h3 class="text-base font-bold text-white mb-2">Create Transaction Code</h3>
-            <p class="text-xs text-gray-400 mb-4">Set up a 4-digit security code to authorize transfers for security reasons.</p>
+            <p class="text-xs text-gray-400 mb-4">Set up your permanent 4-digit security code to authorize all future transfers.</p>
             <input type="password" id="newSetupPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
             <button onclick="saveTransactionPin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Confirm Code</button>
         </div>
@@ -468,13 +488,14 @@
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <i class="fa-solid fa-shield text-3xl text-blue-400 mb-3"></i>
             <h3 class="text-base font-bold text-white mb-2">Enter Transaction Code</h3>
-            <p class="text-xs text-gray-400 mb-4">Type your 4-digit code to authorize this transaction.</p>
+            <p class="text-xs text-gray-400 mb-4">Type your 4-digit security PIN to authorize this transfer.</p>
             <input type="password" id="verifyPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
             <button onclick="verifyTransactionPinAndProceed()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Authorize Transfer</button>
             <button onclick="closePinVerification()" class="w-full bg-transparent text-gray-400 text-xs mt-2 hover:underline">Cancel</button>
         </div>
     </div>
 
+    <!-- FROZEN RESPONSE ALERT -->
     <div id="accountFrozenAlertModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gradient-to-b from-[#0e1d33] to-[#041530] border-t-4 border-red-500 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <div class="w-12 h-12 rounded-full bg-red-950 flex items-center justify-center mx-auto mb-3 text-red-400"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
@@ -514,7 +535,7 @@
         let currentLang = 'en';
         let allUsers = [];
         let loggedInUser = null;
-        let transactionPinCode = "";
+        let transactionPinCode = ""; // System local state for single pin storage
 
         const translations = {
             es: {
@@ -609,7 +630,6 @@
             }
         };
 
-        // STANDARD OVERLAY CONTROLLERS
         function openStandardOverlay(overlayId) {
             const overlay = document.getElementById(overlayId);
             overlay.classList.remove('hidden');
@@ -622,7 +642,6 @@
             setTimeout(() => overlay.classList.add('hidden'), 400);
         }
 
-        // CONNECT SEE ALL TRIGGERS
         document.querySelectorAll('.standard-see-all-trigger').forEach(el => {
             el.addEventListener('click', () => openStandardOverlay('seeAllOverlay'));
         });
@@ -637,7 +656,6 @@
             }
         }
 
-        // TRANSFER STEP FLOW HANDLING
         function executeTransferFlow() {
             const amount = parseFloat(document.getElementById('transferAmount').value);
             
@@ -646,13 +664,12 @@
                 return;
             }
 
-            // BALANCE ENGAGEMENT VALIDATION
             if (loggedInUser && amount > loggedInUser.balance) {
                 alert(currentLang === 'es' ? "Fondos Insuficientes: Tu saldo disponible es menor que el monto solicitado." : "Insufficient Funds: Your available balance is less than the requested transfer amount.");
                 return;
             }
 
-            // PIN ASSIGNMENT ENGINE CHECKS
+            // PIN CODE ASSIGNMENT CORE ENGINE (Checks if pin already exists)
             if(!transactionPinCode) {
                 document.getElementById('transactionPinSetupModal').classList.remove('hidden');
             } else {
@@ -663,10 +680,10 @@
         function saveTransactionPin() {
             const pinVal = document.getElementById('newSetupPinInput').value;
             if(pinVal.length !== 4 || isNaN(pinVal)) {
-                alert(currentLang === 'es' ? "El código debe ser de 4 dígitos." : "Code must be exactly 4 digits.");
+                alert(currentLang === 'es' ? "El código debe ser de 4 dígitos numéricos." : "Code must be exactly 4 numeric digits.");
                 return;
             }
-            transactionPinCode = pinVal;
+            transactionPinCode = pinVal; // PIN code permanently saved for this session
             document.getElementById('transactionPinSetupModal').classList.add('hidden');
             document.getElementById('newSetupPinInput').value = "";
             document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
@@ -680,7 +697,7 @@
                 closeStandardOverlay('transferOverlay');
                 triggerFreezeAlert();
             } else {
-                alert(currentLang === 'es' ? "Código incorrecto." : "Incorrect security transaction code.");
+                alert(currentLang === 'es' ? "Código de transacción incorrecto." : "Incorrect security transaction code.");
             }
         }
 
@@ -689,7 +706,6 @@
             document.getElementById('verifyPinInput').value = "";
         }
 
-        // SIMULATED SYSTEM ERROR MODALS
         function triggerFreezeAlert() {
             document.getElementById('accountFrozenAlertModal').classList.remove('hidden');
         }
@@ -720,7 +736,6 @@
             document.getElementById('noAccountText').innerText = translations[lang].noAccountText;
             document.getElementById('signUpLinkText').innerText = translations[lang].signUpLinkText;
             
-            // Placeholders
             document.getElementById('regUser').placeholder = lang === 'es' ? "Usuario" : "Username";
             document.getElementById('regName').placeholder = lang === 'es' ? "Nombre Completo" : "Full Name";
             document.getElementById('regEmail').placeholder = lang === 'es' ? "E-mail" : "E-mail";
@@ -729,7 +744,6 @@
             document.getElementById('loginUser').placeholder = lang === 'es' ? "Usuario" : "Username";
             document.getElementById('loginPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
 
-            // Translate dashboard
             document.getElementById('greetingDay').innerText = translations[lang].greetingDay;
             document.getElementById('dateLabel').innerText = translations[lang].dateLabel;
             document.getElementById('lblProducts').innerText = translations[lang].lblProducts;
@@ -759,7 +773,6 @@
             document.getElementById('secTitle').innerText = translations[lang].secTitle;
             document.getElementById('secDesc').innerText = translations[lang].secDesc;
             
-            // Translate Bottom Nav
             document.getElementById('navStart').innerText = translations[lang].navStart;
             document.getElementById('navProducts').innerText = translations[lang].navProducts;
             document.getElementById('navOperate').innerText = translations[lang].navOperate;
@@ -828,6 +841,7 @@
 
             if (user) {
                 loggedInUser = user;
+                transactionPinCode = ""; // Reset local instance on fresh logins
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 document.getElementById('stickyBottomNav').classList.remove('hidden');
