@@ -56,25 +56,6 @@
         .standard-overlay.active {
             transform: translateY(0);
         }
-        .opay-green-btn {
-            background: #00b875;
-            box-shadow: 0 4px 12px rgba(0, 184, 117, 0.3);
-        }
-        .opay-green-btn:hover {
-            background: #009e64;
-        }
-        .pin-bubble {
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-radius: 50%;
-            transition: all 0.1s ease;
-        }
-        .pin-bubble.filled {
-            background-color: #ffffff;
-            border-color: #ffffff;
-            box-shadow: 0 0 8px #ffffff;
-        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden">
@@ -85,7 +66,6 @@
         </button>
     </div>
 
-    <!-- AUTHENTICATION PANELS -->
     <div id="authContainer" class="w-full max-w-md glow-box p-8 rounded-xl mt-12 mx-4">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold tracking-widest text-white brightness-125">BBVA</h1>
@@ -121,7 +101,6 @@
         </div>
     </div>
 
-    <!-- MAIN APP DASHBOARD -->
     <div id="dashboardContainer" class="w-full max-w-md hidden px-4 mt-4">
         
         <div class="flex justify-between items-center mb-6">
@@ -179,11 +158,10 @@
             </div>
         </div>
 
-        <!-- DASHBOARD GRID: STEP 1 ACTIONS -->
         <div class="grid grid-cols-5 gap-2 mb-6 text-center">
-            <div onclick="openStandardOverlay('step2RecipientOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
-                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-bank text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">To Bank</span>
+            <div onclick="openStandardOverlay('transferOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-arrow-right-arrow-left text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">Transferir</span>
             </div>
             <div onclick="openStandardOverlay('payServicesOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-receipt text-blue-400 text-xs"></i></div>
@@ -222,7 +200,7 @@
             <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Movimientos recientes</span>
             <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">Ver todas</span>
         </div>
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md" id="movementsList">
             <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-950 flex items-center justify-center text-emerald-400 text-sm"><i class="fa-solid fa-cart-shopping"></i></div>
@@ -249,290 +227,275 @@
                     <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- STEP 2: RECIPIENT ACCOUNT & BANK SELECTION SELECT OVERLAY -->
-    <div id="step2RecipientOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex items-center mb-6">
-            <button onclick="closeStandardOverlay('step2RecipientOverlay')" class="text-gray-400 hover:text-white mr-4"><i class="fa-solid fa-chevron-left text-lg"></i></button>
-            <h2 class="text-md font-bold text-white">Recipient Account</h2>
-        </div>
-        
-        <div class="space-y-5 bg-[#072146] p-5 rounded-xl border border-blue-900/60 shadow-lg">
-            <div>
-                <label class="block text-xs text-gray-400 font-medium mb-1.5">Account Number</label>
-                <input type="text" id="opayAccountInput" maxlength="10" placeholder="Enter 10 digits Account Number" class="w-full p-3 rounded premium-input text-white text-sm tracking-wide placeholder-gray-600">
+            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-sm"><i class="fa-solid fa-arrow-down-long"></i></div>
+                    <div>
+                        <p class="text-xs font-semibold text-white" id="movRecTxt">Transferencia recibida</p>
+                        <p class="text-[10px] text-gray-400">20 mayo 2024</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-emerald-400">+$5,800.00</span>
+                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+                </div>
             </div>
+        </div>
 
-            <div>
-                <label class="block text-xs text-gray-400 font-medium mb-1.5">Select Bank</label>
-                <div onclick="openBankSelectionModal()" class="w-full p-3 rounded bg-[#020b18] border border-blue-900 text-white text-sm flex justify-between items-center cursor-pointer hover:border-blue-500">
-                    <span id="selectedBankLabel" class="text-gray-400">Tap to select destination bank...</span>
-                    <i class="fa-solid fa-chevron-right text-gray-500 text-xs"></i>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-semibold text-gray-200" id="lblApartados">Apartados</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll3">Ver todos</span>
+                    </div>
+                    <div class="flex items-center gap-2 my-2">
+                        <div class="w-7 h-7 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-xs"><i class="fa-solid fa-piggy-bank"></i></div>
+                        <div>
+                            <p class="text-[9px] text-gray-400">Vacaciones Europa</p>
+                            <p class="text-sm font-bold">$ 25,000.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[8px] text-gray-400 mb-1" id="apartadoSub">de $ 50,000.00</p>
+                    <div class="w-full bg-blue-950 h-1 rounded-full overflow-hidden">
+                        <div class="bg-blue-500 h-full w-1/2"></div>
+                    </div>
                 </div>
             </div>
 
-            <button onclick="validateStep2AndProceed()" class="w-full opay-green-btn text-white py-3 rounded-lg font-semibold mt-4 transition tracking-wide text-sm">Next</button>
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-semibold text-gray-200" id="lblInvestments">Inversiones</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll4">Ver todos</span>
+                    </div>
+                    <p class="text-[9px] text-gray-400" id="lblPortfolio">Portafolio Total</p>
+                    <p class="text-base font-bold text-white mt-0.5" id="dashInvestments">$ 0.00</p>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                    <div>
+                        <p class="text-[8px] text-gray-400" id="lblAnnualYield">Rendimiento anual</p>
+                        <p class="text-[10px] text-emerald-400 font-bold" id="dashYield">+12.35%</p>
+                    </div>
+                    <i class="fa-solid fa-chart-line text-emerald-400 text-lg opacity-85"></i>
+                </div>
+            </div>
         </div>
+
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 flex justify-between items-center shadow-md mb-8 cursor-pointer hover:bg-blue-950/20 transition">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-blue-400 text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <p class="text-xs font-bold text-white" id="secTitle">Centro de Seguridad</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5" id="secDesc">Protege tu información y tus operaciones.</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
+        </div>
+
     </div>
 
-    <!-- PREMIUM BEAUTIFUL LOGO BANK LIST DRAWER -->
-    <div id="bankListSelectionModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-end justify-center">
-        <div class="bg-[#041530] border-t border-blue-900 rounded-t-2xl w-full max-w-md h-[80vh] flex flex-col overflow-hidden animate-slide-up">
-            <div class="p-4 border-b border-blue-950 flex justify-between items-center bg-[#072146]">
-                <h3 class="text-sm font-bold text-white tracking-wide">Select Target Bank</h3>
-                <button onclick="closeBankSelectionModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
+    <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
+    <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('transferOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Transfer</h2>
+            <div></div>
+        </div>
+        <div class="space-y-4">
+            <label class="block text-xs text-gray-400 font-semibold uppercase">Select Recipient Bank</label>
+            <select id="transferBankSelect" onchange="checkManualBankOption()" class="w-full p-3 rounded bg-[#020b18] border border-blue-900 text-white text-xs focus:outline-none focus:border-blue-500">
+                <optgroup label="Mexico">
+                    <option value="bbva">BBVA México</option>
+                    <option value="banamex">Citibanamex</option>
+                    <option value="santander_mx">Santander México</option>
+                    <option value="banorte">Banorte</option>
+                </optgroup>
+                <optgroup label="United States">
+                    <option value="chase">Chase Bank</option>
+                    <option value="bofa">Bank of America</option>
+                    <option value="wf">Wells Fargo</option>
+                    <option value="citi_us">Citigroup</option>
+                </optgroup>
+                <optgroup label="United Kingdom">
+                    <option value="barclays">Barclays</option>
+                    <option value="hsbc_uk">HSBC UK</option>
+                    <option value="lloyds">Lloyds Bank</option>
+                </optgroup>
+                <optgroup label="Canada">
+                    <option value="rbc">Royal Bank of Canada (RBC)</option>
+                    <option value="td">TD Bank Canada</option>
+                    <option value="bmo">Bank of Montreal (BMO)</option>
+                </optgroup>
+                <optgroup label="Brazil">
+                    <option value="itau">Itaú Unibanco</option>
+                    <option value="bradesco">Banco Bradesco</option>
+                    <option value="banco_brasil">Banco do Brasil</option>
+                    <option value="nubank">Nubank</option>
+                </optgroup>
+                <option value="manual">-- Other Bank (Enter Manually) --</option>
+            </select>
             
-            <div class="p-3 bg-[#020b18]">
-                <div class="relative flex items-center">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 text-gray-500 text-xs"></i>
-                    <input type="text" id="bankSearchInput" oninput="filterSelectorBanks()" placeholder="Search Bank Name" class="w-full pl-9 pr-4 py-2 text-xs rounded premium-input text-white placeholder-gray-500">
-                </div>
+            <div id="manualBankInputs" class="hidden space-y-4 pt-2">
+                <input type="text" id="manualBankName" placeholder="Enter Bank Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+                <input type="text" id="manualRouteNumber" placeholder="Routing / Sort Code / CLABE / Swift" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             </div>
 
-            <!-- CORE ACTIVE COMPREHENSIVE REGION LIST WITH CUSTOM STYLIZED METRIC SYSTEM LOGOS -->
-            <div class="flex-1 overflow-y-auto p-4 space-y-4" id="bankListContainer">
-                
-                <!-- MEXICO -->
-                <div>
-                    <h5 class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">Mexico</h5>
-                    <div class="space-y-1">
-                        <div onclick="selectBankOption('BBVA México', 'fa-solid fa-building-columns text-blue-400')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-blue-950/80 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-building-columns text-blue-400"></i></div>
-                            <span class="text-xs font-medium">BBVA México</span>
-                        </div>
-                        <div onclick="selectBankOption('Citibanamex', 'fa-solid fa-landmark text-red-400')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-red-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-landmark text-red-400"></i></div>
-                            <span class="text-xs font-medium">Citibanamex</span>
-                        </div>
-                        <div onclick="selectBankOption('Santander México', 'fa-solid fa-shield-halved text-red-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-red-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-shield-halved text-red-500"></i></div>
-                            <span class="text-xs font-medium">Santander México</span>
-                        </div>
-                        <div onclick="selectBankOption('Banorte', 'fa-solid fa-money-bill-white text-emerald-400')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-emerald-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-money-check text-emerald-400"></i></div>
-                            <span class="text-xs font-medium">Banorte</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- USA -->
-                <div>
-                    <h5 class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">United States</h5>
-                    <div class="space-y-1">
-                        <div onclick="selectBankOption('Chase Bank', 'fa-solid fa-square-poll-horizontal text-blue-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-blue-950/80 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-square-poll-horizontal text-blue-500"></i></div>
-                            <span class="text-xs font-medium">Chase Bank</span>
-                        </div>
-                        <div onclick="selectBankOption('Bank of America', 'fa-solid fa-flag text-red-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-red-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-flag text-red-500"></i></div>
-                            <span class="text-xs font-medium">Bank of America</span>
-                        </div>
-                        <div onclick="selectBankOption('Wells Fargo', 'fa-solid fa-horse text-amber-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-amber-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-horse text-amber-500"></i></div>
-                            <span class="text-xs font-medium">Wells Fargo</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- UK -->
-                <div>
-                    <h5 class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">United Kingdom</h5>
-                    <div class="space-y-1">
-                        <div onclick="selectBankOption('Barclays', 'fa-solid fa-crown text-sky-400')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-sky-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-crown text-sky-400"></i></div>
-                            <span class="text-xs font-medium">Barclays</span>
-                        </div>
-                        <div onclick="selectBankOption('HSBC UK', 'fa-solid fa-hexagon text-red-400')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-red-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-dice-d20 text-red-400"></i></div>
-                            <span class="text-xs font-medium">HSBC UK</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CANADA -->
-                <div>
-                    <h5 class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">Canada</h5>
-                    <div class="space-y-1">
-                        <div onclick="selectBankOption('Royal Bank of Canada', 'fa-solid fa-lion text-yellow-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-yellow-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-circle-nodes text-yellow-500"></i></div>
-                            <span class="text-xs font-medium">Royal Bank of Canada (RBC)</span>
-                        </div>
-                        <div onclick="selectBankOption('TD Bank Canada', 'fa-solid fa-leaf text-emerald-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-emerald-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-leaf text-emerald-500"></i></div>
-                            <span class="text-xs font-medium">TD Bank Canada</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BRAZIL -->
-                <div>
-                    <h5 class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">Brazil</h5>
-                    <div class="space-y-1">
-                        <div onclick="selectBankOption('Itaú Unibanco', 'fa-solid fa-square text-orange-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-orange-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-square text-orange-500"></i></div>
-                            <span class="text-xs font-medium">Itaú Unibanco</span>
-                        </div>
-                        <div onclick="selectBankOption('Nubank', 'fa-solid fa-circle text-purple-500')" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-blue-950/40 cursor-pointer transition">
-                            <div class="w-7 h-7 bg-purple-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-circle text-purple-500"></i></div>
-                            <span class="text-xs font-medium">Nubank</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MANUAL ENTRY -->
-                <div class="pt-2 border-t border-blue-950">
-                    <div onclick="selectBankOption('manual', 'fa-solid fa-pen-to-square text-gray-400')" class="flex items-center gap-3 p-2.5 rounded-lg bg-[#072146] hover:bg-blue-900/40 cursor-pointer transition">
-                        <div class="w-7 h-7 bg-gray-950/40 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-pen-to-square text-gray-400"></i></div>
-                        <span class="text-xs font-semibold text-gray-300">Other Bank (Enter Manually)</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DYNAMIC MANUAL BANK FIELD ENTRY POPUP INNER SYSTEM -->
-    <div id="manualBankInputsBox" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 w-full max-w-xs space-y-3">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Custom Bank Details</h4>
-            <input type="text" id="customBankNameInput" placeholder="Enter Bank Name" class="w-full p-2.5 rounded bg-[#020b18] border border-blue-900 text-white text-xs">
-            <input type="text" id="customRoutingInput" placeholder="Routing / CLABE / Swift" class="w-full p-2.5 rounded bg-[#020b18] border border-blue-900 text-white text-xs">
-            <button onclick="saveManualCustomBank()" class="w-full bg-blue-600 text-white py-2 rounded text-xs font-bold">Apply Details</button>
-        </div>
-    </div>
-
-    <!-- STEP 3: AMOUNT & REMARK / DESCRIPTION INPUT SCREEN -->
-    <div id="step3AmountOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex items-center mb-6">
-            <button onclick="closeStandardOverlay('step3AmountOverlay'); openStandardOverlay('step2RecipientOverlay');" class="text-gray-400 hover:text-white mr-4"><i class="fa-solid fa-chevron-left text-lg"></i></button>
-            <h2 class="text-md font-bold text-white">Transaction Setup</h2>
-        </div>
-
-        <div class="bg-[#072146] p-5 rounded-xl border border-blue-900 shadow-xl space-y-5">
-            <div class="flex items-center gap-3 bg-[#020b18] p-3 rounded-lg border border-blue-950">
-                <div id="step3BankLogo" class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-sm"></div>
-                <div>
-                    <h4 id="step3TargetBankName" class="text-xs font-bold text-white"></h4>
-                    <p id="step3TargetAccountNumber" class="text-[11px] text-gray-400"></p>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs text-gray-400 font-medium mb-1.5">Amount ($)</label>
-                <input type="number" id="opayAmountInputVal" placeholder="0.00" class="w-full p-3 rounded premium-input text-white text-lg font-bold placeholder-gray-700">
-            </div>
-
-            <div>
-                <label class="block text-xs text-gray-400 font-medium mb-1.5">Remark / Description (Optional)</label>
-                <input type="text" id="opayRemarkInput" placeholder="What is this transfer for?" class="w-full p-3 rounded premium-input text-white text-xs placeholder-gray-600">
-            </div>
-
-            <button onclick="validateStep3AndProceed()" class="w-full opay-green-btn text-white py-3 rounded-lg font-semibold mt-2 tracking-wide text-sm">Confirm</button>
-        </div>
-    </div>
-
-    <!-- STEP 4: TRANSACTION DETAILS REMINDER POPUP (DOUBLE-CHECK REMINDER MODAL) -->
-    <div id="step4ReminderModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 w-full max-w-xs shadow-2xl space-y-4">
-            <div class="text-center pb-2 border-b border-blue-950">
-                <h3 class="text-sm font-bold text-yellow-500"><i class="fa-solid fa-circle-exclamation mr-1.5"></i>Reminder</h3>
-                <p class="text-[10px] text-gray-400 mt-0.5">Double check transaction coordinates carefully.</p>
-            </div>
+            <input type="text" id="transferAccount" placeholder="Account Number / Card Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="text" id="transferName" placeholder="Recipient Full Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="number" id="transferAmount" placeholder="Amount ($)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             
-            <div class="text-xs space-y-2 text-gray-300">
-                <div class="flex justify-between"><span class="text-gray-500">Bank:</span><span id="remindBank" class="font-bold text-white text-right"></span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Account:</span><span id="remindAccount" class="font-mono text-white"></span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Amount:</span><span id="remindAmount" class="font-bold text-emerald-400"></span></div>
-            </div>
+            <button onclick="executeTransferFlow()" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-4 transition tracking-wide text-sm uppercase">Continue Transfer</button>
+        </div>
+    </div>
 
-            <div class="grid grid-cols-2 gap-2 pt-2">
-                <button onclick="document.getElementById('step4ReminderModal').classList.add('hidden')" class="bg-gray-800 text-gray-400 py-2 rounded text-xs font-bold">Recheck</button>
-                <button onclick="proceedFromStep4ToStep5()" class="opay-green-btn text-white py-2 rounded text-xs font-bold">Continue</button>
+    <!-- 2. PAY SERVICES OVERLAY -->
+    <div id="payServicesOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('payServicesOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Pay Services</h2>
+            <div></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-lightbulb text-yellow-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Electricity (CFE)</span>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-droplet text-blue-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Water Supply</span>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-house-signal text-purple-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Internet / TV</span>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-mobile-retro text-emerald-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Telephone Plan</span>
+            </div>
+        </div>
+        <div class="space-y-4">
+            <input type="text" placeholder="Service Reference Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="number" placeholder="Amount Due ($)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold tracking-wide text-sm">PROCEED TO PAY</button>
+        </div>
+    </div>
+
+    <!-- 3. CARDLESS CASH OVERLAY -->
+    <div id="cardlessCashOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('cardlessCashOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Cardless Cash</h2>
+            <div></div>
+        </div>
+        <div class="bg-gradient-to-br from-blue-900 to-blue-950 p-5 rounded-xl border border-blue-800 text-center mb-6">
+            <i class="fa-solid fa-money-bill-transfer text-4xl text-blue-400 mb-2"></i>
+            <p class="text-sm font-semibold">Withdraw cash from any ATM without using physical plastic.</p>
+            <p class="text-xs text-gray-400 mt-1">Generate a dynamic reference code directly valid for 30 minutes.</p>
+        </div>
+        <div class="space-y-4">
+            <label class="block text-xs text-gray-400 font-semibold uppercase">Amount to Withdraw</label>
+            <input type="number" placeholder="Enter Amount (e.g., $200, $500)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold tracking-wide text-sm uppercase">Generate Security Reference</button>
+        </div>
+    </div>
+
+    <!-- 4. INVESTMENTS OVERLAY -->
+    <div id="investmentsOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('investmentsOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Investment Portfolio</h2>
+            <div></div>
+        </div>
+        <div class="space-y-3">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="text-xs font-bold text-white">Fixed Term Funds (Pagaré)</h4>
+                    <p class="text-[10px] text-emerald-400 mt-0.5">Yield up to 11.50% APR</p>
+                </div>
+                <button onclick="triggerFreezeAlert()" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-semibold">Invest</button>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="text-xs font-bold text-white">Mutual Global Strategy</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">High Performance Variable Index</p>
+                </div>
+                <button onclick="triggerFreezeAlert()" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-semibold">Invest</button>
             </div>
         </div>
     </div>
 
-    <!-- STEP 5: FINAL PAYMENT REVIEW PANEL SCREEN -->
-    <div id="step5ReviewOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex items-center mb-6">
-            <button onclick="closeStandardOverlay('step5ReviewOverlay'); openStandardOverlay('step3AmountOverlay');" class="text-gray-400 hover:text-white mr-4"><i class="fa-solid fa-chevron-left text-lg"></i></button>
-            <h2 class="text-md font-bold text-white">Confirm Payment</h2>
+    <!-- 5. LOANS OVERLAY -->
+    <div id="loansOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('loansOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Pre-Approved Credits</h2>
+            <div></div>
         </div>
-
-        <div class="text-center my-6">
-            <p class="text-xs text-gray-400 uppercase tracking-wider">Transfer Amount</p>
-            <h1 id="reviewDisplayAmount" class="text-4xl font-black text-white mt-1"></h1>
+        <div class="bg-gradient-to-r from-amber-600/20 to-yellow-600/10 border border-yellow-700/40 p-5 rounded-xl mb-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="bg-yellow-500/20 text-yellow-400 text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">Immediate Delivery</span>
+                    <h3 class="text-lg font-bold mt-1.5">Personal Credit</h3>
+                </div>
+                <p class="text-xl font-black text-yellow-400">$150,000</p>
+            </div>
+            <p class="text-xs text-gray-300 mt-2">Fixed monthly payments with dynamic competitive preferential interest rates.</p>
+            <button onclick="triggerFreezeAlert()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-xs py-2.5 rounded-lg font-bold tracking-wide mt-4 shadow-lg uppercase">Acquire Loan Now</button>
         </div>
-
-        <div class="bg-[#072146] rounded-xl border border-blue-900/60 p-4 space-y-3.5 shadow-md mb-6 text-xs">
-            <div class="flex justify-between items-center"><span class="text-gray-400">Target Bank</span><span id="revBank" class="font-bold"></span></div>
-            <div class="flex justify-between items-center"><span class="text-gray-400">Account Number</span><span id="revAccount" class="font-mono"></span></div>
-            <div class="flex justify-between items-center"><span class="text-gray-400">Description</span><span id="revRemark" class="italic text-gray-300"></span></div>
-            <div class="flex justify-between items-center"><span class="text-gray-400">Transaction Fee</span><span class="text-emerald-400 font-bold">$0.00</span></div>
-            <hr class="border-blue-950">
-            <div class="flex justify-between items-center"><span class="text-gray-400">Payment Method</span><span class="font-semibold text-blue-400">BBVA Wallet Balance</span></div>
-            <div class="flex justify-between items-center"><span class="text-gray-400">Available Balance</span><span id="revAvailable" class="font-bold text-gray-300"></span></div>
-        </div>
-
-        <!-- THE FINAL SUBMIT ACTION: LAUNCHES IMMEDIATE PIN SCREEN -->
-        <button onclick="executeFinalPayAction()" class="w-full opay-green-btn text-white py-3.5 rounded-xl font-bold tracking-wide text-sm shadow-xl uppercase">Pay</button>
     </div>
 
-    <!-- TRANSACTION SETUP MODAL (FOR THE VERY FIRST TIME RUN ONLY) -->
-    <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden">
+    <!-- 6. SEE ALL OVERLAY -->
+    <div id="seeAllOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('seeAllOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">All Operations</h2>
+            <div></div>
+        </div>
+        <ul class="divide-y divide-blue-950 text-sm">
+            <li onclick="openStandardOverlay('transferOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Express Money Transfer</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('payServicesOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Utility & Services Statement Payment</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('cardlessCashOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">ATM Cardless Cash Generation</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('investmentsOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Growth Capital Mutual Fund Portfolios</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('loansOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Apply for Immediate Personal Loans</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+        </ul>
+    </div>
+
+    <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS (ONCE CREATION AND RE-VERIFY SYSTEM) -->
+    <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
-            <div class="w-10 h-10 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 mx-auto mb-2"><i class="fa-solid fa-key text-lg"></i></div>
-            <h3 class="text-sm font-bold text-white mb-1">Create Transaction PIN</h3>
-            <p class="text-[11px] text-gray-400 mb-4">Set up your permanent 4-digit safety code to authorize all transfers.</p>
+            <i class="fa-solid fa-key text-3xl text-blue-400 mb-3"></i>
+            <h3 class="text-base font-bold text-white mb-2">Create Transaction Code</h3>
+            <p class="text-xs text-gray-400 mb-4">Set up your permanent 4-digit security code to authorize all future transfers.</p>
             <input type="password" id="newSetupPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
-            <button onclick="saveTransactionPin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Confirm & Secure</button>
+            <button onclick="saveTransactionPin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Confirm Code</button>
         </div>
     </div>
 
-    <!-- STEP 7: SECURE MANUAL NUMERIC NUMPAD MODAL INPUT KEYPAD DRAWER (OPAY STYLE BACKDROP) -->
-    <div id="transactionPinVerifyModal" class="fixed inset-0 bg-black/80 z-50 flex items-end justify-center hidden">
-        <div class="bg-[#030d1e] border-t border-blue-900/60 rounded-t-2xl w-full max-w-md p-6 flex flex-col items-center">
-            
-            <div class="w-full flex justify-between items-center mb-4">
-                <span class="text-xs font-semibold text-gray-400 tracking-wide uppercase">Security Validation</span>
-                <i onclick="closePinVerification()" class="fa-solid fa-xmark text-gray-500 text-base cursor-pointer hover:text-white"></i>
-            </div>
-
-            <p class="text-sm font-bold text-white mb-1">Enter Payment PIN</p>
-            <p class="text-[11px] text-gray-400 mb-6 text-center">Input your 4-digit transaction authorization key code.</p>
-
-            <!-- CUSTOM BUBBLE PIN TRACKER COMPONENT -->
-            <div class="flex gap-4 mb-8">
-                <div id="pb0" class="pin-bubble"></div>
-                <div id="pb1" class="pin-bubble"></div>
-                <div id="pb2" class="pin-bubble"></div>
-                <div id="pb3" class="pin-bubble"></div>
-            </div>
-
-            <!-- OPAY STYLE PREMIUM NUMERIC SECURE KEYPAD GRID LAYER -->
-            <div class="w-full max-w-xs grid grid-cols-3 gap-y-4 gap-x-6 text-center text-xl font-bold select-none pb-4">
-                <div onclick="pressNumpad('1')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">1</div>
-                <div onclick="pressNumpad('2')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">2</div>
-                <div onclick="pressNumpad('3')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">3</div>
-                
-                <div onclick="pressNumpad('4')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">4</div>
-                <div onclick="pressNumpad('5')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">5</div>
-                <div onclick="pressNumpad('6')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">6</div>
-                
-                <div onclick="pressNumpad('7')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">7</div>
-                <div onclick="pressNumpad('8')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">8</div>
-                <div onclick="pressNumpad('9')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">9</div>
-                
-                <div class="opacity-0 pointer-events-none"></div>
-                <div onclick="pressNumpad('0')" class="py-3 bg-[#072146]/40 hover:bg-blue-900/30 rounded-lg active:scale-95 cursor-pointer">0</div>
-                <div onclick="pressNumpad('back')" class="py-3 flex items-center justify-center text-gray-400 hover:text-white cursor-pointer active:scale-95"><i class="fa-solid fa-delete-left"></i></div>
-            </div>
+    <div id="transactionPinVerifyModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
+            <i class="fa-solid fa-shield text-3xl text-blue-400 mb-3"></i>
+            <h3 class="text-base font-bold text-white mb-2">Enter Transaction Code</h3>
+            <p class="text-xs text-gray-400 mb-4">Type your 4-digit security PIN to authorize this transfer.</p>
+            <input type="password" id="verifyPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
+            <button onclick="verifyTransactionPinAndProceed()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Authorize Transfer</button>
+            <button onclick="closePinVerification()" class="w-full bg-transparent text-gray-400 text-xs mt-2 hover:underline">Cancel</button>
         </div>
     </div>
 
-    <!-- FROZEN RESPONSE ALERT MODAL -->
+    <!-- FROZEN RESPONSE ALERT -->
     <div id="accountFrozenAlertModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gradient-to-b from-[#0e1d33] to-[#041530] border-t-4 border-red-500 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <div class="w-12 h-12 rounded-full bg-red-950 flex items-center justify-center mx-auto mb-3 text-red-400"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
@@ -542,58 +505,129 @@
         </div>
     </div>
 
-    <!-- GENERIC STANDALONE OVERLAYS (SERVICES, CARDLESS CASH, ETC.) -->
-    <div id="payServicesOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6"><button onclick="closeStandardOverlay('payServicesOverlay')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button><h2 class="text-md font-bold text-blue-400">Services</h2><div></div></div>
-        <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded text-xs uppercase font-bold">Proceed</button>
-    </div>
-    <div id="cardlessCashOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6"><button onclick="closeStandardOverlay('cardlessCashOverlay')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button><h2 class="text-md font-bold text-blue-400">Cardless</h2><div></div></div>
-        <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded text-xs uppercase font-bold">Generate</button>
-    </div>
-    <div id="investmentsOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6"><button onclick="closeStandardOverlay('investmentsOverlay')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button><h2 class="text-md font-bold text-blue-400">Investments</h2><div></div></div>
-    </div>
-    <div id="loansOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6"><button onclick="closeStandardOverlay('loansOverlay')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button><h2 class="text-md font-bold text-blue-400">Loans</h2><div></div></div>
-    </div>
-    <div id="seeAllOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6"><button onclick="closeStandardOverlay('seeAllOverlay')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button><h2 class="text-md font-bold text-blue-400">All Ops</h2><div></div></div>
-    </div>
-
-    <!-- BOTTOM APP NAVIGATION -->
     <div id="stickyBottomNav" class="fixed bottom-0 left-0 right-0 z-40 hidden flex justify-around items-center h-16 bottom-nav max-w-md mx-auto">
-        <div class="flex flex-col items-center justify-center cursor-pointer text-blue-400"><i class="fa-solid fa-house text-sm"></i><span class="text-[9px] mt-1" id="navStart">Inicio</span></div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400"><i class="fa-solid fa-wallet text-sm"></i><span class="text-[9px] mt-1" id="navProducts">Productos</span></div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
+            <i class="fa-solid fa-house text-sm"></i>
+            <span class="text-[9px] mt-1" id="navStart">Inicio</span>
+        </div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-wallet text-sm"></i>
+            <span class="text-[9px] mt-1" id="navProducts">Productos</span>
+        </div>
         <div class="flex flex-col items-center justify-center -mt-6 cursor-pointer">
-            <div onclick="openStandardOverlay('seeAllOverlay')" class="w-12 h-12 rounded-full operar-btn flex items-center justify-center text-white text-lg"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div onclick="openStandardOverlay('seeAllOverlay')" class="w-12 h-12 rounded-full operar-btn flex items-center justify-center text-white text-lg">
+                <i class="fa-solid fa-dollar-sign"></i>
+            </div>
             <span class="text-[9px] mt-1 text-gray-300 font-medium" id="navOperate">Operar</span>
         </div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400"><i class="fa-solid fa-circle-question text-sm"></i><span class="text-[9px] mt-1" id="navHelp">Ayuda</span></div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400"><i class="fa-solid fa-bars text-sm"></i><span class="text-[9px] mt-1" id="navMenu">Menú</span></div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-circle-question text-sm"></i>
+            <span class="text-[9px] mt-1" id="navHelp">Ayuda</span>
+        </div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-bars text-sm"></i>
+            <span class="text-[9px] mt-1" id="navMenu">Menú</span>
+        </div>
     </div>
 
-    <!-- LOGIC APPLICATION CORE CONTROLLER ENGINE -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
         let currentLang = 'en';
         let allUsers = [];
         let loggedInUser = null;
-
-        // Transaction variables mapping the step metrics
-        let chosenBankName = "";
-        let chosenBankIconHTML = "";
-        let chosenAccountNumber = "";
-        let chosenTransferAmount = 0;
-        let chosenRemarkText = "";
-        
-        // Permanent PIN engine management mapping 
-        let persistentTransactionPin = ""; 
-        let currentPinEntry = ""; 
+        let transactionPinCode = ""; // System local state for single pin storage
 
         const translations = {
-            es: { langBtn: "IS", signUpTitle: "Crear Cuenta", submitSignUpBtn: "Registrarse", haveAccountText: "¿Ya tienes cuenta?", loginLinkText: "Inicia sesión", loginTitle: "Iniciar Sesión", loginBtnText: "Entrar", noAccountText: "¿No tienes cuenta?", signUpLinkText: "Regístrate", greetingDay: "Hola,", lblProducts: "Mis productos", lblSeeAll1: "Ver todos", cardLabel: "Cuenta de Cheques", availableLabel: "Saldo disponible", actualLabel: "Saldo actual: ", lblMovementsLink: "Ver movimientos", actTransfer: "To Bank", actPay: "Pagar servicios", actWithdraw: "Retirar sin tarjeta", actInvest: "Inversiones", actLoans: "Préstamos", lblCards: "Tarjetas", lblSeeAll2: "Ver todas", cardDeb: "Débito", cardCred: "Crédito", lblRecentMovements: "Movimientos recientes", lblSeeAllMovements: "Ver todas", movRecTxt: "Transferencia recibida", lblApartados: "Apartados", lblSeeAll3: "Ver todos", apartadoSub: "de $ 50,000.00", lblInvestments: "Inversiones", lblSeeAll4: "Ver todos", lblPortfolio: "Portafolio Total", lblAnnualYield: "Rendimiento anual", secTitle: "Centro de Seguridad", secDesc: "Protege tu información y tus operaciones.", navStart: "Inicio", navProducts: "Productos", navOperate: "Operar", navHelp: "Ayuda", navMenu: "Menú", dateLabel: "Miércoles 22 de mayo, 2024" },
-            en: { langBtn: "EN", signUpTitle: "Create Account", submitSignUpBtn: "Register", haveAccountText: "Already have an account?", loginLinkText: "Log In", loginTitle: "Log In", loginBtnText: "Sign In", noAccountText: "Don't have an account?", signUpLinkText: "Sign Up", greetingDay: "Hello,", lblProducts: "My Products", lblSeeAll1: "See all", cardLabel: "Checking Account", availableLabel: "Available balance", actualLabel: "Current balance: ", lblMovementsLink: "View transactions", actTransfer: "To Bank", actPay: "Pay Services", actWithdraw: "Cardless Cash", actInvest: "Investments", actLoans: "Loans", lblCards: "Cards", lblSeeAll2: "See all", cardDeb: "Debit", cardCred: "Credit", lblRecentMovements: "Recent movements", lblSeeAllMovements: "See all", movRecTxt: "Transfer received", lblApartados: "Vaults", lblSeeAll3: "See all", apartadoSub: "of $ 50,000.00", lblInvestments: "Investments", lblSeeAll4: "See all", lblPortfolio: "Total Portfolio", lblAnnualYield: "Annual Yield", secTitle: "Security Center", secDesc: "Protect your personal data and operations.", navStart: "Home", navProducts: "Products", navOperate: "Operate", navHelp: "Help", navMenu: "Menu", dateLabel: "Wednesday May 22, 2024" }
+            es: {
+                langBtn: "IS",
+                signUpTitle: "Crear Cuenta",
+                submitSignUpBtn: "Registrarse",
+                haveAccountText: "¿Ya tienes cuenta?",
+                loginLinkText: "Inicia sesión",
+                loginTitle: "Iniciar Sesión",
+                loginBtnText: "Entrar",
+                noAccountText: "¿No tienes cuenta?",
+                signUpLinkText: "Regístrate",
+                greetingDay: "Hola,",
+                lblProducts: "Mis productos",
+                lblSeeAll1: "Ver todos",
+                cardLabel: "Cuenta de Cheques",
+                availableLabel: "Saldo disponible",
+                actualLabel: "Saldo actual: ",
+                lblMovementsLink: "Ver movimientos",
+                actTransfer: "Transferir",
+                actPay: "Pagar servicios",
+                actWithdraw: "Retirar sin tarjeta",
+                actInvest: "Inversiones",
+                actLoans: "Préstamos",
+                lblCards: "Tarjetas",
+                lblSeeAll2: "Ver todas",
+                cardDeb: "Débito",
+                cardCred: "Crédito",
+                lblRecentMovements: "Movimientos recientes",
+                lblSeeAllMovements: "Ver todas",
+                movRecTxt: "Transferencia recibida",
+                lblApartados: "Apartados",
+                lblSeeAll3: "Ver todos",
+                apartadoSub: "de $ 50,000.00",
+                lblInvestments: "Inversiones",
+                lblSeeAll4: "Ver todos",
+                lblPortfolio: "Portafolio Total",
+                lblAnnualYield: "Rendimiento anual",
+                secTitle: "Centro de Seguridad",
+                secDesc: "Protege tu información y tus operaciones.",
+                navStart: "Inicio",
+                navProducts: "Productos",
+                navOperate: "Operar",
+                navHelp: "Ayuda",
+                navMenu: "Menú",
+                dateLabel: "Miércoles 22 de mayo, 2024"
+            },
+            en: {
+                langBtn: "EN",
+                signUpTitle: "Create Account",
+                submitSignUpBtn: "Register",
+                haveAccountText: "Already have an account?",
+                loginLinkText: "Log In",
+                loginTitle: "Log In",
+                loginBtnText: "Sign In",
+                noAccountText: "Don't have an account?",
+                signUpLinkText: "Sign Up",
+                greetingDay: "Hello,",
+                lblProducts: "My Products",
+                lblSeeAll1: "See all",
+                cardLabel: "Checking Account",
+                availableLabel: "Available balance",
+                actualLabel: "Current balance: ",
+                lblMovementsLink: "View transactions",
+                actTransfer: "Transfer",
+                actPay: "Pay Services",
+                actWithdraw: "Cardless Cash",
+                actInvest: "Investments",
+                actLoans: "Loans",
+                lblCards: "Cards",
+                lblSeeAll2: "See all",
+                cardDeb: "Debit",
+                cardCred: "Credit",
+                lblRecentMovements: "Recent movements",
+                lblSeeAllMovements: "See all",
+                movRecTxt: "Transfer received",
+                lblApartados: "Vaults",
+                lblSeeAll3: "See all",
+                apartadoSub: "of $ 50,000.00",
+                lblInvestments: "Investments",
+                lblSeeAll4: "See all",
+                lblPortfolio: "Total Portfolio",
+                lblAnnualYield: "Annual Yield",
+                secTitle: "Security Center",
+                secDesc: "Protect your personal data and operations.",
+                navStart: "Home",
+                navProducts: "Products",
+                navOperate: "Operate",
+                navHelp: "Help",
+                navMenu: "Menu",
+                dateLabel: "Wednesday May 22, 2024"
+            }
         };
 
         function openStandardOverlay(overlayId) {
@@ -612,183 +646,64 @@
             el.addEventListener('click', () => openStandardOverlay('seeAllOverlay'));
         });
 
-        // STEP 2 WORKFLOW CONTROL HOOKS
-        function openBankSelectionModal() {
-            document.getElementById('bankListSelectionModal').classList.remove('hidden');
-        }
-
-        function closeBankSelectionModal() {
-            document.getElementById('bankListSelectionModal').classList.add('hidden');
-        }
-
-        function selectBankOption(bankName, iconClasses) {
-            closeBankSelectionModal();
-            if (bankName === 'manual') {
-                document.getElementById('manualBankInputsBox').classList.remove('hidden');
+        function checkManualBankOption() {
+            const selectValue = document.getElementById('transferBankSelect').value;
+            const manualInputs = document.getElementById('manualBankInputs');
+            if(selectValue === 'manual') {
+                manualInputs.classList.remove('hidden');
             } else {
-                chosenBankName = bankName;
-                chosenBankIconHTML = `<i class="${iconClasses}"></i>`;
-                document.getElementById('selectedBankLabel').innerHTML = `${chosenBankIconHTML} <span class="ml-2 text-white">${bankName}</span>`;
+                manualInputs.classList.add('hidden');
             }
         }
 
-        function saveManualCustomBank() {
-            const name = document.getElementById('customBankNameInput').value.trim();
-            const routing = document.getElementById('customRoutingInput').value.trim();
-            if(!name) {
-                alert("Please type a bank name.");
-                return;
-            }
-            chosenBankName = name + (routing ? ` (${routing})` : "");
-            chosenBankIconHTML = `<i class="fa-solid fa-pen-to-square text-gray-400"></i>`;
-            document.getElementById('selectedBankLabel').innerHTML = `${chosenBankIconHTML} <span class="ml-2 text-white">${chosenBankName}</span>`;
-            document.getElementById('manualBankInputsBox').classList.add('hidden');
-        }
-
-        function filterSelectorBanks() {
-            const query = document.getElementById('bankSearchInput').value.toLowerCase();
-            const items = document.querySelectorAll('#bankListContainer > div div[onclick]');
-            items.forEach(el => {
-                const txt = el.textContent.toLowerCase();
-                el.style.display = txt.includes(query) ? "flex" : "none";
-            });
-        }
-
-        function validateStep2AndProceed() {
-            const accountVal = document.getElementById('opayAccountInput').value.trim();
-            if(accountVal.length !== 10 || isNaN(accountVal)) {
-                alert(currentLang === 'es' ? "Por favor ingresa un número de cuenta válido de 10 dígitos." : "Please enter a valid 10-digit account number.");
-                return;
-            }
-            if(!chosenBankName) {
-                alert(currentLang === 'es' ? "Selecciona un banco de destino." : "Please select a destination bank.");
-                return;
-            }
-            chosenAccountNumber = accountVal;
-
-            // Update parameters inside step 3 layout structures
-            document.getElementById('step3BankLogo').innerHTML = chosenBankIconHTML;
-            document.getElementById('step3TargetBankName').innerText = chosenBankName;
-            document.getElementById('step3TargetAccountNumber').innerText = "Account Number: " + chosenAccountNumber;
-
-            closeStandardOverlay('step2RecipientOverlay');
-            openStandardOverlay('step3AmountOverlay');
-        }
-
-        // STEP 3 SYSTEM VERIFICATIONS
-        function validateStep3AndProceed() {
-            const amt = parseFloat(document.getElementById('opayAmountInputVal').value);
-            if(!amt || amt <= 0) {
+        function executeTransferFlow() {
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            
+            if(!amount || amount <= 0) {
                 alert(currentLang === 'es' ? "Ingresa un monto válido." : "Please enter a valid amount.");
                 return;
             }
-            if(loggedInUser && amt > loggedInUser.balance) {
-                alert(currentLang === 'es' ? "Fondos Insuficientes." : "Insufficient Funds in available balance.");
+
+            if (loggedInUser && amount > loggedInUser.balance) {
+                alert(currentLang === 'es' ? "Fondos Insuficientes: Tu saldo disponible es menor que el monto solicitado." : "Insufficient Funds: Your available balance is less than the requested transfer amount.");
                 return;
             }
 
-            chosenTransferAmount = amt;
-            chosenRemarkText = document.getElementById('opayRemarkInput').value.trim() || "Good afternoon";
-
-            // Trigger Step 4 Double-Check Reminder Modal Coordinates
-            document.getElementById('remindBank').innerText = chosenBankName;
-            document.getElementById('remindAccount').innerText = chosenAccountNumber;
-            document.getElementById('remindAmount').innerText = `$${chosenTransferAmount.toFixed(2)}`;
-            
-            document.getElementById('step4ReminderModal').classList.remove('hidden');
-        }
-
-        // PROCEED STEP 4 TO STEP 5 REVIEW PANEL SCREEN
-        function proceedFromStep4ToStep5() {
-            document.getElementById('step4ReminderModal').classList.add('hidden');
-            closeStandardOverlay('step3AmountOverlay');
-
-            // Set up review displays inside Step 5 Review Panel Layout
-            document.getElementById('reviewDisplayAmount').innerText = `$${chosenTransferAmount.toFixed(2)}`;
-            document.getElementById('revBank').innerText = chosenBankName;
-            document.getElementById('revAccount').innerText = chosenAccountNumber;
-            document.getElementById('revRemark').innerText = chosenRemarkText;
-            
-            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-            document.getElementById('revAvailable').innerText = loggedInUser ? fmt.format(loggedInUser.balance) : "$0.00";
-
-            openStandardOverlay('step5ReviewOverlay');
-        }
-
-        // STEP 5: FINAL TRANSACTION ROUTER CONTROL BLOCK
-        function executeFinalPayAction() {
-            // Checks if a permanent PIN exists in local memory yet
-            if(!persistentTransactionPin) {
-                // If completely missing, trigger the "Create Once" layout overlay setup flow
+            // PIN CODE ASSIGNMENT CORE ENGINE (Checks if pin already exists)
+            if(!transactionPinCode) {
                 document.getElementById('transactionPinSetupModal').classList.remove('hidden');
             } else {
-                // Pin is confirmed, skip creation completely and open the OPay verified key numpad
-                openNumpadDrawer();
+                document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
             }
         }
 
-        // SET UP TRANSACTION SECURITY PERMANENT VALUES (RUNS ONCE FOREVER)
         function saveTransactionPin() {
-            const setupVal = document.getElementById('newSetupPinInput').value;
-            if(setupVal.length !== 4 || isNaN(setupVal)) {
-                alert("Code must be exactly 4 numeric digits.");
+            const pinVal = document.getElementById('newSetupPinInput').value;
+            if(pinVal.length !== 4 || isNaN(pinVal)) {
+                alert(currentLang === 'es' ? "El código debe ser de 4 dígitos numéricos." : "Code must be exactly 4 numeric digits.");
                 return;
             }
-            persistentTransactionPin = setupVal; // PIN code permanently saved for this session
+            transactionPinCode = pinVal; // PIN code permanently saved for this session
             document.getElementById('transactionPinSetupModal').classList.add('hidden');
             document.getElementById('newSetupPinInput').value = "";
-            
-            // Instantly transition into the keypad authorization screen 
-            openNumpadDrawer();
+            document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
         }
 
-        // STEP 7 NUMPAD COMPONENT ROUTINES
-        function openNumpadDrawer() {
-            currentPinEntry = "";
-            updatePinBubbles();
-            document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
+        function verifyTransactionPinAndProceed() {
+            const pinVal = document.getElementById('verifyPinInput').value;
+            if(pinVal === transactionPinCode) {
+                document.getElementById('transactionPinVerifyModal').classList.add('hidden');
+                document.getElementById('verifyPinInput').value = "";
+                closeStandardOverlay('transferOverlay');
+                triggerFreezeAlert();
+            } else {
+                alert(currentLang === 'es' ? "Código de transacción incorrecto." : "Incorrect security transaction code.");
+            }
         }
 
         function closePinVerification() {
             document.getElementById('transactionPinVerifyModal').classList.add('hidden');
-        }
-
-        function pressNumpad(key) {
-            if(key === 'back') {
-                currentPinEntry = currentPinEntry.slice(0, -1);
-            } else {
-                if(currentPinEntry.length < 4) {
-                    currentPinEntry += key;
-                }
-            }
-            
-            updatePinBubbles();
-
-            if(currentPinEntry.length === 4) {
-                // Automatic verification trigger on full inputs
-                setTimeout(() => {
-                    if(currentPinEntry === persistentTransactionPin) {
-                        document.getElementById('transactionPinVerifyModal').classList.add('hidden');
-                        closeStandardOverlay('step5ReviewOverlay');
-                        triggerFreezeAlert();
-                    } else {
-                        alert(currentLang === 'es' ? "PIN Incorrecto." : "Incorrect Payment PIN.");
-                        currentPinEntry = "";
-                        updatePinBubbles();
-                    }
-                }, 150);
-            }
-        }
-
-        function updatePinBubbles() {
-            for(let i=0; i<4; i++) {
-                const bubble = document.getElementById(`pb${i}`);
-                if(i < currentPinEntry.length) {
-                    bubble.classList.add('filled');
-                } else {
-                    bubble.classList.remove('filled');
-                }
-            }
+            document.getElementById('verifyPinInput').value = "";
         }
 
         function triggerFreezeAlert() {
@@ -836,12 +751,27 @@
             document.getElementById('cardLabel').innerText = translations[lang].cardLabel;
             document.getElementById('availableLabel').innerText = translations[lang].availableLabel;
             document.getElementById('lblMovementsLink').innerText = translations[lang].lblMovementsLink;
+            document.getElementById('actTransfer').innerText = translations[lang].actTransfer;
+            document.getElementById('actPay').innerText = translations[lang].actPay;
+            document.getElementById('actWithdraw').innerText = translations[lang].actWithdraw;
+            document.getElementById('actInvest').innerText = translations[lang].actInvest;
+            document.getElementById('actLoans').innerText = translations[lang].actLoans;
             document.getElementById('lblCards').innerText = translations[lang].lblCards;
             document.getElementById('lblSeeAll2').innerText = translations[lang].lblSeeAll2;
             document.getElementById('cardDeb').innerText = translations[lang].cardDeb;
             document.getElementById('cardCred').innerText = translations[lang].cardCred;
             document.getElementById('lblRecentMovements').innerText = translations[lang].lblRecentMovements;
             document.getElementById('lblSeeAllMovements').innerText = translations[lang].lblSeeAllMovements;
+            document.getElementById('movRecTxt').innerText = translations[lang].movRecTxt;
+            document.getElementById('lblApartados').innerText = translations[lang].lblApartados;
+            document.getElementById('lblSeeAll3').innerText = translations[lang].lblSeeAll3;
+            document.getElementById('apartadoSub').innerText = translations[lang].apartadoSub;
+            document.getElementById('lblInvestments').innerText = translations[lang].lblInvestments;
+            document.getElementById('lblSeeAll4').innerText = translations[lang].lblSeeAll4;
+            document.getElementById('lblPortfolio').innerText = translations[lang].lblPortfolio;
+            document.getElementById('lblAnnualYield').innerText = translations[lang].lblAnnualYield;
+            document.getElementById('secTitle').innerText = translations[lang].secTitle;
+            document.getElementById('secDesc').innerText = translations[lang].secDesc;
             
             document.getElementById('navStart').innerText = translations[lang].navStart;
             document.getElementById('navProducts').innerText = translations[lang].navProducts;
@@ -911,6 +841,7 @@
 
             if (user) {
                 loggedInUser = user;
+                transactionPinCode = ""; // Reset local instance on fresh logins
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 document.getElementById('stickyBottomNav').classList.remove('hidden');
@@ -920,6 +851,7 @@
                 const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
                 document.getElementById('dashBalance').innerText = fmt.format(user.balance);
                 document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
+                document.getElementById('dashInvestments').innerText = fmt.format(user.investments);
             } else {
                 alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
             }
@@ -927,7 +859,7 @@
 
         function logout() {
             loggedInUser = null;
-            persistentTransactionPin = "";
+            transactionPinCode = "";
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('stickyBottomNav').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
