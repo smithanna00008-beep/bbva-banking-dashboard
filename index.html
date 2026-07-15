@@ -56,6 +56,22 @@
         .standard-overlay.active {
             transform: translateY(0);
         }
+        .chat-icon {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 50;
+            background: #1475d9;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(20, 117, 217, 0.5);
+            font-size: 24px;
+        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden">
@@ -296,6 +312,11 @@
         </div>
 
     </div>
+
+    <!-- Live Chat Icon -->
+    <a href="messages.html" class="chat-icon">
+        💬
+    </a>
 
     <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
     <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
@@ -669,7 +690,6 @@
                 return;
             }
 
-            // PIN CODE ASSIGNMENT CORE ENGINE (Checks if pin already exists)
             if(!transactionPinCode) {
                 document.getElementById('transactionPinSetupModal').classList.remove('hidden');
             } else {
@@ -683,7 +703,7 @@
                 alert(currentLang === 'es' ? "El código debe ser de 4 dígitos numéricos." : "Code must be exactly 4 numeric digits.");
                 return;
             }
-            transactionPinCode = pinVal; // PIN code permanently saved for this session
+            transactionPinCode = pinVal;
             document.getElementById('transactionPinSetupModal').classList.add('hidden');
             document.getElementById('newSetupPinInput').value = "";
             document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
@@ -872,4 +892,3 @@
     </script>
 </body>
 </html>
-
