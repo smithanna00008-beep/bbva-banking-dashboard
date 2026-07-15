@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Soporte - BBVA</title>
+    <title>Support - BBVA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
-            background: #041530; 
+            background: #000c1e; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
         .chat-container { 
-            height: calc(100vh - 140px); 
+            height: calc(100vh - 130px); 
         }
-        .glow-header {
-            background: linear-gradient(145deg, rgba(10, 58, 118, 0.4) 0%, rgba(4, 21, 48, 0.6) 100%);
-            box-shadow: 0 4px 30px rgba(20, 117, 217, 0.15);
-            border-bottom: 1px solid rgba(20, 117, 217, 0.2);
-            backdrop-filter: blur(10px);
+        .app-header {
+            background-color: #000000;
+            border-bottom: 1px solid #112233;
         }
         .message-bubble { 
             max-width: 75%; 
@@ -29,8 +27,8 @@
             line-height: 1.4;
         }
         .received { 
-            background-color: rgba(7, 33, 70, 0.85); 
-            border: 1px solid rgba(20, 117, 217, 0.25);
+            background-color: #072146; 
+            border: 1px solid #004481;
             border-bottom-left-radius: 4px; 
             color: #ffffff;
         }
@@ -41,13 +39,13 @@
             color: #ffffff;
         }
         .premium-input {
-            background-color: rgba(2, 11, 24, 0.6);
-            border: 1px solid rgba(20, 117, 217, 0.4);
+            background-color: #020b18;
+            border: 1px solid #004481;
             transition: all 0.3s ease;
         }
         .premium-input:focus {
-            border-color: #1475d9;
-            box-shadow: 0 0 10px rgba(20, 117, 217, 0.5);
+            border-color: #0073ea;
+            box-shadow: 0 0 8px rgba(0, 115, 234, 0.4);
             outline: none;
         }
         .bbva-send-btn {
@@ -61,28 +59,28 @@
 </head>
 <body class="text-white min-h-screen flex flex-col">
 
-    <header class="flex items-center justify-between px-6 py-4 glow-header z-10">
-        <a href="index.html" class="text-blue-400 hover:text-white flex items-center text-sm font-semibold transition">
-            <i class="fa-solid fa-chevron-left mr-2"></i>Atrás
+    <header class="flex items-center justify-between px-4 py-3 app-header z-10">
+        <a href="index.html" class="text-gray-400 hover:text-white flex items-center text-sm transition">
+            <i class="fa-solid fa-chevron-left mr-1.5 text-xs"></i> Back
         </a>
-        <div class="text-center">
-            <p class="font-bold tracking-wider text-base text-white">Soporte BBVA</p>
-            <p class="text-[10px] text-green-400 font-bold flex items-center justify-center gap-1.5 mt-0.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>En línea
+        <div class="text-center mr-8">
+            <p class="font-semibold text-base text-white">Support Chat</p>
+            <p class="text-[11px] text-green-500 font-medium flex items-center justify-center gap-1 mt-0.5">
+                Online
             </p>
         </div>
         <div class="w-8"></div>
     </header>
 
-    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 chat-container bg-[#020b18]">
+    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 chat-container bg-[#000c1e]">
         </div>
 
-    <div class="p-4 border-t border-blue-900/40 bg-[#041530]/90 backdrop-blur-md">
+    <div class="p-4 border-t border-[#112233] bg-[#000c1e]">
         <div class="flex gap-2.5">
-            <input type="text" id="messageInput" placeholder="Escribe un mensaje..." 
-                   class="flex-1 rounded-2xl px-5 py-3.5 text-white premium-input placeholder-gray-500 text-sm">
+            <input type="text" id="messageInput" placeholder="Type a message..." 
+                   class="flex-1 rounded-xl px-5 py-3.5 text-white premium-input placeholder-gray-500 text-sm">
             <button onclick="sendMessage()" 
-                    class="bbva-send-btn text-white px-6 rounded-2xl font-bold transition flex items-center justify-center">
+                    class="bbva-send-btn text-white px-5 rounded-xl font-bold transition flex items-center justify-center">
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </div>
@@ -90,7 +88,7 @@
             <input type="file" id="photoUpload" accept="image/*" class="hidden" onchange="sendPhoto(this)">
             <button onclick="document.getElementById('photoUpload').click()" 
                     class="text-xs text-blue-400 hover:text-blue-300 font-semibold transition flex items-center justify-center mx-auto gap-1.5">
-                <i class="fa-solid fa-camera"></i> Enviar Foto
+                <i class="fa-solid fa-camera"></i> Send Photo
             </button>
         </div>
     </div>
@@ -121,7 +119,7 @@
                     container.scrollTop = container.scrollHeight;
                 }
             } catch (e) {
-                container.innerHTML = '<div class="text-center text-red-400 py-8 text-xs">Error al cargar los mensajes</div>';
+                container.innerHTML = '<div class="text-center text-red-400 py-8 text-xs">Error loading messages</div>';
             }
         }
 
@@ -143,7 +141,7 @@
                 input.value = '';
                 loadMessages();
             } catch (e) {
-                alert("Error al enviar el mensaje");
+                alert("Error sending message");
             }
         }
 
@@ -166,7 +164,7 @@
                     });
                     loadMessages();
                 } catch (e) {
-                    alert("Error al enviar la foto");
+                    alert("Error sending photo");
                 }
             };
             reader.readAsDataURL(file);
