@@ -313,12 +313,10 @@
 
     </div>
 
-    <!-- Live Chat Icon -->
     <a href="messages.html" class="chat-icon">
         💬
     </a>
 
-    <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
     <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('transferOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -372,7 +370,6 @@
         </div>
     </div>
 
-    <!-- 2. PAY SERVICES OVERLAY -->
     <div id="payServicesOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('payServicesOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -404,7 +401,6 @@
         </div>
     </div>
 
-    <!-- 3. CARDLESS CASH OVERLAY -->
     <div id="cardlessCashOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('cardlessCashOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -423,7 +419,6 @@
         </div>
     </div>
 
-    <!-- 4. INVESTMENTS OVERLAY -->
     <div id="investmentsOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('investmentsOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -448,7 +443,6 @@
         </div>
     </div>
 
-    <!-- 5. LOANS OVERLAY -->
     <div id="loansOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('loansOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -468,7 +462,6 @@
         </div>
     </div>
 
-    <!-- 6. SEE ALL OVERLAY -->
     <div id="seeAllOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
             <button onclick="closeStandardOverlay('seeAllOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -494,7 +487,6 @@
         </ul>
     </div>
 
-    <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS (ONCE CREATION AND RE-VERIFY SYSTEM) -->
     <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <i class="fa-solid fa-key text-3xl text-blue-400 mb-3"></i>
@@ -516,7 +508,6 @@
         </div>
     </div>
 
-    <!-- FROZEN RESPONSE ALERT -->
     <div id="accountFrozenAlertModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gradient-to-b from-[#0e1d33] to-[#041530] border-t-4 border-red-500 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
             <div class="w-12 h-12 rounded-full bg-red-950 flex items-center justify-center mx-auto mb-3 text-red-400"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
@@ -552,7 +543,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbz0HryAeUntqX3fu2R5XoVIUMFzi8-4p0AnVrbh6-z1k02xufaZqUB54edPpvwvn0w3vw/exec";
         let currentLang = 'en';
         let allUsers = [];
         let loggedInUser = null;
@@ -872,6 +863,9 @@
                 document.getElementById('dashBalance').innerText = fmt.format(user.balance);
                 document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
                 document.getElementById('dashInvestments').innerText = fmt.format(user.investments);
+                
+                // Save userId globally in localStorage to allow messages.html retrieval
+                localStorage.setItem("userId", user.username);
             } else {
                 alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
             }
@@ -880,6 +874,7 @@
         function logout() {
             loggedInUser = null;
             transactionPinCode = "";
+            localStorage.removeItem("userId");
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('stickyBottomNav').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
