@@ -3,351 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soporte BBVA - Panel de Administración</title>
+    <title>Admin - Support</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #0b141a;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        }
-        .sidebar-bg {
-            background-color: #111b21;
-            border-right: 1px solid #222e35;
-        }
-        .main-chat-bg {
-            background-color: #0b141a;
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-repeat: repeat;
-        }
-        .bubble-in {
-            background-color: #202c33;
-            border-radius: 8px;
-            border-top-left-radius: 0;
-        }
-        .bubble-out {
-            background-color: #005c4b;
-            border-radius: 8px;
-            border-top-right-radius: 0;
-        }
+        body { background-color: #041530; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; }
+        .received { background: #1f1f1f; border-bottom-left-radius: 4px; }
+        .sent { background: #1475d9; color: white; border-bottom-right-radius: 4px; }
     </style>
 </head>
-<body class="text-white min-h-screen flex items-stretch overflow-hidden">
+<body class="text-white min-h-screen flex flex-col">
 
-    <div class="w-1/3 min-w-[320px] max-w-[420px] sidebar-bg flex flex-col">
-        <div class="bg-[#202c33] px-4 py-3.5 flex items-center justify-between border-b border-[#222e35]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white">
-                    <i class="fa-solid fa-user-shield text-base"></i>
-                </div>
-                <h2 class="font-bold text-sm tracking-wide text-gray-200">BBVA Central Support</h2>
-            </div>
-            <button onclick="refreshActiveUsers()" class="text-gray-400 hover:text-white p-2 text-sm transition">
-                <i class="fa-solid fa-rotate"></i> Refresh
-            </button>
-        </div>
+    <header class="flex items-center justify-between px-6 py-4 border-b border-blue-900 bg-[#041530]">
+        <a href="index.html" class="text-blue-400">← Back</a>
+        <h1 class="text-lg font-bold">Admin Support</h1>
+        <div></div>
+    </header>
 
-        <div class="p-3 bg-[#111b21] border-b border-[#222e35]">
-            <div class="relative flex items-center bg-[#202c33] rounded-lg">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 text-xs text-gray-400"></i>
-                <input type="text" id="userSearch" oninput="filterUsers()" placeholder="Search active users..." class="w-full pl-9 pr-4 py-2 bg-transparent text-xs text-white border-none focus:outline-none placeholder-gray-500">
-            </div>
-        </div>
-
-        <div id="activeUserChatsList" class="flex-1 overflow-y-auto divide-y divide-[#222e35]">
-            <p class="text-center text-xs text-gray-500 py-10">Searching for new client conversations...</p>
-        </div>
+    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 bg-[#020b18]">
+        <!-- Messages load here -->
     </div>
 
-    <div class="flex-1 flex flex-col relative bg-[#0b141a]">
-        
-        <div id="blankState" class="absolute inset-0 flex flex-col items-center justify-center bg-[#222e35]/30 z-10 text-center p-8">
-            <div class="w-20 h-20 bg-blue-900/40 rounded-full flex items-center justify-center text-blue-400 mb-4 text-3xl">
-                <i class="fa-solid fa-comments"></i>
-            </div>
-            <h2 class="text-lg font-bold text-gray-200">Secure Live Chat Console</h2>
-            <p class="text-xs text-gray-500 max-w-xs mt-1">Select an active user from the sidebar to view communication records and send secure replies.</p>
-        </div>
-
-        <div id="activeChatBox" class="flex-1 flex flex-col h-full hidden">
-            <div class="bg-[#202c33] px-5 py-3.5 flex items-center justify-between shadow-md">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-white text-sm uppercase" id="currentChatAvatar">
-                        ?
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white" id="currentChatUsername">User</h3>
-                        <p class="text-[10px] text-gray-400" id="currentChatSubtext">Account verified</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="adminMessageLog" class="flex-1 overflow-y-auto p-6 space-y-4 main-chat-bg flex flex-col">
-                </div>
-
-            <div id="adminImagePreview" class="hidden bg-[#1f2c34] p-4 border-t border-gray-800 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img id="adminThumbnail" class="w-16 h-16 rounded object-cover border border-emerald-500" src="" alt="attachment preview">
-                    <span class="text-xs text-gray-300">Photo attached for transmission</span>
-                </div>
-                <button onclick="clearAdminAttachment()" class="text-red-400 hover:text-red-300 text-sm font-bold px-3 py-1.5"><i class="fa-solid fa-trash-can mr-1"></i>Discard</button>
-            </div>
-
-            <div class="bg-[#202c33] px-4 py-3 flex items-center gap-3">
-                <button onclick="document.getElementById('adminFileInput').click()" class="text-gray-400 hover:text-white p-2 text-base transition">
-                    <i class="fa-solid fa-paperclip"></i>
-                </button>
-                <input type="file" id="adminFileInput" accept="image/*" class="hidden" onchange="previewAdminImage()">
-                
-                <input type="text" id="adminInputMessage" placeholder="Type response..." class="flex-1 bg-[#2a3942] text-xs p-3 rounded-lg text-white border-none focus:outline-none placeholder-gray-400 focus:ring-1 focus:ring-emerald-500">
-                
-                <button onclick="sendAdminReply()" class="w-10 h-10 rounded-full bg-[#00a884] hover:bg-[#008f72] flex items-center justify-center text-white text-sm transition shadow-md">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
+    <div class="p-4 border-t border-blue-900 bg-[#041530]">
+        <div class="flex gap-2">
+            <input type="text" id="replyInput" placeholder="Reply to user..." 
+                   class="flex-1 bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white focus:outline-none">
+            <button onclick="sendAdminReply()" class="bg-blue-600 px-6 rounded-2xl">Send</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbymAAf9TawLIqdaNQf-cMPx_hCZ93YjKWh9GilrCRIOxh71svT1iwC17WbBU6KXHYvNMw/exec";
-        
-        let allMessages = [];
-        let activeUsersList = [];
-        let currentlySelectedUserId = null;
-        let adminBase64Image = "";
-        let syncTimer = null;
-        let knownMsgIds = new Set();
+        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+        let currentUserId = null; // You can change this to target specific user
 
-        async function fetchAllMessagesFromSheet() {
+        async function loadAdminMessages() {
+            const container = document.getElementById('chatContainer');
             try {
-                // Fetching via a dummy user 'support_agent' returns all data rows mapped to it
-                const res = await fetch(`${API_URL}?action=getMessages&userId=support_agent`);
-                allMessages = await res.json();
-                analyzeUsersFromMessages();
-            } catch(e) {
-                console.error("Critical communications sync failed:", e);
-            }
-        }
+                const res = await fetch(`${API_URL}?action=getMessages&userId=${currentUserId || 'all'}`);
+                const result = await res.json();
 
-        function analyzeUsersFromMessages() {
-            const userActivityMap = {};
-            
-            allMessages.forEach(msg => {
-                const clientName = msg.senderId === "support_agent" ? msg.receiverId : msg.senderId;
-                if (!clientName || clientName === "support_agent") return;
-
-                if (!userActivityMap[clientName]) {
-                    userActivityMap[clientName] = {
-                        username: clientName,
-                        lastMessageText: msg.textOrImage.startsWith('data:image/') ? "📷 Photo" : msg.textOrImage,
-                        timestamp: msg.timestamp
-                    };
-                } else {
-                    // Update if this message is newer
-                    const currentLast = new Date(userActivityMap[clientName].timestamp);
-                    const incoming = new Date(msg.timestamp);
-                    if (incoming > currentLast) {
-                        userActivityMap[clientName].lastMessageText = msg.textOrImage.startsWith('data:image/') ? "📷 Photo" : msg.textOrImage;
-                        userActivityMap[clientName].timestamp = msg.timestamp;
-                    }
-                }
-            });
-
-            // Convert map to array and sort by most recent conversation timestamp
-            activeUsersList = Object.values(userActivityMap).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-            renderUsersList();
-        }
-
-        function renderUsersList() {
-            const container = document.getElementById('activeUserChatsList');
-            container.innerHTML = "";
-
-            if (activeUsersList.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-10">No messages found in Chat_Database.</p>`;
-                return;
-            }
-
-            activeUsersList.forEach(user => {
-                const isActive = user.username === currentlySelectedUserId;
-                const activeClass = isActive ? "bg-[#2a3942]" : "hover:bg-[#202c33]/40";
-                
-                const timeStr = new Date(user.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const bubbleAvatar = user.username.charAt(0).toUpperCase();
-
-                const item = document.createElement('div');
-                item.className = `flex items-center justify-between p-3.5 cursor-pointer transition ${activeClass}`;
-                item.onclick = () => selectUserToChat(user.username);
-
-                item.innerHTML = `
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center font-bold text-sm text-white select-none">
-                            ${bubbleAvatar}
-                        </div>
-                        <div class="overflow-hidden">
-                            <h4 class="text-xs font-semibold text-gray-100">${user.username}</h4>
-                            <p class="text-[11px] text-gray-400 mt-0.5 truncate max-w-[180px]">${user.lastMessageText}</p>
+                container.innerHTML = result.messages.map(msg => `
+                    <div class="flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}">
+                        <div class="message-bubble ${msg.sender === 'admin' ? 'sent' : 'received'}">
+                            ${msg.message}
+                            <p class="text-[10px] mt-1 opacity-75">${msg.timestamp}</p>
                         </div>
                     </div>
-                    <span class="text-[10px] text-gray-500 font-mono self-start mt-1">${timeStr}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function filterUsers() {
-            const query = document.getElementById('userSearch').value.toLowerCase();
-            const items = document.querySelectorAll('#activeUserChatsList > div');
-            items.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(query) ? "flex" : "none";
-            });
-        }
-
-        function selectUserToChat(userId) {
-            currentlySelectedUserId = userId;
-            document.getElementById('blankState').classList.add('hidden');
-            document.getElementById('activeChatBox').classList.remove('hidden');
-
-            document.getElementById('currentChatUsername').innerText = userId;
-            document.getElementById('currentChatAvatar').innerText = userId.charAt(0).toUpperCase();
-
-            // Clear display tracker log state and redraw cleanly
-            knownMsgIds.clear();
-            document.getElementById('adminMessageLog').innerHTML = "";
-            
-            renderSelectedMessages();
-        }
-
-        function renderSelectedMessages() {
-            if (!currentlySelectedUserId) return;
-
-            const container = document.getElementById('adminMessageLog');
-            let newlyAdded = false;
-
-            allMessages.forEach(msg => {
-                // Filter messages belonging only to currently selected conversation
-                const matchesUser = (msg.senderId === currentlySelectedUserId && msg.receiverId === "support_agent") || 
-                                    (msg.senderId === "support_agent" && msg.receiverId === currentlySelectedUserId);
-                
-                if (matchesUser && !knownMsgIds.has(msg.messageId)) {
-                    knownMsgIds.add(msg.messageId);
-                    newlyAdded = true;
-
-                    const isSelf = msg.senderId === "support_agent";
-                    const row = document.createElement('div');
-                    row.className = `flex w-full ${isSelf ? 'justify-end' : 'justify-start'}`;
-
-                    const bubbleClass = isSelf ? 'bubble-out' : 'bubble-in';
-                    const renderData = msg.textOrImage.startsWith('data:image/')
-                        ? `<a href="${msg.textOrImage}" target="_blank" title="Click to view large"><img src="${msg.textOrImage}" class="max-w-[280px] max-h-[220px] rounded-lg mt-1 block hover:opacity-90"></a>`
-                        : `<p class="text-xs text-white leading-relaxed whitespace-pre-wrap">${msg.textOrImage}</p>`;
-
-                    const msgDate = new Date(msg.timestamp);
-                    const time = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                    row.innerHTML = `
-                        <div class="${bubbleClass} max-w-[70%] p-2.5 px-3.5 shadow relative">
-                            ${renderData}
-                            <div class="text-[9px] text-gray-400 mt-1 flex justify-end items-center gap-0.5">
-                                <span>${time}</span>
-                                ${isSelf ? '<i class="fa-solid fa-check-double text-emerald-400 text-[10px]"></i>' : ''}
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(row);
-                }
-            });
-
-            if (newlyAdded) {
+                `).join('');
                 container.scrollTop = container.scrollHeight;
+            } catch (e) {
+                container.innerHTML = '<div class="text-red-400 text-center py-8">Failed to load messages</div>';
             }
-        }
-
-        function previewAdminImage() {
-            const input = document.getElementById('adminFileInput');
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Compress image to Base64 safely
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    const maxDim = 500;
-                    if (width > maxDim || height > maxDim) {
-                        if (width > height) {
-                            height *= maxDim / width;
-                            width = maxDim;
-                        } else {
-                            width *= maxDim / height;
-                            height = maxDim;
-                        }
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    adminBase64Image = canvas.toDataURL('image/jpeg', 0.7);
-
-                    document.getElementById('adminThumbnail').src = adminBase64Image;
-                    document.getElementById('adminImagePreview').classList.remove('hidden');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function clearAdminAttachment() {
-            adminBase64Image = "";
-            document.getElementById('adminFileInput').value = "";
-            document.getElementById('adminImagePreview').classList.add('hidden');
         }
 
         async function sendAdminReply() {
-            const textInput = document.getElementById('adminInputMessage');
-            const messageText = textInput.value.trim();
-
-            if (!messageText && !adminBase64Image) return;
-            if (!currentlySelectedUserId) return;
-
-            const payloadContent = adminBase64Image ? adminBase64Image : messageText;
-
-            // Clear fields instantly
-            textInput.value = "";
-            clearAdminAttachment();
+            const input = document.getElementById('replyInput');
+            const text = input.value.trim();
+            if (!text) return;
 
             try {
                 await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({
-                        action: "sendMessage",
-                        senderId: "support_agent",
-                        receiverId: currentlySelectedUserId,
-                        textOrImage: payloadContent
+                        action: "submitMessage",
+                        senderId: "admin",
+                        receiverId: currentUserId || "user123", // Change as needed
+                        message: text
                     })
                 });
-                await refreshActiveUsers();
-            } catch(e) {
-                console.error("Admin dispatch failure:", e);
+                input.value = '';
+                loadAdminMessages();
+            } catch (e) {
+                alert("Failed to send reply");
             }
         }
 
-        async function refreshActiveUsers() {
-            await fetchAllMessagesFromSheet();
-            if (currentlySelectedUserId) {
-                renderSelectedMessages();
-            }
-        }
-
-        window.onload = () => {
-            fetchAllMessagesFromSheet();
-            // Background interval keeps database messaging fully aligned in real-time
-            syncTimer = setInterval(refreshActiveUsers, 4000);
-        };
+        // Load messages when page opens
+        loadAdminMessages();
+        setInterval(loadAdminMessages, 3000);
     </script>
 </body>
 </html>
