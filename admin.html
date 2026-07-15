@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Soporte BBVA</title>
+    <title>Admin - BBVA Support</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #041530; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #000c1e; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .sidebar { background-color: #000000; border-right: 1px solid #112233; }
         .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; }
         .received { 
-            background: rgba(7, 33, 70, 0.85); 
-            border: 1px solid rgba(20, 117, 217, 0.25);
+            background: #072146; 
+            border: 1px solid #004481;
             border-bottom-left-radius: 4px; 
             color: #ffffff;
         }
@@ -20,57 +21,57 @@
             border-bottom-right-radius: 4px; 
             color: white; 
         }
-        .sidebar {
-            background-color: #030d1e;
-            border-right: 1px solid rgba(20, 117, 217, 0.2);
-        }
         .premium-input {
-            background-color: rgba(2, 11, 24, 0.6);
-            border: 1px solid rgba(20, 117, 217, 0.4);
+            background-color: #020b18;
+            border: 1px solid #004481;
             transition: all 0.3s ease;
         }
         .premium-input:focus {
-            border-color: #1475d9;
-            box-shadow: 0 0 10px rgba(20, 117, 217, 0.5);
+            border-color: #0073ea;
+            box-shadow: 0 0 8px rgba(0, 115, 234, 0.4);
             outline: none;
         }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col">
 
-    <header class="flex items-center justify-between px-6 py-4 border-b border-blue-900 bg-[#041530] shrink-0">
-        <h1 class="text-lg font-bold tracking-wider text-blue-400"><i class="fa-solid fa-headset mr-2"></i>BBVA Admin Support</h1>
-        <div id="activeUserLabel" class="text-sm font-semibold text-slate-300">Selecciona un usuario para chatear</div>
+    <!-- Header -->
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#112233] bg-[#000c1e] shrink-0">
+        <h1 class="text-lg font-bold tracking-wider text-white"><i class="fa-solid fa-shield-halved mr-2 text-blue-500"></i>BBVA Admin Center</h1>
+        <div id="activeUserLabel" class="text-xs font-medium text-gray-400 italic">Select a user to begin</div>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
         
+        <!-- Sidebar -->
         <aside class="w-1/4 sidebar flex flex-col overflow-y-auto">
-            <div class="p-4 border-b border-blue-900/50 bg-[#041530]/50">
-                <p class="text-xs font-bold uppercase tracking-wider text-blue-500">Chats Activos</p>
+            <div class="p-4 border-b border-[#112233]">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-blue-500">Active Conversations</p>
             </div>
-            <div id="userListContainer" class="flex-1 divide-y divide-blue-950/40">
-                <div class="text-center text-xs text-slate-500 py-8">Cargando usuarios...</div>
+            <div id="userListContainer" class="flex-1 divide-y divide-[#112233]">
+                <div class="text-center text-xs text-gray-500 py-8">Loading sessions...</div>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col bg-[#020b18]">
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col bg-[#000c1e]">
             <div id="chatContainer" class="flex-1 p-6 overflow-y-auto space-y-4">
-                <div class="h-full flex items-center justify-center text-slate-500 text-sm">
+                <div class="h-full flex items-center justify-center text-gray-600 text-sm">
                     <div class="text-center">
-                        <i class="fa-regular fa-comments text-4xl mb-3 text-blue-900"></i>
-                        <p>Selecciona un chat en la barra lateral para empezar</p>
+                        <i class="fa-regular fa-comments text-4xl mb-3 text-blue-900/30"></i>
+                        <p>No active session selected</p>
                     </div>
                 </div>
             </div>
 
-            <div class="p-4 border-t border-blue-900/40 bg-[#041530] shrink-0">
+            <!-- Reply Box -->
+            <div class="p-4 border-t border-[#112233] bg-[#000c1e] shrink-0">
                 <div class="flex gap-2">
-                    <input type="text" id="replyInput" placeholder="Escribe una respuesta para el usuario..." disabled
-                           class="flex-1 rounded-2xl px-5 py-3.5 text-white premium-input placeholder-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    <input type="text" id="replyInput" placeholder="Type a response..." disabled
+                           class="flex-1 rounded-xl px-5 py-3.5 text-white premium-input placeholder-gray-500 text-sm disabled:opacity-50"
                            onkeypress="if(event.key === 'Enter') sendAdminReply()">
                     <button id="sendBtn" onclick="sendAdminReply()" disabled
-                            class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-2xl font-bold transition flex items-center justify-center disabled:opacity-50">
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition flex items-center justify-center disabled:opacity-50">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
@@ -81,19 +82,14 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
         let currentUserId = null;
-        let knownUsers = new Set();
 
-        // 1. Fetch all conversations and build/update the sidebar
         async function updateSidebar() {
             try {
                 const res = await fetch(`${API_URL}?action=getMessages&userId=all`);
                 const result = await res.json();
-
                 if (result.status === "success") {
                     const listContainer = document.getElementById('userListContainer');
                     const chats = result.messages;
-                    
-                    // Extract all unique users who are not "admin"
                     const activeUsers = new Set();
                     chats.forEach(msg => {
                         if (msg.sender !== 'admin') activeUsers.add(msg.sender);
@@ -101,60 +97,44 @@
                     });
 
                     if (activeUsers.size === 0) {
-                        listContainer.innerHTML = '<div class="text-center text-xs text-slate-500 py-8">No hay chats activos</div>';
+                        listContainer.innerHTML = '<div class="text-center text-xs text-gray-500 py-8">No active chats</div>';
                         return;
                     }
 
-                    // Render user list
-                    listContainer.innerHTML = Array.from(activeUsers).map(user => {
-                        const isSelected = user === currentUserId;
-                        return `
-                            <div onclick="selectUser('${user}')" 
-                                 class="p-4 cursor-pointer transition flex items-center justify-between ${isSelected ? 'bg-blue-950/60 border-l-4 border-blue-500' : 'hover:bg-blue-950/20'}">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-blue-900/60 flex items-center justify-center text-white text-xs font-bold">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-bold text-white">${user}</p>
-                                        <p class="text-[10px] text-green-400 mt-0.5">Hilo de chat</p>
-                                    </div>
+                    listContainer.innerHTML = Array.from(activeUsers).map(user => `
+                        <div onclick="selectUser('${user}')" 
+                             class="p-4 cursor-pointer transition flex items-center justify-between ${user === currentUserId ? 'bg-blue-950/30 border-l-4 border-blue-500' : 'hover:bg-blue-950/10'}">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-blue-900/40 flex items-center justify-center text-blue-300 text-xs font-bold">
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-blue-900"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-white">${user}</p>
+                                    <p class="text-[9px] text-green-500 mt-0.5">Online</p>
+                                </div>
                             </div>
-                        `;
-                    }).join('');
+                        </div>
+                    `).join('');
                 }
-            } catch (e) {
-                console.error("Error loading sidebar users:", e);
-            }
+            } catch (e) { console.error("Sidebar sync error"); }
         }
 
-        // 2. Click to select a user and load their specific thread
         function selectUser(userId) {
             currentUserId = userId;
-            document.getElementById('activeUserLabel').innerText = `Chateando con: ${userId}`;
-            
-            // Enable inputs
-            const replyInput = document.getElementById('replyInput');
-            const sendBtn = document.getElementById('sendBtn');
-            replyInput.removeAttribute('disabled');
-            replyInput.placeholder = `Escribe un mensaje para ${userId}...`;
-            sendBtn.removeAttribute('disabled');
-            
+            document.getElementById('activeUserLabel').innerText = `Chatting with: ${userId}`;
+            document.getElementById('replyInput').removeAttribute('disabled');
+            document.getElementById('sendBtn').removeAttribute('disabled');
             updateSidebar();
             loadAdminMessages();
         }
 
-        // 3. Load message thread for selected user
         async function loadAdminMessages() {
             if (!currentUserId) return;
             const container = document.getElementById('chatContainer');
             try {
                 const res = await fetch(`${API_URL}?action=getMessages&userId=${currentUserId}`);
                 const result = await res.json();
-
-                if (result.status === "success" && result.messages) {
+                if (result.status === "success") {
                     container.innerHTML = result.messages.map(msg => `
                         <div class="flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}">
                             <div class="message-bubble ${msg.sender === 'admin' ? 'sent' : 'received'} shadow-md">
@@ -165,41 +145,26 @@
                     `).join('');
                     container.scrollTop = container.scrollHeight;
                 }
-            } catch (e) {
-                container.innerHTML = '<div class="text-red-400 text-center py-8 text-xs">Error al cargar la conversación</div>';
-            }
+            } catch (e) { container.innerHTML = '<div class="text-red-400 text-center py-8 text-xs">Load error</div>'; }
         }
 
-        // 4. Send Admin Reply
         async function sendAdminReply() {
             const input = document.getElementById('replyInput');
             const text = input.value.trim();
             if (!text || !currentUserId) return;
-
             try {
                 await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({
-                        action: "submitMessage",
-                        senderId: "admin",
-                        receiverId: currentUserId,
-                        message: text
-                    })
+                    body: JSON.stringify({ action: "submitMessage", senderId: "admin", receiverId: currentUserId, message: text })
                 });
                 input.value = '';
                 loadAdminMessages();
-            } catch (e) {
-                alert("Error al enviar la respuesta.");
-            }
+            } catch (e) { alert("Sending failed."); }
         }
 
-        // Auto-refresh loops
         updateSidebar();
-        setInterval(() => {
-            updateSidebar();
-            loadAdminMessages();
-        }, 3000);
+        setInterval(() => { updateSidebar(); loadAdminMessages(); }, 3000);
     </script>
 </body>
 </html>
