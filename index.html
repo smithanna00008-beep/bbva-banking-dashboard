@@ -1,323 +1,875 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <base target="_top">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    .whatsapp-bg { background-color: #efeae2; }
-    .chat-bubble-client { background-color: #d9fdd3; }
-    .chat-bubble-admin { background-color: #ffffff; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BBVA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #041530; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glow-box {
+            background: linear-gradient(145deg, rgba(10, 58, 118, 0.4) 0%, rgba(4, 21, 48, 0.6) 100%);
+            box-shadow: 0 0 40px rgba(20, 117, 217, 0.25), inset 0 0 20px rgba(20, 117, 217, 0.1);
+            border: 1px solid rgba(20, 117, 217, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .premium-input {
+            background-color: rgba(2, 11, 24, 0.5);
+            border: 1px solid rgba(20, 117, 217, 0.4);
+            transition: all 0.3s ease;
+        }
+        .premium-input:focus {
+            border-color: #1475d9;
+            box-shadow: 0 0 10px rgba(20, 117, 217, 0.5);
+            outline: none;
+        }
+        .bbva-btn {
+            background: linear-gradient(90deg, #0073ea 0%, #0056b3 100%);
+            box-shadow: 0 4px 15px rgba(0, 115, 234, 0.4);
+        }
+        .bbva-btn:hover {
+            background: linear-gradient(90deg, #0080ff 0%, #0066cc 100%);
+        }
+        .card-glow-blue {
+            background: linear-gradient(135deg, #072146 0%, #0a3a76 100%);
+        }
+        .card-glow-gold {
+            background: linear-gradient(135deg, #a48130 0%, #cca356 100%);
+        }
+        .bottom-nav {
+            background-color: #030d1e;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .operar-btn {
+            background: radial-gradient(circle, #2575fc 0%, #1a4cb0 100%);
+            box-shadow: 0 4px 20px rgba(37, 117, 252, 0.6);
+        }
+        .standard-overlay {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(100%);
+        }
+        .standard-overlay.active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+<body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden">
 
-  <div id="auth-box" class="w-full max-w-md bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-extrabold tracking-tight text-blue-500"><i class="fa-solid fa-vault mr-2"></i>Apex Portal</h1>
-      <p class="text-slate-400 mt-2" id="auth-title">Access your global asset accounts</p>
+    <div class="absolute top-4 right-4 z-50">
+        <button id="langBtn" onclick="toggleLanguage()" class="bg-black bg-opacity-40 text-xs font-bold px-3 py-1 rounded border border-blue-500 tracking-wider">
+            IS
+        </button>
     </div>
 
-    <div id="login-form">
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-slate-300">Email Address</label>
-          <input type="email" id="login-email" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+    <div id="authContainer" class="w-full max-w-md glow-box p-8 rounded-xl mt-12 mx-4">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold tracking-widest text-white brightness-125">BBVA</h1>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-300">Password</label>
-          <input type="password" id="login-password" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+
+        <div id="signUpForm">
+            <h2 id="signUpTitle" class="text-2xl font-normal mb-6 text-gray-100">Create Account</h2>
+            <div class="space-y-4">
+                <input type="text" id="regUser" placeholder="Username" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="text" id="regName" placeholder="Full Name" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="email" id="regEmail" placeholder="E-mail" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="text" id="regPhone" placeholder="Phone Number" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="password" id="regPass" placeholder="Password" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+            </div>
+            <button onclick="handleSignUp()" id="submitSignUpBtn" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Register</button>
+            <p class="text-sm mt-6 text-center text-gray-400">
+                <span id="haveAccountText">Already have an account?</span> 
+                <a href="#" onclick="showLogin()" class="text-blue-400 hover:underline ml-1" id="loginLinkText">Log In</a>
+            </p>
         </div>
-        <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 p-3 rounded-lg font-bold transition">Sign In</button>
-      </div>
-      <p class="text-center text-sm text-slate-400 mt-6">Don't have an account? <span onclick="toggleAuth(false)" class="text-blue-500 cursor-pointer hover:underline">Sign up here</span></p>
+
+        <div id="loginForm" class="hidden">
+            <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Iniciar Sesión</h2>
+            <div class="space-y-4">
+                <input type="text" id="loginUser" placeholder="Usuario" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="password" id="loginPass" placeholder="Contraseña" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+            </div>
+            <button onclick="handleLogin()" id="loginBtnText" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Entrar</button>
+            <p class="text-sm mt-6 text-center text-gray-400">
+                <span id="noAccountText">¿No tienes cuenta?</span> 
+                <a href="#" onclick="showSignUp()" class="text-blue-400 hover:underline ml-1" id="signUpLinkText">Regístrate</a>
+            </p>
+        </div>
     </div>
 
-    <div id="signup-form" class="hidden">
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-slate-300">Full Name</label>
-          <input type="text" id="reg-name" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-300">Email Address</label>
-          <input type="email" id="reg-email" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-300">Password</label>
-          <input type="password" id="reg-pass" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <button onclick="handleSignup()" class="w-full bg-green-600 hover:bg-green-500 p-3 rounded-lg font-bold transition">Register Account</button>
-      </div>
-      <p class="text-center text-sm text-slate-400 mt-6">Already registered? <span onclick="toggleAuth(true)" class="text-blue-500 cursor-pointer hover:underline">Log in here</span></p>
-    </div>
-  </div>
-
-  <div id="dashboard-container" class="hidden w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6 p-2 lg:p-6">
-    
-    <div class="lg:col-span-2 space-y-6">
-      
-      <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg grid grid-cols-2 gap-4">
-        <div class="p-4 bg-slate-900 rounded-xl">
-          <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Available Balance</p>
-          <h2 id="bal-available" class="text-2xl lg:text-3xl font-extrabold mt-1 text-green-400">$0.00</h2>
-        </div>
-        <div class="p-4 bg-slate-900 rounded-xl">
-          <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Investment Balance</p>
-          <h2 id="bal-investment" class="text-2xl lg:text-3xl font-extrabold mt-1 text-blue-400">$0.00</h2>
-        </div>
-      </div>
-
-      <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
-        <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fa-solid fa-paper-plane mr-2 text-blue-500"></i>Send Global Transfer</h3>
+    <div id="dashboardContainer" class="w-full max-w-md hidden px-4 mt-4">
         
+        <div class="flex justify-between items-center mb-6">
+            <i class="fa-solid fa-bars text-xl cursor-pointer"></i>
+            <h1 class="text-2xl font-bold tracking-wider">BBVA</h1>
+            <div class="relative cursor-pointer">
+                <i class="fa-regular fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-blue-500 w-2 h-2 rounded-full"></span>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-end mb-4">
+            <div>
+                <div class="flex items-center gap-1 text-gray-300 text-lg">
+                    <span id="greetingDay">Hola,</span>
+                    <span id="userGreetingName" class="font-bold text-white">Alejandro</span>
+                </div>
+                <p class="text-gray-400 text-xs mt-0.5" id="dateLabel">Miércoles 22 de mayo, 2024</p>
+            </div>
+            <button onclick="logout()" class="bg-gray-900 bg-opacity-40 text-gray-400 hover:text-white text-xs px-3 py-1 rounded border border-gray-700">Logout</button>
+        </div>
+
+        <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-semibold text-gray-200" id="lblProducts">Mis productos</span>
+            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll1">Ver todos</span>
+        </div>
+
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 mb-5 relative overflow-hidden shadow-xl">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-sm font-medium text-white" id="cardLabel">Cuenta de Cheques</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">• • 1234</p>
+                </div>
+                <i class="fa-solid fa-ellipsis-vertical text-gray-400 cursor-pointer"></i>
+            </div>
+            <div class="mt-4">
+                <p class="text-[11px] text-gray-400" id="availableLabel">Saldo disponible</p>
+                <div class="flex items-baseline mt-0.5">
+                    <p class="text-3xl font-bold tracking-tight text-white" id="dashBalance">$ 0.00</p>
+                </div>
+                <p class="text-[11px] text-gray-400 mt-1" id="actualLabel">Saldo actual: $ 0.00</p>
+            </div>
+            <p class="text-xs text-blue-400 font-semibold mt-4 cursor-pointer" id="lblMovementsLink">Ver movimientos</p>
+            
+            <div class="absolute right-4 bottom-8 w-24 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-1.5 flex flex-col justify-between opacity-95 shadow-md border border-blue-500">
+                <div class="flex justify-between items-center">
+                    <span class="text-[6px] font-bold tracking-widest text-white">BBVA</span>
+                    <span class="text-[5px] text-blue-300">Débito</span>
+                </div>
+                <div class="w-3.5 h-2.5 bg-yellow-400 bg-opacity-90 rounded-sm"></div>
+                <div class="flex justify-between items-center">
+                    <span class="text-[6px] text-gray-300">• • • • 1234</span>
+                    <span class="text-[8px] italic font-bold text-white">VISA</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-2 mb-6 text-center">
+            <div onclick="openStandardOverlay('transferOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-arrow-right-arrow-left text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">Transferir</span>
+            </div>
+            <div onclick="openStandardOverlay('payServicesOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-receipt text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actPay">Pagar servicios</span>
+            </div>
+            <div onclick="openStandardOverlay('cardlessCashOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-mobile-screen text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actWithdraw">Retirar sin tarjeta</span>
+            </div>
+            <div onclick="openStandardOverlay('investmentsOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-chart-pie text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actInvest">Inversiones</span>
+            </div>
+            <div onclick="openStandardOverlay('loansOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-hand-holding-dollar text-blue-400 text-xs"></i></div>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actLoans">Préstamos</span>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-semibold text-gray-200" id="lblCards">Tarjetas</span>
+            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll2">Ver todas</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="card-glow-blue p-3.5 rounded-xl border border-blue-900 flex flex-col justify-between h-24 relative shadow-md">
+                <div class="flex justify-between items-start"><span class="text-[9px] font-bold">BBVA</span><span class="text-[8px] text-gray-300" id="cardDeb">Débito</span></div>
+                <div class="flex justify-between items-end"><span class="text-[10px] text-gray-300">• • 1234</span><span class="text-xs italic font-bold">VISA</span></div>
+            </div>
+            <div class="card-glow-gold p-3.5 rounded-xl border border-yellow-700/30 flex flex-col justify-between h-24 relative shadow-md">
+                <div class="flex justify-between items-start"><span class="text-[9px] font-bold text-amber-100">BBVA</span><span class="text-[8px] text-amber-200 font-medium" id="cardCred">Crédito</span></div>
+                <div class="flex justify-between items-end"><span class="text-[10px] text-amber-100">• • 5678</span><span class="text-xs italic font-bold text-amber-100">VISA</span></div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Movimientos recientes</span>
+            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">Ver todas</span>
+        </div>
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md" id="movementsList">
+            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-950 flex items-center justify-center text-emerald-400 text-sm"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div>
+                        <p class="text-xs font-semibold text-white">Supermercado Chedraui</p>
+                        <p class="text-[10px] text-gray-400">21 mayo 2024</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-white">-$1,200.00</span>
+                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+                </div>
+            </div>
+            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-950 flex items-center justify-center text-emerald-400 text-sm"><i class="fa-solid fa-coffee"></i></div>
+                    <div>
+                        <p class="text-xs font-semibold text-white">Starbucks</p>
+                        <p class="text-[10px] text-gray-400">20 mayo 2024</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-white">-$95.00</span>
+                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+                </div>
+            </div>
+            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-sm"><i class="fa-solid fa-arrow-down-long"></i></div>
+                    <div>
+                        <p class="text-xs font-semibold text-white" id="movRecTxt">Transferencia recibida</p>
+                        <p class="text-[10px] text-gray-400">20 mayo 2024</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-emerald-400">+$5,800.00</span>
+                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-semibold text-gray-200" id="lblApartados">Apartados</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll3">Ver todos</span>
+                    </div>
+                    <div class="flex items-center gap-2 my-2">
+                        <div class="w-7 h-7 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-xs"><i class="fa-solid fa-piggy-bank"></i></div>
+                        <div>
+                            <p class="text-[9px] text-gray-400">Vacaciones Europa</p>
+                            <p class="text-sm font-bold">$ 25,000.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[8px] text-gray-400 mb-1" id="apartadoSub">de $ 50,000.00</p>
+                    <div class="w-full bg-blue-950 h-1 rounded-full overflow-hidden">
+                        <div class="bg-blue-500 h-full w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-semibold text-gray-200" id="lblInvestments">Inversiones</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll4">Ver todos</span>
+                    </div>
+                    <p class="text-[9px] text-gray-400" id="lblPortfolio">Portafolio Total</p>
+                    <p class="text-base font-bold text-white mt-0.5" id="dashInvestments">$ 0.00</p>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                    <div>
+                        <p class="text-[8px] text-gray-400" id="lblAnnualYield">Rendimiento anual</p>
+                        <p class="text-[10px] text-emerald-400 font-bold" id="dashYield">+12.35%</p>
+                    </div>
+                    <i class="fa-solid fa-chart-line text-emerald-400 text-lg opacity-85"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 flex justify-between items-center shadow-md mb-8 cursor-pointer hover:bg-blue-950/20 transition">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-blue-400 text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <p class="text-xs font-bold text-white" id="secTitle">Centro de Seguridad</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5" id="secDesc">Protege tu información y tus operaciones.</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
+        </div>
+
+    </div>
+
+    <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
+    <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('transferOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Transfer</h2>
+            <div></div>
+        </div>
         <div class="space-y-4">
-          <div>
-            <label class="block text-sm text-slate-400">Destination Country</label>
-            <select id="tx-country" onchange="updateBankOptions()" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-              <option value="">Select Country</option>
-              <option value="USA">United States (USA)</option>
-              <option value="UK">United Kingdom (UK)</option>
-              <option value="Canada">Canada</option>
-              <option value="Mexico">Mexico</option>
-              <option value="Brazil">Brazil</option>
-              <option value="Manual">Not listed? (Add Manually)</option>
+            <label class="block text-xs text-gray-400 font-semibold uppercase">Select Recipient Bank</label>
+            <select id="transferBankSelect" onchange="checkManualBankOption()" class="w-full p-3 rounded bg-[#020b18] border border-blue-900 text-white text-xs focus:outline-none focus:border-blue-500">
+                <optgroup label="Mexico">
+                    <option value="bbva">BBVA México</option>
+                    <option value="banamex">Citibanamex</option>
+                    <option value="santander_mx">Santander México</option>
+                    <option value="banorte">Banorte</option>
+                </optgroup>
+                <optgroup label="United States">
+                    <option value="chase">Chase Bank</option>
+                    <option value="bofa">Bank of America</option>
+                    <option value="wf">Wells Fargo</option>
+                    <option value="citi_us">Citigroup</option>
+                </optgroup>
+                <optgroup label="United Kingdom">
+                    <option value="barclays">Barclays</option>
+                    <option value="hsbc_uk">HSBC UK</option>
+                    <option value="lloyds">Lloyds Bank</option>
+                </optgroup>
+                <optgroup label="Canada">
+                    <option value="rbc">Royal Bank of Canada (RBC)</option>
+                    <option value="td">TD Bank Canada</option>
+                    <option value="bmo">Bank of Montreal (BMO)</option>
+                </optgroup>
+                <optgroup label="Brazil">
+                    <option value="itau">Itaú Unibanco</option>
+                    <option value="bradesco">Banco Bradesco</option>
+                    <option value="banco_brasil">Banco do Brasil</option>
+                    <option value="nubank">Nubank</option>
+                </optgroup>
+                <option value="manual">-- Other Bank (Enter Manually) --</option>
             </select>
-          </div>
-
-          <div id="bank-select-wrapper">
-            <label class="block text-sm text-slate-400">Select Bank</label>
-            <select id="tx-bank" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-              <option value="">Choose a country first</option>
-            </select>
-          </div>
-
-          <div id="manual-bank-wrapper" class="hidden">
-            <label class="block text-sm text-slate-400">Type Bank Name Manually</label>
-            <input type="text" id="tx-manual-bank" placeholder="Enter Bank Name" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm text-slate-400">Account Number / IBAN</label>
-              <input type="text" id="tx-account" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none">
+            
+            <div id="manualBankInputs" class="hidden space-y-4 pt-2">
+                <input type="text" id="manualBankName" placeholder="Enter Bank Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+                <input type="text" id="manualRouteNumber" placeholder="Routing / Sort Code / CLABE / Swift" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             </div>
-            <div>
-              <label class="block text-sm text-slate-400">Amount ($)</label>
-              <input type="number" id="tx-amount" class="w-full mt-1 p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none">
+
+            <input type="text" id="transferAccount" placeholder="Account Number / Card Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="text" id="transferName" placeholder="Recipient Full Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="number" id="transferAmount" placeholder="Amount ($)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            
+            <button onclick="executeTransferFlow()" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-4 transition tracking-wide text-sm uppercase">Continue Transfer</button>
+        </div>
+    </div>
+
+    <!-- 2. PAY SERVICES OVERLAY -->
+    <div id="payServicesOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('payServicesOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Pay Services</h2>
+            <div></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-lightbulb text-yellow-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Electricity (CFE)</span>
             </div>
-          </div>
-
-          <button onclick="submitTransfer()" class="w-full bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold tracking-wide transition uppercase mt-2">Initiate Secure Transfer</button>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-droplet text-blue-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Water Supply</span>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-house-signal text-purple-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Internet / TV</span>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+                <i class="fa-solid fa-mobile-retro text-emerald-400 text-2xl mb-2"></i>
+                <span class="text-xs font-semibold">Telephone Plan</span>
+            </div>
         </div>
-      </div>
+        <div class="space-y-4">
+            <input type="text" placeholder="Service Reference Number" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <input type="number" placeholder="Amount Due ($)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold tracking-wide text-sm">PROCEED TO PAY</button>
+        </div>
     </div>
 
-    <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-lg flex flex-col h-[550px] lg:h-[600px] overflow-hidden">
-      <div class="bg-emerald-800 p-4 flex items-center justify-between border-b border-emerald-700">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-white"><i class="fa-solid fa-headset text-lg"></i></div>
-          <div>
-            <h4 class="font-bold text-white text-sm">Customer Helpdesk</h4>
-            <span class="text-xs text-emerald-200 flex items-center"><span class="w-2 h-2 rounded-full bg-green-400 inline-block mr-1.5 animate-pulse"></span>Online Support</span>
-          </div>
+    <!-- 3. CARDLESS CASH OVERLAY -->
+    <div id="cardlessCashOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('cardlessCashOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Cardless Cash</h2>
+            <div></div>
         </div>
-      </div>
-
-      <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 whatsapp-bg flex flex-col text-slate-950">
+        <div class="bg-gradient-to-br from-blue-900 to-blue-950 p-5 rounded-xl border border-blue-800 text-center mb-6">
+            <i class="fa-solid fa-money-bill-transfer text-4xl text-blue-400 mb-2"></i>
+            <p class="text-sm font-semibold">Withdraw cash from any ATM without using physical plastic.</p>
+            <p class="text-xs text-gray-400 mt-1">Generate a dynamic reference code directly valid for 30 minutes.</p>
         </div>
-
-      <div class="p-3 bg-neutral-100 flex items-center space-x-2 border-t">
-        <input type="text" id="chat-input" placeholder="Type message..." class="flex-1 p-2 rounded-full border border-gray-300 text-slate-900 focus:outline-none px-4 text-sm" onkeypress="if(event.key === 'Enter') sendUserMessage()">
-        <button onclick="sendUserMessage()" class="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 flex items-center justify-center text-white transition"><i class="fa-solid fa-paper-plane"></i></button>
-      </div>
+        <div class="space-y-4">
+            <label class="block text-xs text-gray-400 font-semibold uppercase">Amount to Withdraw</label>
+            <input type="number" placeholder="Enter Amount (e.g., $200, $500)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
+            <button onclick="triggerFreezeAlert()" class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold tracking-wide text-sm uppercase">Generate Security Reference</button>
+        </div>
     </div>
-  </div>
 
-  <div id="freeze-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-    <div class="bg-slate-900 border border-red-500/30 p-8 rounded-2xl max-w-md w-full text-center shadow-2xl relative">
-      <div class="w-20 h-20 bg-red-950/50 border-2 border-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500 animate-pulse">
-        <i class="fa-solid fa-triangle-exclamation text-4xl"></i>
-      </div>
-      <h3 class="text-2xl font-black text-red-500 uppercase tracking-wide">Account Security Hold</h3>
-      <p class="text-slate-300 mt-4 leading-relaxed text-sm">
-        We detected an unauthorized transaction attempt. To protect your assets, your account has been placed on a security freeze. 
-      </p>
-      <div class="my-6 bg-red-950/20 border border-red-900/40 p-3 rounded-lg text-xs text-red-400">
-        Error Code: ERR_SEC_BLOCK_MEX_UK
-      </div>
-      <p class="text-xs text-slate-400 leading-normal mb-6">
-        Please contact our customer support agent directly in the live support chat widget on your dashboard to complete manual verification.
-      </p>
-      <button onclick="closeModal()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition uppercase text-sm tracking-wider shadow-lg">Verify via Helpdesk</button>
+    <!-- 4. INVESTMENTS OVERLAY -->
+    <div id="investmentsOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('investmentsOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Investment Portfolio</h2>
+            <div></div>
+        </div>
+        <div class="space-y-3">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="text-xs font-bold text-white">Fixed Term Funds (Pagaré)</h4>
+                    <p class="text-[10px] text-emerald-400 mt-0.5">Yield up to 11.50% APR</p>
+                </div>
+                <button onclick="triggerFreezeAlert()" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-semibold">Invest</button>
+            </div>
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="text-xs font-bold text-white">Mutual Global Strategy</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">High Performance Variable Index</p>
+                </div>
+                <button onclick="triggerFreezeAlert()" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-semibold">Invest</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    let activeUser = null;
-    let chatInterval = null;
-    
-    // Country to Bank mappings
-    const countryBanks = {
-      USA: ["Chase Bank", "Bank of America", "Wells Fargo", "Citigroup"],
-      UK: ["Barclays", "HSBC UK", "Lloyds Bank", "NatWest"],
-      Canada: ["Royal Bank of Canada", "TD Bank", "Scotiabank", "BMO"],
-      Mexico: ["BBVA México", "Banorte", "Santander México", "Citibanamex"],
-      Brazil: ["Itaú Unibanco", "Banco do Brasil", "Bradesco", "Santander Brasil"]
-    };
+    <!-- 5. LOANS OVERLAY -->
+    <div id="loansOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('loansOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Pre-Approved Credits</h2>
+            <div></div>
+        </div>
+        <div class="bg-gradient-to-r from-amber-600/20 to-yellow-600/10 border border-yellow-700/40 p-5 rounded-xl mb-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="bg-yellow-500/20 text-yellow-400 text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">Immediate Delivery</span>
+                    <h3 class="text-lg font-bold mt-1.5">Personal Credit</h3>
+                </div>
+                <p class="text-xl font-black text-yellow-400">$150,000</p>
+            </div>
+            <p class="text-xs text-gray-300 mt-2">Fixed monthly payments with dynamic competitive preferential interest rates.</p>
+            <button onclick="triggerFreezeAlert()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-xs py-2.5 rounded-lg font-bold tracking-wide mt-4 shadow-lg uppercase">Acquire Loan Now</button>
+        </div>
+    </div>
 
-    function toggleAuth(showLogin) {
-      document.getElementById('login-form').classList.toggle('hidden', !showLogin);
-      document.getElementById('signup-form').classList.toggle('hidden', showLogin);
-      document.getElementById('auth-title').innerText = showLogin ? "Access your global asset accounts" : "Create your secure account";
-    }
+    <!-- 6. SEE ALL OVERLAY -->
+    <div id="seeAllOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('seeAllOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">All Operations</h2>
+            <div></div>
+        </div>
+        <ul class="divide-y divide-blue-950 text-sm">
+            <li onclick="openStandardOverlay('transferOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Express Money Transfer</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('payServicesOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Utility & Services Statement Payment</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('cardlessCashOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">ATM Cardless Cash Generation</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('investmentsOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Growth Capital Mutual Fund Portfolios</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+            <li onclick="openStandardOverlay('loansOverlay'); closeStandardOverlay('seeAllOverlay');" class="py-3.5 flex justify-between items-center cursor-pointer hover:bg-blue-950/20 px-1">
+                <span class="font-medium">Apply for Immediate Personal Loans</span><i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </li>
+        </ul>
+    </div>
 
-    // Dynamic country dropdown triggers bank lists or manual inputs
-    function updateBankOptions() {
-      const country = document.getElementById('tx-country').value;
-      const bankWrapper = document.getElementById('bank-select-wrapper');
-      const manualWrapper = document.getElementById('manual-bank-wrapper');
-      const bankSelect = document.getElementById('tx-bank');
-      
-      if (country === "Manual") {
-        bankWrapper.classList.add('hidden');
-        manualWrapper.classList.remove('hidden');
-      } else if (countryBanks[country]) {
-        bankWrapper.classList.remove('hidden');
-        manualWrapper.classList.add('hidden');
-        bankSelect.innerHTML = `<option value="">Choose Bank</option>` + 
-          countryBanks[country].map(bank => `<option value="${bank}">${bank}</option>`).join('');
-      } else {
-        bankWrapper.classList.remove('hidden');
-        manualWrapper.classList.add('hidden');
-        bankSelect.innerHTML = `<option value="">Choose a country first</option>`;
-      }
-    }
+    <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS (ONCE CREATION AND RE-VERIFY SYSTEM) -->
+    <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
+            <i class="fa-solid fa-key text-3xl text-blue-400 mb-3"></i>
+            <h3 class="text-base font-bold text-white mb-2">Create Transaction Code</h3>
+            <p class="text-xs text-gray-400 mb-4">Set up your permanent 4-digit security code to authorize all future transfers.</p>
+            <input type="password" id="newSetupPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
+            <button onclick="saveTransactionPin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Confirm Code</button>
+        </div>
+    </div>
 
-    // SIGN UP ACTION
-    function handleSignup() {
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
-      const pass = document.getElementById('reg-pass').value;
-      
-      if(!name || !email || !pass) { alert("Fill in all credentials"); return; }
-      
-      google.script.run.withSuccessHandler(function(response) {
-        if(response.success) {
-          alert(response.message);
-          toggleAuth(true);
-        } else {
-          alert(response.message);
+    <div id="transactionPinVerifyModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
+            <i class="fa-solid fa-shield text-3xl text-blue-400 mb-3"></i>
+            <h3 class="text-base font-bold text-white mb-2">Enter Transaction Code</h3>
+            <p class="text-xs text-gray-400 mb-4">Type your 4-digit security PIN to authorize this transfer.</p>
+            <input type="password" id="verifyPinInput" maxlength="4" placeholder="••••" class="w-24 text-center p-2 tracking-widest text-lg font-bold rounded bg-[#020b18] border border-blue-600 text-white focus:outline-none">
+            <button onclick="verifyTransactionPinAndProceed()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded mt-4 uppercase">Authorize Transfer</button>
+            <button onclick="closePinVerification()" class="w-full bg-transparent text-gray-400 text-xs mt-2 hover:underline">Cancel</button>
+        </div>
+    </div>
+
+    <!-- FROZEN RESPONSE ALERT -->
+    <div id="accountFrozenAlertModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gradient-to-b from-[#0e1d33] to-[#041530] border-t-4 border-red-500 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-red-950 flex items-center justify-center mx-auto mb-3 text-red-400"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
+            <h3 class="text-base font-bold text-white mb-1 tracking-tight">Operation Terminated</h3>
+            <p class="text-[11px] text-gray-300 leading-relaxed mb-4">Transaction Failed: This account has been temporarily frozen due to irregular background activity log profiles. Please contact security customer support to verify your identity parameters.</p>
+            <button onclick="closeFrozenAlert()" class="w-full bg-red-600 text-white font-semibold text-xs py-2.5 rounded uppercase tracking-wider">Acknowledge</button>
+        </div>
+    </div>
+
+    <div id="stickyBottomNav" class="fixed bottom-0 left-0 right-0 z-40 hidden flex justify-around items-center h-16 bottom-nav max-w-md mx-auto">
+        <div class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
+            <i class="fa-solid fa-house text-sm"></i>
+            <span class="text-[9px] mt-1" id="navStart">Inicio</span>
+        </div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-wallet text-sm"></i>
+            <span class="text-[9px] mt-1" id="navProducts">Productos</span>
+        </div>
+        <div class="flex flex-col items-center justify-center -mt-6 cursor-pointer">
+            <div onclick="openStandardOverlay('seeAllOverlay')" class="w-12 h-12 rounded-full operar-btn flex items-center justify-center text-white text-lg">
+                <i class="fa-solid fa-dollar-sign"></i>
+            </div>
+            <span class="text-[9px] mt-1 text-gray-300 font-medium" id="navOperate">Operar</span>
+        </div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-circle-question text-sm"></i>
+            <span class="text-[9px] mt-1" id="navHelp">Ayuda</span>
+        </div>
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+            <i class="fa-solid fa-bars text-sm"></i>
+            <span class="text-[9px] mt-1" id="navMenu">Menú</span>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
+        let currentLang = 'en';
+        let allUsers = [];
+        let loggedInUser = null;
+        let transactionPinCode = ""; // System local state for single pin storage
+
+        const translations = {
+            es: {
+                langBtn: "IS",
+                signUpTitle: "Crear Cuenta",
+                submitSignUpBtn: "Registrarse",
+                haveAccountText: "¿Ya tienes cuenta?",
+                loginLinkText: "Inicia sesión",
+                loginTitle: "Iniciar Sesión",
+                loginBtnText: "Entrar",
+                noAccountText: "¿No tienes cuenta?",
+                signUpLinkText: "Regístrate",
+                greetingDay: "Hola,",
+                lblProducts: "Mis productos",
+                lblSeeAll1: "Ver todos",
+                cardLabel: "Cuenta de Cheques",
+                availableLabel: "Saldo disponible",
+                actualLabel: "Saldo actual: ",
+                lblMovementsLink: "Ver movimientos",
+                actTransfer: "Transferir",
+                actPay: "Pagar servicios",
+                actWithdraw: "Retirar sin tarjeta",
+                actInvest: "Inversiones",
+                actLoans: "Préstamos",
+                lblCards: "Tarjetas",
+                lblSeeAll2: "Ver todas",
+                cardDeb: "Débito",
+                cardCred: "Crédito",
+                lblRecentMovements: "Movimientos recientes",
+                lblSeeAllMovements: "Ver todas",
+                movRecTxt: "Transferencia recibida",
+                lblApartados: "Apartados",
+                lblSeeAll3: "Ver todos",
+                apartadoSub: "de $ 50,000.00",
+                lblInvestments: "Inversiones",
+                lblSeeAll4: "Ver todos",
+                lblPortfolio: "Portafolio Total",
+                lblAnnualYield: "Rendimiento anual",
+                secTitle: "Centro de Seguridad",
+                secDesc: "Protege tu información y tus operaciones.",
+                navStart: "Inicio",
+                navProducts: "Productos",
+                navOperate: "Operar",
+                navHelp: "Ayuda",
+                navMenu: "Menú",
+                dateLabel: "Miércoles 22 de mayo, 2024"
+            },
+            en: {
+                langBtn: "EN",
+                signUpTitle: "Create Account",
+                submitSignUpBtn: "Register",
+                haveAccountText: "Already have an account?",
+                loginLinkText: "Log In",
+                loginTitle: "Log In",
+                loginBtnText: "Sign In",
+                noAccountText: "Don't have an account?",
+                signUpLinkText: "Sign Up",
+                greetingDay: "Hello,",
+                lblProducts: "My Products",
+                lblSeeAll1: "See all",
+                cardLabel: "Checking Account",
+                availableLabel: "Available balance",
+                actualLabel: "Current balance: ",
+                lblMovementsLink: "View transactions",
+                actTransfer: "Transfer",
+                actPay: "Pay Services",
+                actWithdraw: "Cardless Cash",
+                actInvest: "Investments",
+                actLoans: "Loans",
+                lblCards: "Cards",
+                lblSeeAll2: "See all",
+                cardDeb: "Debit",
+                cardCred: "Credit",
+                lblRecentMovements: "Recent movements",
+                lblSeeAllMovements: "See all",
+                movRecTxt: "Transfer received",
+                lblApartados: "Vaults",
+                lblSeeAll3: "See all",
+                apartadoSub: "of $ 50,000.00",
+                lblInvestments: "Investments",
+                lblSeeAll4: "See all",
+                lblPortfolio: "Total Portfolio",
+                lblAnnualYield: "Annual Yield",
+                secTitle: "Security Center",
+                secDesc: "Protect your personal data and operations.",
+                navStart: "Home",
+                navProducts: "Products",
+                navOperate: "Operate",
+                navHelp: "Help",
+                navMenu: "Menu",
+                dateLabel: "Wednesday May 22, 2024"
+            }
+        };
+
+        function openStandardOverlay(overlayId) {
+            const overlay = document.getElementById(overlayId);
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('active'), 10);
         }
-      }).registerUser(name, email, pass);
-    }
 
-    // LOGIN ACTION
-    function handleLogin() {
-      const email = document.getElementById('login-email').value;
-      const pass = document.getElementById('login-password').value;
-      
-      google.script.run.withSuccessHandler(function(response) {
-        if(response.success) {
-          activeUser = response.user;
-          document.getElementById('auth-box').classList.add('hidden');
-          document.getElementById('dashboard-container').classList.remove('hidden');
-          document.body.className = "bg-slate-900 text-white min-h-screen flex flex-col justify-start p-2 md:p-6";
-          
-          loadDashboardData();
-          startChatPolling();
-        } else {
-          alert(response.message);
+        function closeStandardOverlay(overlayId) {
+            const overlay = document.getElementById(overlayId);
+            overlay.classList.remove('active');
+            setTimeout(() => overlay.classList.add('hidden'), 400);
         }
-      }).loginUser(email, pass);
-    }
 
-    // REFRESH BALANCES FROM SHEETS
-    function loadDashboardData() {
-      if(!activeUser) return;
-      google.script.run.withSuccessHandler(function(balances) {
-        document.getElementById('bal-available').innerText = balances.available;
-        document.getElementById('bal-investment').innerText = balances.investment;
-      }).getUserData(activeUser.email);
-    }
-
-    // TRANSFER SUBMISSION (Logs then freezes immediately)
-    function submitTransfer() {
-      const country = document.getElementById('tx-country').value;
-      const amount = document.getElementById('tx-amount').value;
-      const accDetails = document.getElementById('tx-account').value;
-      let finalBank = "";
-      
-      if(country === "Manual") {
-        finalBank = document.getElementById('tx-manual-bank').value;
-      } else {
-        finalBank = document.getElementById('tx-bank').value;
-      }
-      
-      if(!country || !finalBank || !amount || !accDetails) {
-        alert("Please complete all fields to send payment.");
-        return;
-      }
-      
-      google.script.run.withSuccessHandler(function(res) {
-        // Clear transaction inputs immediately
-        document.getElementById('tx-amount').value = "";
-        document.getElementById('tx-account').value = "";
-        
-        // Bring up security freeze block instantly
-        document.getElementById('freeze-modal').classList.remove('hidden');
-      }).processTransfer(activeUser.email, amount, finalBank, accDetails);
-    }
-
-    function closeModal() {
-      document.getElementById('freeze-modal').classList.add('hidden');
-    }
-
-    // LIVE CHAT POLLING (Emulates instantaneous real-time sync)
-    function loadChatHistory() {
-      if(!activeUser) return;
-      google.script.run.withSuccessHandler(function(messages) {
-        const chatFeed = document.getElementById('chat-messages');
-        const isScrolledToBottom = chatFeed.scrollHeight - chatFeed.clientHeight <= chatFeed.scrollTop + 20;
-        
-        chatFeed.innerHTML = "";
-        messages.forEach(msg => {
-          const isClient = msg.sender === "client";
-          const alignClass = isClient ? "self-end chat-bubble-client" : "self-start chat-bubble-admin";
-          const radiusClass = isClient ? "rounded-l-lg rounded-br-lg" : "rounded-r-lg rounded-bl-lg";
-          
-          chatFeed.innerHTML += `
-            <div class="max-w-[80%] p-2.5 shadow-sm text-[13.5px] ${alignClass} ${radiusClass}">
-              <p class="leading-normal">${msg.message}</p>
-            </div>
-          `;
+        document.querySelectorAll('.standard-see-all-trigger').forEach(el => {
+            el.addEventListener('click', () => openStandardOverlay('seeAllOverlay'));
         });
-        
-        if (isScrolledToBottom) {
-          chatFeed.scrollTop = chatFeed.scrollHeight;
+
+        function checkManualBankOption() {
+            const selectValue = document.getElementById('transferBankSelect').value;
+            const manualInputs = document.getElementById('manualBankInputs');
+            if(selectValue === 'manual') {
+                manualInputs.classList.remove('hidden');
+            } else {
+                manualInputs.classList.add('hidden');
+            }
         }
-      }).getChatMessages(activeUser.email);
-    }
 
-    function sendUserMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim();
-      if(!text || !activeUser) return;
-      
-      input.value = "";
-      google.script.run.withSuccessHandler(function() {
-        loadChatHistory();
-      }).sendChatMessage(activeUser.email, "client", text);
-    }
+        function executeTransferFlow() {
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            
+            if(!amount || amount <= 0) {
+                alert(currentLang === 'es' ? "Ingresa un monto válido." : "Please enter a valid amount.");
+                return;
+            }
 
-    function startChatPolling() {
-      loadChatHistory();
-      // Fast updates (every 2.5 seconds) to ensure fluid live messaging
-      chatInterval = setInterval(loadChatHistory, 2500);
-      // Refresh balances in background every 10 seconds
-      setInterval(loadDashboardData, 10000);
-    }
-  </script>
+            if (loggedInUser && amount > loggedInUser.balance) {
+                alert(currentLang === 'es' ? "Fondos Insuficientes: Tu saldo disponible es menor que el monto solicitado." : "Insufficient Funds: Your available balance is less than the requested transfer amount.");
+                return;
+            }
+
+            // PIN CODE ASSIGNMENT CORE ENGINE (Checks if pin already exists)
+            if(!transactionPinCode) {
+                document.getElementById('transactionPinSetupModal').classList.remove('hidden');
+            } else {
+                document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
+            }
+        }
+
+        function saveTransactionPin() {
+            const pinVal = document.getElementById('newSetupPinInput').value;
+            if(pinVal.length !== 4 || isNaN(pinVal)) {
+                alert(currentLang === 'es' ? "El código debe ser de 4 dígitos numéricos." : "Code must be exactly 4 numeric digits.");
+                return;
+            }
+            transactionPinCode = pinVal; // PIN code permanently saved for this session
+            document.getElementById('transactionPinSetupModal').classList.add('hidden');
+            document.getElementById('newSetupPinInput').value = "";
+            document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
+        }
+
+        function verifyTransactionPinAndProceed() {
+            const pinVal = document.getElementById('verifyPinInput').value;
+            if(pinVal === transactionPinCode) {
+                document.getElementById('transactionPinVerifyModal').classList.add('hidden');
+                document.getElementById('verifyPinInput').value = "";
+                closeStandardOverlay('transferOverlay');
+                triggerFreezeAlert();
+            } else {
+                alert(currentLang === 'es' ? "Código de transacción incorrecto." : "Incorrect security transaction code.");
+            }
+        }
+
+        function closePinVerification() {
+            document.getElementById('transactionPinVerifyModal').classList.add('hidden');
+            document.getElementById('verifyPinInput').value = "";
+        }
+
+        function triggerFreezeAlert() {
+            document.getElementById('accountFrozenAlertModal').classList.remove('hidden');
+        }
+
+        function closeFrozenAlert() {
+            document.getElementById('accountFrozenAlertModal').classList.add('hidden');
+        }
+
+        async function autoDetectLanguage() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                setLanguage(data.country_code === 'MX' ? 'es' : 'en');
+            } catch (e) {
+                setLanguage('en');
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langBtn').innerText = translations[lang].langBtn;
+            document.getElementById('signUpTitle').innerText = translations[lang].signUpTitle;
+            document.getElementById('submitSignUpBtn').innerText = translations[lang].submitSignUpBtn;
+            document.getElementById('haveAccountText').innerText = translations[lang].haveAccountText;
+            document.getElementById('loginLinkText').innerText = translations[lang].loginLinkText;
+            document.getElementById('loginTitle').innerText = translations[lang].loginTitle;
+            document.getElementById('loginBtnText').innerText = translations[lang].loginBtnText;
+            document.getElementById('noAccountText').innerText = translations[lang].noAccountText;
+            document.getElementById('signUpLinkText').innerText = translations[lang].signUpLinkText;
+            
+            document.getElementById('regUser').placeholder = lang === 'es' ? "Usuario" : "Username";
+            document.getElementById('regName').placeholder = lang === 'es' ? "Nombre Completo" : "Full Name";
+            document.getElementById('regEmail').placeholder = lang === 'es' ? "E-mail" : "E-mail";
+            document.getElementById('regPhone').placeholder = lang === 'es' ? "Número de Celular" : "Phone Number";
+            document.getElementById('regPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
+            document.getElementById('loginUser').placeholder = lang === 'es' ? "Usuario" : "Username";
+            document.getElementById('loginPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
+
+            document.getElementById('greetingDay').innerText = translations[lang].greetingDay;
+            document.getElementById('dateLabel').innerText = translations[lang].dateLabel;
+            document.getElementById('lblProducts').innerText = translations[lang].lblProducts;
+            document.getElementById('lblSeeAll1').innerText = translations[lang].lblSeeAll1;
+            document.getElementById('cardLabel').innerText = translations[lang].cardLabel;
+            document.getElementById('availableLabel').innerText = translations[lang].availableLabel;
+            document.getElementById('lblMovementsLink').innerText = translations[lang].lblMovementsLink;
+            document.getElementById('actTransfer').innerText = translations[lang].actTransfer;
+            document.getElementById('actPay').innerText = translations[lang].actPay;
+            document.getElementById('actWithdraw').innerText = translations[lang].actWithdraw;
+            document.getElementById('actInvest').innerText = translations[lang].actInvest;
+            document.getElementById('actLoans').innerText = translations[lang].actLoans;
+            document.getElementById('lblCards').innerText = translations[lang].lblCards;
+            document.getElementById('lblSeeAll2').innerText = translations[lang].lblSeeAll2;
+            document.getElementById('cardDeb').innerText = translations[lang].cardDeb;
+            document.getElementById('cardCred').innerText = translations[lang].cardCred;
+            document.getElementById('lblRecentMovements').innerText = translations[lang].lblRecentMovements;
+            document.getElementById('lblSeeAllMovements').innerText = translations[lang].lblSeeAllMovements;
+            document.getElementById('movRecTxt').innerText = translations[lang].movRecTxt;
+            document.getElementById('lblApartados').innerText = translations[lang].lblApartados;
+            document.getElementById('lblSeeAll3').innerText = translations[lang].lblSeeAll3;
+            document.getElementById('apartadoSub').innerText = translations[lang].apartadoSub;
+            document.getElementById('lblInvestments').innerText = translations[lang].lblInvestments;
+            document.getElementById('lblSeeAll4').innerText = translations[lang].lblSeeAll4;
+            document.getElementById('lblPortfolio').innerText = translations[lang].lblPortfolio;
+            document.getElementById('lblAnnualYield').innerText = translations[lang].lblAnnualYield;
+            document.getElementById('secTitle').innerText = translations[lang].secTitle;
+            document.getElementById('secDesc').innerText = translations[lang].secDesc;
+            
+            document.getElementById('navStart').innerText = translations[lang].navStart;
+            document.getElementById('navProducts').innerText = translations[lang].navProducts;
+            document.getElementById('navOperate').innerText = translations[lang].navOperate;
+            document.getElementById('navHelp').innerText = translations[lang].navHelp;
+            document.getElementById('navMenu').innerText = translations[lang].navMenu;
+        }
+
+        function toggleLanguage() {
+            setLanguage(currentLang === 'es' ? 'en' : 'es');
+        }
+
+        function showLogin() {
+            document.getElementById('signUpForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function showSignUp() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signUpForm').classList.remove('hidden');
+        }
+
+        async function fetchUsers() {
+            try {
+                const res = await fetch(API_URL);
+                allUsers = await res.json();
+            } catch (err) {
+                console.error("Failed syncing sheet data:", err);
+            }
+        }
+
+        async function handleSignUp() {
+            const username = document.getElementById('regUser').value.trim();
+            const fullName = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPass').value;
+
+            if(!username || !fullName || !password) {
+                alert(currentLang === 'es' ? "Completa los campos obligatorios." : "Please fill required fields.");
+                return;
+            }
+
+            const payload = { username, fullName, email, phone, password };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                alert(currentLang === 'es' ? "¡Registro guardado en Google Sheets!" : "Account added to Google Sheets!");
+                await fetchUsers();
+                showLogin();
+            } catch(e) {
+                alert("Error connecting to Engine Sheet.");
+            }
+        }
+
+        async function handleLogin() {
+            const userVal = document.getElementById('loginUser').value.trim();
+            const passVal = document.getElementById('loginPass').value;
+
+            await fetchUsers(); 
+            const user = allUsers.find(u => u.username === userVal && String(u.password) === passVal);
+
+            if (user) {
+                loggedInUser = user;
+                transactionPinCode = ""; // Reset local instance on fresh logins
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('dashboardContainer').classList.remove('hidden');
+                document.getElementById('stickyBottomNav').classList.remove('hidden');
+                
+                document.getElementById('userGreetingName').innerText = user.fullName;
+                
+                const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+                document.getElementById('dashBalance').innerText = fmt.format(user.balance);
+                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
+                document.getElementById('dashInvestments').innerText = fmt.format(user.investments);
+            } else {
+                alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
+            }
+        }
+
+        function logout() {
+            loggedInUser = null;
+            transactionPinCode = "";
+            document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('stickyBottomNav').classList.add('hidden');
+            document.getElementById('authContainer').classList.remove('hidden');
+        }
+
+        window.onload = () => {
+            autoDetectLanguage();
+            fetchUsers();
+        };
+    </script>
 </body>
 </html>
+
