@@ -12,6 +12,7 @@
         .received { background: #1f1f1f; border-bottom-left-radius: 4px; }
         .sent { background: #1475d9; color: white; border-bottom-right-radius: 4px; }
         .timestamp { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+        img { max-width: 220px; border-radius: 12px; margin-top: 4px; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col">
@@ -40,7 +41,7 @@
         </div>
         <div class="text-center mt-2">
             <input type="file" id="photoUpload" accept="image/*" class="hidden" onchange="sendPhoto(this)">
-            <button onclick="document.getElementById('photoUpload').click()" class="text-xs text-blue-400 hover:text-white">📎 Send Photo / Document</button>
+            <button onclick="document.getElementById('photoUpload').click()" class="text-xs text-blue-400 hover:text-white">📎 Send Photo</button>
         </div>
     </div>
 
@@ -64,7 +65,7 @@
                     renderMessages();
                 }
             } catch (e) {
-                if (!silent) console.error("Failed to load messages");
+                if (!silent) console.error("Failed to load");
             }
         }
 
@@ -73,7 +74,7 @@
             container.innerHTML = messagesCache.map(msg => `
                 <div class="flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}">
                     <div class="message-bubble ${msg.sender === userId ? 'sent' : 'received'}">
-                        ${msg.message}
+                        ${msg.message.includes('data:image') ? msg.message : msg.message}
                         <p class="timestamp">${msg.timestamp}</p>
                     </div>
                 </div>
@@ -86,7 +87,6 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Show message immediately (optimistic update)
             messagesCache.push({
                 sender: userId,
                 message: text,
@@ -104,25 +104,18 @@
                         message: text
                     })
                 });
-            } catch (e) {
-                console.error("Failed to send");
-            }
-
+            } catch (e) {}
             input.value = '';
         }
 
         async function sendPhoto(input) {
             if (!input.files[0]) return;
-            const file = input.files[0];
             const reader = new FileReader();
-            
             reader.onload = async function(e) {
                 const base64 = e.target.result;
-                const preview = `<img src="${base64}" class="max-w-[220px] rounded-xl">`;
-
                 messagesCache.push({
                     sender: userId,
-                    message: preview,
+                    message: `<img src="${base64}" class="max-w-[220px] rounded-xl">`,
                     timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
                 });
                 renderMessages();
@@ -137,20 +130,17 @@
                             message: base64
                         })
                     });
-                } catch (e) {
-                    console.error("Failed to send photo");
-                }
+                } catch (e) {}
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(input.files[0]);
         }
 
         function goBackToDashboard() {
             window.location.href = "index.html";
         }
 
-        // Initial load + gentle refresh
         loadMessages();
-        setInterval(() => loadMessages(true), 5000); // silent refresh
+        setInterval(() => loadMessages(true), 5000);
     </script>
 </body>
 </html>
