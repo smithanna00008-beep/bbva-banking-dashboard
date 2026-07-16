@@ -156,6 +156,7 @@
                 <p class="text-[11px] text-gray-400" id="availableLabel">Saldo disponible</p>
                 <div class="flex items-baseline mt-0.5">
                     <p class="text-3xl font-bold tracking-tight text-white" id="dashBalance">$ 0.00</p>
+                    <button onclick="toggleBalanceVisibility()" id="eyeIcon" class="ml-3 text-gray-400 hover:text-white"><i class="fa-solid fa-eye"></i></button>
                 </div>
                 <p class="text-[11px] text-gray-400 mt-1" id="actualLabel">Saldo actual: $ 0.00</p>
             </div>
@@ -527,7 +528,7 @@
     </div>
 
     <div id="stickyBottomNav" class="fixed bottom-0 left-0 right-0 z-40 hidden flex justify-around items-center h-16 bottom-nav max-w-md mx-auto">
-        <div class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
+        <div onclick="goHome()" class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[9px] mt-1" id="navStart">Inicio</span>
         </div>
@@ -557,6 +558,7 @@
         let allUsers = [];
         let loggedInUser = null;
         let transactionPinCode = "";
+        let balanceVisible = true; // For eye toggle
 
         const translations = {
             es: {
@@ -654,9 +656,24 @@
         function goToChat() {
             if (loggedInUser) {
                 localStorage.setItem("userId", loggedInUser.username);
+                localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
                 window.location.href = "messages.html";
             } else {
                 alert("Please log in first");
+            }
+        }
+
+        function toggleBalanceVisibility() {
+            balanceVisible = !balanceVisible;
+            const balanceEl = document.getElementById('dashBalance');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (balanceVisible) {
+                const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+                balanceEl.innerText = fmt.format(loggedInUser.balance);
+                eyeIcon.innerHTML = '<i class="fa-solid fa-eye"></i>';
+            } else {
+                balanceEl.innerText = '****';
+                eyeIcon.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
             }
         }
 
@@ -889,12 +906,35 @@
         function logout() {
             loggedInUser = null;
             transactionPinCode = "";
+            localStorage.removeItem("userId");
+            localStorage.removeItem("loggedInUser");
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('stickyBottomNav').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
         }
 
+        function goHome() {
+            // Refresh dashboard
+            location.reload();
+        }
+
         window.onload = () => {
+            // Restore login from localStorage
+            const savedUser = localStorage.getItem("loggedInUser");
+            if (savedUser) {
+                loggedInUser = JSON.parse(savedUser);
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('dashboardContainer').classList.remove('hidden');
+                document.getElementById('stickyBottomNav').classList.remove('hidden');
+                
+                document.getElementById('userGreetingName').innerText = loggedInUser.fullName;
+                
+                const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+                document.getElementById('dashBalance').innerText = fmt.format(loggedInUser.balance);
+                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(loggedInUser.balance)}`;
+                document.getElementById('dashInvestments').innerText = fmt.format(loggedInUser.investments);
+            }
+
             autoDetectLanguage();
             fetchUsers();
         };
