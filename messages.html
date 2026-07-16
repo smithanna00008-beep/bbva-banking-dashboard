@@ -71,8 +71,9 @@
                 const res = await fetch(`${API_URL}?action=getMessages&userId=${userId}`);
                 const result = await res.json();
                 if (result.status === "success") {
+                    // Strict filter: only messages where user is sender or explicit receiver
                     messagesCache = result.messages.filter(m => 
-                        m.sender === userId || m.receiver === userId || m.sender === "admin"
+                        m.sender === userId || m.receiver === userId
                     );
                     renderMessages();
                 }
