@@ -7,15 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #041530; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; margin-bottom: 8px; }
-        .received { background: #1f1f1f; }
-        .sent { background: #1475d9; color: white; }
+        .message-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; margin-bottom: 12px; }
+        .received { background: #1f1f1f; border-bottom-left-radius: 4px; }
+        .sent { background: #1475d9; color: white; border-bottom-right-radius: 4px; }
+        img { max-width: 260px; border-radius: 12px; margin: 6px 0; display: block; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col">
 
-    <header class="flex items-center justify-between px-6 py-4 border-b border-blue-900 bg-[#041530]">
-        <h1 class="text-lg font-bold">Admin Support Replies</h1>
+    <header class="px-6 py-4 border-b border-blue-900 bg-[#041530] flex justify-between items-center">
+        <h1 class="text-lg font-bold">Admin Support</h1>
+        <button onclick="window.location.href='index.html'" class="text-blue-400">← Dashboard</button>
     </header>
 
     <div id="chatContainer" class="flex-1 p-4 overflow-y-auto bg-[#020b18]">
@@ -23,10 +25,16 @@
     </div>
 
     <div class="p-4 border-t border-blue-900 bg-[#041530]">
-        <input type="text" id="replyInput" placeholder="Type reply..." 
-               class="w-full bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white" 
-               onkeypress="if(event.key === 'Enter') sendReply()">
-        <button onclick="sendReply()" class="w-full mt-2 bg-blue-600 py-3 rounded-2xl">Send Reply</button>
+        <div class="flex gap-2">
+            <input type="text" id="replyInput" placeholder="Reply to client..." 
+                   class="flex-1 bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white focus:outline-none"
+                   onkeypress="if(event.key==='Enter') sendReply()">
+            <button onclick="sendReply()" class="bg-blue-600 px-6 rounded-2xl">Send</button>
+        </div>
+        <div class="mt-3 text-center">
+            <input type="file" id="photoUpload" accept="image/*" class="hidden" onchange="sendAdminPhoto(this)">
+            <button onclick="document.getElementById('photoUpload').click()" class="text-blue-400 text-sm">📎 Send Photo</button>
+        </div>
     </div>
 
     <script>
@@ -37,12 +45,20 @@
             try {
                 const res = await fetch(`${API_URL}?action=getMessages&userId=all`);
                 const result = await res.json();
-                container.innerHTML = result.messages.map(m => `
-                    <div class="message-bubble ${m.sender === 'admin' ? 'sent' : 'received'}">
-                        <strong>${m.sender}:</strong> ${m.message}
-                        <div class="text-xs opacity-70">${m.timestamp}</div>
-                    </div>
-                `).join('');
+                
+                let html = '';
+                result.messages.forEach(m => {
+                    const isAdmin = m.sender === 'admin';
+                    html += `
+                        <div class="flex ${isAdmin ? 'justify-end' : 'justify-start'}">
+                            <div class="message-bubble ${isAdmin ? 'sent' : 'received'}">
+                                ${m.message.includes('data:image') ? `<img src="${m.message}">` : m.message}
+                                <div class="text-xs opacity-70 mt-1">${m.timestamp} • ${m.sender}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
                 container.scrollTop = container.scrollHeight;
             } catch(e) {}
         }
@@ -65,9 +81,27 @@
             loadMessages();
         }
 
+        async function sendAdminPhoto(input) {
+            if (!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        action: "submitMessage",
+                        senderId: "admin",
+                        message: base64
+                    })
+                });
+                loadMessages();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
         loadMessages();
-        setInterval(loadMessages, 4000);
+        setInterval(loadMessages, 3000);
     </script>
 </body>
 </html>
-
