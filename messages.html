@@ -1,101 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Support - BBVA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - BBVA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { 
-            background: #000c1e; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .chat-container { 
-            height: calc(100vh - 130px); 
-        }
-        .app-header {
-            background-color: #000000;
-            border-bottom: 1px solid #112233;
-        }
-        .message-bubble { 
-            max-width: 75%; 
-            padding: 12px 16px; 
-            border-radius: 18px; 
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .received { 
-            background-color: #072146; 
-            border: 1px solid #004481;
-            border-bottom-left-radius: 4px; 
-            color: #ffffff;
-        }
-        .sent { 
-            background: linear-gradient(90deg, #0073ea 0%, #0056b3 100%);
-            box-shadow: 0 4px 12px rgba(0, 115, 234, 0.3);
-            border-bottom-right-radius: 4px; 
-            color: #ffffff;
-        }
-        .premium-input {
-            background-color: #020b18;
-            border: 1px solid #004481;
-            transition: all 0.3s ease;
-        }
-        .premium-input:focus {
-            border-color: #0073ea;
-            box-shadow: 0 0 8px rgba(0, 115, 234, 0.4);
-            outline: none;
-        }
-        .bbva-send-btn {
-            background: linear-gradient(90deg, #0073ea 0%, #0056b3 100%);
-            box-shadow: 0 4px 15px rgba(0, 115, 234, 0.4);
-        }
-        .bbva-send-btn:hover {
-            background: linear-gradient(90deg, #0080ff 0%, #0066cc 100%);
-        }
+        body { background-color: #041530; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .chat-container { height: calc(100vh - 140px); overflow-y: auto; }
+        .message-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; margin-bottom: 8px; }
+        .received { background: #1f1f1f; border-bottom-left-radius: 4px; }
+        .sent { background: #1475d9; color: white; border-bottom-right-radius: 4px; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col">
 
-    <header class="flex items-center justify-between px-4 py-3 app-header z-10">
-        <a href="index.html" class="text-gray-400 hover:text-white flex items-center text-sm transition">
-            <i class="fa-solid fa-chevron-left mr-1.5 text-xs"></i> Back
-        </a>
-        <div class="text-center mr-8">
-            <p class="font-semibold text-base text-white">Support Chat</p>
-            <p class="text-[11px] text-green-500 font-medium flex items-center justify-center gap-1 mt-0.5">
-                Online
-            </p>
+    <header class="flex items-center justify-between px-6 py-4 border-b border-blue-900 bg-[#041530]">
+        <button onclick="goBackToDashboard()" class="text-blue-400 flex items-center gap-1">
+            ← Back
+        </button>
+        <div class="text-center">
+            <p class="font-medium">Support Chat</p>
+            <p class="text-xs text-emerald-400">Online</p>
         </div>
         <div class="w-8"></div>
     </header>
 
-    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 chat-container bg-[#000c1e]">
-        </div>
+    <div id="chatContainer" class="flex-1 p-4 chat-container bg-[#020b18]">
+        <!-- Messages load here -->
+    </div>
 
-    <div class="p-4 border-t border-[#112233] bg-[#000c1e]">
-        <div class="flex gap-2.5">
+    <div class="p-4 border-t border-blue-900 bg-[#041530]">
+        <div class="flex gap-2">
             <input type="text" id="messageInput" placeholder="Type a message..." 
-                   class="flex-1 rounded-xl px-5 py-3.5 text-white premium-input placeholder-gray-500 text-sm">
-            <button onclick="sendMessage()" 
-                    class="bbva-send-btn text-white px-5 rounded-xl font-bold transition flex items-center justify-center">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
+                   class="flex-1 bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white focus:outline-none">
+            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-2xl">Send</button>
         </div>
-        <div class="text-center mt-3">
+        <div class="text-center mt-2">
             <input type="file" id="photoUpload" accept="image/*" class="hidden" onchange="sendPhoto(this)">
-            <button onclick="document.getElementById('photoUpload').click()" 
-                    class="text-xs text-blue-400 hover:text-blue-300 font-semibold transition flex items-center justify-center mx-auto gap-1.5">
-                <i class="fa-solid fa-camera"></i> Send Photo
-            </button>
+            <button onclick="document.getElementById('photoUpload').click()" class="text-xs text-blue-400 hover:text-white">📷 Send Photo</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzYds8gGtgIOA8QiCyyWaI-v3vEdX7_02siN7JEfHT7syAhVb_knK32PaIzTCM1iUdXqA/exec";
-        const userId = localStorage.getItem("userId");
+        const API_URL = "https://script.google.com/macros/s/AKfycbyIvkHELP41Lf8zzdjilYWozkwbUS18HEajXA7yBpV5xoxVw7vJ6zPAVyf8LN85y2FdFw/exec";
+        let userId = localStorage.getItem("userId");
 
         if (!userId) {
             window.location.href = "index.html";
@@ -110,16 +59,16 @@
                 if (result.status === "success") {
                     container.innerHTML = result.messages.map(msg => `
                         <div class="flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}">
-                            <div class="message-bubble ${msg.sender === userId ? 'sent' : 'received'} shadow-md">
+                            <div class="message-bubble ${msg.sender === userId ? 'sent' : 'received'}">
                                 ${msg.message}
-                                <p class="text-[9px] mt-1 opacity-60 text-right">${msg.timestamp}</p>
+                                <p class="text-[10px] mt-1 opacity-75">${msg.timestamp}</p>
                             </div>
                         </div>
                     `).join('');
                     container.scrollTop = container.scrollHeight;
                 }
             } catch (e) {
-                container.innerHTML = '<div class="text-center text-red-400 py-8 text-xs">Error loading messages</div>';
+                container.innerHTML = '<div class="text-red-400 text-center py-8">Could not load messages</div>';
             }
         }
 
@@ -141,7 +90,7 @@
                 input.value = '';
                 loadMessages();
             } catch (e) {
-                alert("Error sending message");
+                alert("Failed to send");
             }
         }
 
@@ -149,7 +98,6 @@
             if (!input.files[0]) return;
             const file = input.files[0];
             const reader = new FileReader();
-            
             reader.onload = async function(e) {
                 const base64 = e.target.result;
                 try {
@@ -159,20 +107,25 @@
                         body: JSON.stringify({
                             action: "submitMessage",
                             senderId: userId,
-                            message: `<img src="${base64}" class="max-w-[200px] rounded-xl border border-blue-900/40 shadow-lg">`
+                            message: `<img src="${base64}" class="max-w-[220px] rounded-xl">`
                         })
                     });
                     loadMessages();
                 } catch (e) {
-                    alert("Error sending photo");
+                    alert("Failed to send photo");
                 }
             };
             reader.readAsDataURL(file);
         }
 
-        // Load messages on start and refresh every 4 seconds
+        function goBackToDashboard() {
+            window.location.href = "index.html";
+        }
+
+        // Load messages
         loadMessages();
         setInterval(loadMessages, 4000);
     </script>
 </body>
 </html>
+
