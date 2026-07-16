@@ -7,10 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #041530; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .chat-container { height: calc(100vh - 140px); overflow-y: auto; }
-        .message-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; margin-bottom: 8px; }
+        .chat-container { height: calc(100vh - 140px); overflow-y: auto; padding-bottom: 20px; }
+        .message-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; margin-bottom: 8px; position: relative; }
         .received { background: #1f1f1f; border-bottom-left-radius: 4px; }
         .sent { background: #1475d9; color: white; border-bottom-right-radius: 4px; }
+        .timestamp { font-size: 10px; opacity: 0.7; margin-top: 2px; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col">
@@ -33,12 +34,13 @@
     <div class="p-4 border-t border-blue-900 bg-[#041530]">
         <div class="flex gap-2">
             <input type="text" id="messageInput" placeholder="Type a message..." 
-                   class="flex-1 bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white focus:outline-none">
-            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-2xl">Send</button>
+                   class="flex-1 bg-[#072146] border border-blue-800 rounded-2xl px-5 py-3 text-white focus:outline-none" 
+                   onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-2xl font-medium">Send</button>
         </div>
         <div class="text-center mt-2">
             <input type="file" id="photoUpload" accept="image/*" class="hidden" onchange="sendPhoto(this)">
-            <button onclick="document.getElementById('photoUpload').click()" class="text-xs text-blue-400 hover:text-white">📷 Send Photo</button>
+            <button onclick="document.getElementById('photoUpload').click()" class="text-xs text-blue-400 hover:text-white">📎 Send Photo / Document</button>
         </div>
     </div>
 
@@ -50,32 +52,47 @@
             window.location.href = "index.html";
         }
 
-        async function loadMessages() {
-            const container = document.getElementById('chatContainer');
+        let messagesCache = [];
+
+        async function loadMessages(silent = false) {
             try {
                 const res = await fetch(`${API_URL}?action=getMessages&userId=${userId}`);
                 const result = await res.json();
 
                 if (result.status === "success") {
-                    container.innerHTML = result.messages.map(msg => `
-                        <div class="flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}">
-                            <div class="message-bubble ${msg.sender === userId ? 'sent' : 'received'}">
-                                ${msg.message}
-                                <p class="text-[10px] mt-1 opacity-75">${msg.timestamp}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                    container.scrollTop = container.scrollHeight;
+                    messagesCache = result.messages;
+                    renderMessages();
                 }
             } catch (e) {
-                container.innerHTML = '<div class="text-red-400 text-center py-8">Could not load messages</div>';
+                if (!silent) console.error("Failed to load messages");
             }
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = messagesCache.map(msg => `
+                <div class="flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}">
+                    <div class="message-bubble ${msg.sender === userId ? 'sent' : 'received'}">
+                        ${msg.message}
+                        <p class="timestamp">${msg.timestamp}</p>
+                    </div>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
         }
 
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
             if (!text) return;
+
+            // Show message immediately (optimistic update)
+            messagesCache.push({
+                sender: userId,
+                message: text,
+                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            renderMessages();
 
             try {
                 await fetch(API_URL, {
@@ -87,19 +104,29 @@
                         message: text
                     })
                 });
-                input.value = '';
-                loadMessages();
             } catch (e) {
-                alert("Failed to send");
+                console.error("Failed to send");
             }
+
+            input.value = '';
         }
 
         async function sendPhoto(input) {
             if (!input.files[0]) return;
             const file = input.files[0];
             const reader = new FileReader();
+            
             reader.onload = async function(e) {
                 const base64 = e.target.result;
+                const preview = `<img src="${base64}" class="max-w-[220px] rounded-xl">`;
+
+                messagesCache.push({
+                    sender: userId,
+                    message: preview,
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+                renderMessages();
+
                 try {
                     await fetch(API_URL, {
                         method: "POST",
@@ -107,12 +134,11 @@
                         body: JSON.stringify({
                             action: "submitMessage",
                             senderId: userId,
-                            message: `<img src="${base64}" class="max-w-[220px] rounded-xl">`
+                            message: base64
                         })
                     });
-                    loadMessages();
                 } catch (e) {
-                    alert("Failed to send photo");
+                    console.error("Failed to send photo");
                 }
             };
             reader.readAsDataURL(file);
@@ -122,10 +148,9 @@
             window.location.href = "index.html";
         }
 
-        // Load messages
+        // Initial load + gentle refresh
         loadMessages();
-        setInterval(loadMessages, 4000);
+        setInterval(() => loadMessages(true), 5000); // silent refresh
     </script>
 </body>
 </html>
-
