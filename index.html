@@ -160,7 +160,7 @@
                 </div>
                 <p class="text-[11px] text-gray-400 mt-1" id="actualLabel">Saldo actual: $ 0.00</p>
             </div>
-            <p class="text-xs text-blue-400 font-semibold mt-4 cursor-pointer" id="lblMovementsLink">Ver movimientos</p>
+            <p onclick="showMovementsHistory()" class="text-xs text-blue-400 font-semibold mt-4 cursor-pointer" id="lblMovementsLink">Ver movimientos</p>
             
             <div class="absolute right-4 bottom-8 w-24 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-1.5 flex flex-col justify-between opacity-95 shadow-md border border-blue-500">
                 <div class="flex justify-between items-center">
@@ -215,7 +215,7 @@
 
         <div class="flex justify-between items-center mb-3">
             <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Movimientos recientes</span>
-            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">Ver todas</span>
+            <span onclick="showMovementsHistory()" class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">Ver todas</span>
         </div>
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md" id="movementsList">
             <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
@@ -495,6 +495,97 @@
         </ul>
     </div>
 
+    <!-- TRANSACTION REMINDER / DETAILS SCREEN -->
+    <div id="transactionReminderOverlay" class="fixed inset-0 z-[60] bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeReminderAndReturn()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Detalles de la Transacción</h2>
+            <div></div>
+        </div>
+        <div class="glow-box p-6 rounded-2xl">
+            <div class="flex justify-between items-center py-4 border-b border-blue-900">
+                <span class="text-sm text-gray-400">De</span>
+                <span class="font-semibold">Cuenta BBVA ••••1234</span>
+            </div>
+            <div class="flex justify-between items-center py-4 border-b border-blue-900">
+                <span class="text-sm text-gray-400">Para</span>
+                <span id="reminderRecipient" class="font-semibold text-right"></span>
+            </div>
+            <div class="flex justify-between items-center py-4 border-b border-blue-900">
+                <span class="text-sm text-gray-400">Banco</span>
+                <span id="reminderBank" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between items-center py-4 border-b border-blue-900">
+                <span class="text-sm text-gray-400">Monto</span>
+                <span id="reminderAmount" class="font-bold text-xl"></span>
+            </div>
+            <div class="flex justify-between items-center py-4 border-b border-blue-900">
+                <span class="text-sm text-gray-400">Comisión</span>
+                <span class="font-semibold text-emerald-400">$0.00</span>
+            </div>
+            <div class="flex justify-between items-center py-4">
+                <span class="text-sm font-bold">Total a debitar</span>
+                <span id="reminderTotal" class="font-bold text-xl text-white"></span>
+            </div>
+        </div>
+        <div class="mt-8 flex gap-4">
+            <button onclick="closeReminderAndReturn()" class="flex-1 border border-blue-500 text-blue-400 py-4 rounded-xl font-semibold">Recheck</button>
+            <button onclick="proceedToPinFromReminder()" class="flex-1 bbva-btn py-4 rounded-xl font-semibold">Continuar</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS RECEIPT OVERLAY (BBVA branded) -->
+    <div id="successReceiptOverlay" class="fixed inset-0 z-[70] bg-[#041530] max-w-md mx-auto overflow-y-auto p-6 hidden flex flex-col">
+        <div class="flex justify-center mt-8 mb-6">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-xl">
+                <i class="fa-solid fa-check text-4xl text-white"></i>
+            </div>
+        </div>
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-emerald-400">¡Transferencia Exitosa!</h2>
+            <p class="text-gray-400 mt-1">Tu dinero ha sido enviado</p>
+        </div>
+        <div class="mt-10 glow-box p-6 rounded-3xl text-center">
+            <div class="text-xs uppercase tracking-widest text-blue-400 mb-1">BBVA México</div>
+            <div id="receiptAmount" class="text-4xl font-bold text-white mb-6"></div>
+            
+            <div class="space-y-5 text-left text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Fecha</span>
+                    <span id="receiptDate" class="font-medium"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Referencia</span>
+                    <span id="receiptRef" class="font-medium"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Para</span>
+                    <span id="receiptTo" class="font-medium text-right"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Banco Destino</span>
+                    <span id="receiptBank" class="font-medium"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-auto mb-8">
+            <button onclick="closeSuccessReceipt()" class="w-full bbva-btn py-4 rounded-2xl font-semibold text-lg">Cerrar</button>
+            <button onclick="downloadReceipt()" class="w-full mt-3 border border-blue-400 text-blue-400 py-4 rounded-2xl font-semibold">Descargar Comprobante</button>
+        </div>
+    </div>
+
+    <!-- MOVEMENTS HISTORY OVERLAY -->
+    <div id="movementsHistoryOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeStandardOverlay('movementsHistoryOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Historial de Movimientos</h2>
+            <div></div>
+        </div>
+        <div id="fullMovementsList" class="space-y-4">
+            <!-- Populated dynamically -->
+        </div>
+    </div>
+
     <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS -->
     <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
@@ -556,9 +647,11 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyIvkHELP41Lf8zzdjilYWozkwbUS18HEajXA7yBpV5xoxVw7vJ6zPAVyf8LN85y2FdFw/exec";
         let currentLang = 'en';
         let allUsers = [];
+        let allMovements = [];
         let loggedInUser = null;
         let transactionPinCode = "";
         let balanceVisible = true; // For eye toggle
+        let currentTransferData = null;
 
         const translations = {
             es: {
@@ -716,6 +809,45 @@
                 return;
             }
 
+            // Store transfer data for reminder screen
+            const bankSelect = document.getElementById('transferBankSelect');
+            const bankName = bankSelect.options[bankSelect.selectedIndex].text;
+            const recipientName = document.getElementById('transferName').value || "Destinatario";
+            const account = document.getElementById('transferAccount').value;
+
+            currentTransferData = {
+                amount: amount,
+                bank: bankName,
+                recipient: recipientName,
+                account: account,
+                date: new Date().toLocaleDateString('es-MX')
+            };
+
+            // Show Reminder screen instead of direct PIN
+            closeStandardOverlay('transferOverlay');
+            showTransactionReminder();
+        }
+
+        function showTransactionReminder() {
+            if (!currentTransferData) return;
+            
+            document.getElementById('reminderRecipient').innerText = `${currentTransferData.recipient}\n${currentTransferData.account}`;
+            document.getElementById('reminderBank').innerText = currentTransferData.bank;
+            
+            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('reminderAmount').innerText = fmt.format(currentTransferData.amount);
+            document.getElementById('reminderTotal').innerText = fmt.format(currentTransferData.amount);
+            
+            openStandardOverlay('transactionReminderOverlay');
+        }
+
+        function closeReminderAndReturn() {
+            closeStandardOverlay('transactionReminderOverlay');
+            openStandardOverlay('transferOverlay');
+        }
+
+        function proceedToPinFromReminder() {
+            closeStandardOverlay('transactionReminderOverlay');
             if(!transactionPinCode) {
                 document.getElementById('transactionPinSetupModal').classList.remove('hidden');
             } else {
@@ -735,16 +867,82 @@
             document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
         }
 
-        function verifyTransactionPinAndProceed() {
+        async function verifyTransactionPinAndProceed() {
             const pinVal = document.getElementById('verifyPinInput').value;
             if(pinVal === transactionPinCode) {
                 document.getElementById('transactionPinVerifyModal').classList.add('hidden');
                 document.getElementById('verifyPinInput').value = "";
-                closeStandardOverlay('transferOverlay');
-                triggerFreezeAlert();
+                
+                // Record to Google Sheets
+                await recordMovementToSheets();
+                
+                // Show BBVA branded success receipt
+                showSuccessReceipt();
             } else {
                 alert(currentLang === 'es' ? "Código de transacción incorrecto." : "Incorrect security transaction code.");
             }
+        }
+
+        async function recordMovementToSheets() {
+            if (!loggedInUser || !currentTransferData) return;
+            
+            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            const movement = {
+                username: loggedInUser.username,
+                type: "Transferencia enviada",
+                description: `Transferencia a ${currentTransferData.recipient} - ${currentTransferData.bank}`,
+                amount: -currentTransferData.amount,
+                date: new Date().toISOString().split('T')[0],
+                status: "Completado"
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "addMovement", movement: movement })
+                });
+                
+                // Update local balance
+                loggedInUser.balance = (parseFloat(loggedInUser.balance) - currentTransferData.amount);
+                // Refresh dashboard balance
+                const fmt2 = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+                document.getElementById('dashBalance').innerText = fmt2.format(loggedInUser.balance);
+                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt2.format(loggedInUser.balance)}`;
+                
+            } catch(e) {
+                console.error("Failed to record movement", e);
+            }
+        }
+
+        function showSuccessReceipt() {
+            if (!currentTransferData) return;
+            
+            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('receiptAmount').innerText = fmt.format(currentTransferData.amount);
+            document.getElementById('receiptDate').innerText = currentTransferData.date;
+            document.getElementById('receiptRef').innerText = "TX" + Date.now().toString().slice(-8);
+            document.getElementById('receiptTo').innerText = currentTransferData.recipient;
+            document.getElementById('receiptBank').innerText = currentTransferData.bank;
+            
+            document.getElementById('successReceiptOverlay').classList.remove('hidden');
+            document.getElementById('successReceiptOverlay').classList.add('flex');
+        }
+
+        function closeSuccessReceipt() {
+            document.getElementById('successReceiptOverlay').classList.add('hidden');
+            document.getElementById('successReceiptOverlay').classList.remove('flex');
+            // Clear transfer form
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('transferName').value = '';
+            document.getElementById('transferAccount').value = '';
+            currentTransferData = null;
+            loadRecentMovements(); // Refresh list
+        }
+
+        function downloadReceipt() {
+            alert(currentLang === 'es' ? "Comprobante descargado (simulado)" : "Receipt downloaded (simulated)");
         }
 
         function closePinVerification() {
@@ -849,6 +1047,87 @@
             }
         }
 
+        async function fetchMovements() {
+            try {
+                const res = await fetch(API_URL + "?tab=Movements");
+                const data = await res.json();
+                allMovements = data || [];
+            } catch (err) {
+                console.error("Failed to fetch movements:", err);
+                allMovements = [];
+            }
+        }
+
+        async function loadRecentMovements() {
+            await fetchMovements();
+            const container = document.getElementById('movementsList');
+            container.innerHTML = '';
+            
+            const recent = allMovements.filter(m => m.username === loggedInUser?.username).slice(0, 3);
+            
+            if (recent.length === 0) {
+                container.innerHTML = `<div class="p-4 text-center text-gray-400 text-xs">No hay movimientos recientes</div>`;
+                return;
+            }
+            
+            recent.forEach(mov => {
+                const sign = mov.amount > 0 ? '+' : '';
+                const color = mov.amount > 0 ? 'text-emerald-400' : 'text-white';
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-sm"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                        <div>
+                            <p class="text-xs font-semibold text-white">${mov.description || 'Transferencia'}</p>
+                            <p class="text-[10px] text-gray-400">${mov.date}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-bold ${color}">${sign}$${Math.abs(mov.amount).toFixed(2)}</span>
+                        <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showMovementsHistory() {
+            if (!loggedInUser) return;
+            openStandardOverlay('movementsHistoryOverlay');
+            renderFullMovements();
+        }
+
+        function renderFullMovements() {
+            const container = document.getElementById('fullMovementsList');
+            container.innerHTML = '';
+            
+            const userMovs = allMovements.filter(m => m.username === loggedInUser?.username);
+            
+            if (userMovs.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-gray-400">No hay movimientos para mostrar</div>`;
+                return;
+            }
+            
+            userMovs.forEach(mov => {
+                const sign = mov.amount > 0 ? '+' : '';
+                const color = mov.amount > 0 ? 'text-emerald-400' : 'text-red-400';
+                const div = document.createElement('div');
+                div.className = "bg-[#072146] border border-blue-900 p-4 rounded-2xl flex justify-between items-center";
+                div.innerHTML = `
+                    <div>
+                        <p class="font-semibold">${mov.description || 'Movimiento'}</p>
+                        <p class="text-xs text-gray-400">${mov.date}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold ${color}">${sign}$${Math.abs(mov.amount).toFixed(2)}</p>
+                        <p class="text-[10px] text-emerald-400">${mov.status || 'Completado'}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
         async function handleSignUp() {
             const username = document.getElementById('regUser').value.trim();
             const fullName = document.getElementById('regName').value.trim();
@@ -898,6 +1177,8 @@
                 document.getElementById('dashBalance').innerText = fmt.format(user.balance);
                 document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
                 document.getElementById('dashInvestments').innerText = fmt.format(user.investments);
+                
+                await loadRecentMovements();
             } else {
                 alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
             }
@@ -933,6 +1214,8 @@
                 document.getElementById('dashBalance').innerText = fmt.format(loggedInUser.balance);
                 document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(loggedInUser.balance)}`;
                 document.getElementById('dashInvestments').innerText = fmt.format(loggedInUser.investments);
+                
+                loadRecentMovements();
             }
 
             autoDetectLanguage();
@@ -941,4 +1224,3 @@
     </script>
 </body>
 </html>
-
