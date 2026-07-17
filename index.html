@@ -1262,6 +1262,7 @@
             if (user) {
                 loggedInUser = user;
                 transactionPinCode = localStorage.getItem(`txPin_${user.username}`) || "";
+                localStorage.setItem("loggedInUser", JSON.stringify(user)); // FIXED: persist login
                 
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('dashboardContainer').classList.remove('hidden');
