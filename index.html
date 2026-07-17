@@ -1002,7 +1002,6 @@
             document.getElementById('transferAccount').value = '';
             currentTransferData = null;
             loadRecentMovements();
-            // Refresh full history if open
             const historyOverlay = document.getElementById('movementsHistoryOverlay');
             if (!historyOverlay.classList.contains('hidden')) {
                 renderFullMovements();
@@ -1090,6 +1089,9 @@
             document.getElementById('navOperate').innerText = translations[lang].navOperate;
             document.getElementById('navHelp').innerText = translations[lang].navHelp;
             document.getElementById('navMenu').innerText = translations[lang].navMenu;
+
+            // FORCE REAL CURRENT DATE (this fixes your issue)
+            setRealCurrentDate();
         }
 
         function toggleLanguage() {
@@ -1271,7 +1273,6 @@
                 
                 await loadRecentMovements();
                 
-                // ADDED: Premium UI, chat notification badge, real date
                 enhancePremiumUI();
                 addChatNotificationBadge(unreadAdminMessages);
                 setRealCurrentDate();
@@ -1360,7 +1361,6 @@
                 
                 loadRecentMovements();
                 
-                // ADDED: Load persisted PIN + premium enhancements + badge + real date
                 transactionPinCode = localStorage.getItem(`txPin_${loggedInUser.username}`) || "";
                 enhancePremiumUI();
                 const savedUnread = parseInt(localStorage.getItem('unreadChatCount') || '1');
