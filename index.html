@@ -72,66 +72,43 @@
             box-shadow: 0 4px 15px rgba(20, 117, 217, 0.5);
             font-size: 24px;
         }
-        /* ========== PREMIUM ENHANCEMENTS (ADDED) ========== */
-        .glow-box {
-            transition: box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .glow-box:hover {
-            box-shadow: 0 0 70px rgba(20, 117, 217, 0.4), inset 0 0 35px rgba(20, 117, 217, 0.2);
-            transform: translateY(-1px);
-        }
-        .premium-input {
+
+        /* Premium Enhancements */
+        .premium-card {
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 30px rgba(20, 117, 217, 0.15), inset 0 0 25px rgba(20, 117, 217, 0.08);
         }
-        .bbva-btn {
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(20, 117, 217, 0.25), inset 0 0 30px rgba(20, 117, 217, 0.12);
         }
-        .bbva-btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -100%;
-            width: 50%;
-            height: 200%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.7s;
+        .movement-item {
+            transition: all 0.3s ease;
         }
-        .bbva-btn:hover::after {
-            left: 300%;
+        .movement-item:hover {
+            background-color: rgba(20, 117, 217, 0.1) !important;
+            transform: scale(1.01);
         }
-        .card-glow-blue, .card-glow-gold {
-            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease;
+        .nav-item {
+            transition: all 0.2s ease;
         }
-        .card-glow-blue:hover, .card-glow-gold:hover {
-            transform: translateY(-5px) scale(1.015);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+        .nav-item.active {
+            color: #1475d9;
+            transform: scale(1.08);
         }
-        .modern-card {
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,255,255,0.07);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        .success-receipt {
+            background: linear-gradient(145deg, #072146, #0a3a76);
+            box-shadow: 0 0 60px rgba(20, 117, 217, 0.4);
         }
-        .subtle-glow {
-            box-shadow: 0 10px 25px -8px rgba(20, 117, 217, 0.25);
+        .reminder-screen {
+            animation: fadeInScale 0.4s ease forwards;
         }
-        .smooth-anim {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .premium-action {
-            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
-        }
-        .premium-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -8px rgba(20, 117, 217, 0.3);
-        }
-        .unread-badge {
-            animation: pulse-badge 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse-badge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.85; }
+        .glow-text {
+            text-shadow: 0 0 15px rgba(20, 117, 217, 0.6);
         }
     </style>
 </head>
@@ -139,7 +116,7 @@
 
     <div class="absolute top-4 right-4 z-50">
         <button id="langBtn" onclick="toggleLanguage()" class="bg-black bg-opacity-40 text-xs font-bold px-3 py-1 rounded border border-blue-500 tracking-wider">
-            IS
+            EN
         </button>
     </div>
 
@@ -165,15 +142,15 @@
         </div>
 
         <div id="loginForm" class="hidden">
-            <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Iniciar Sesión</h2>
+            <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Log In</h2>
             <div class="space-y-4">
-                <input type="text" id="loginUser" placeholder="Usuario" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
-                <input type="password" id="loginPass" placeholder="Contraseña" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="text" id="loginUser" placeholder="Username" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="password" id="loginPass" placeholder="Password" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
             </div>
-            <button onclick="handleLogin()" id="loginBtnText" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Entrar</button>
+            <button onclick="handleLogin()" id="loginBtnText" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Sign In</button>
             <p class="text-sm mt-6 text-center text-gray-400">
-                <span id="noAccountText">¿No tienes cuenta?</span> 
-                <a href="#" onclick="showSignUp()" class="text-blue-400 hover:underline ml-1" id="signUpLinkText">Regístrate</a>
+                <span id="noAccountText">Don't have an account?</span> 
+                <a href="#" onclick="showSignUp()" class="text-blue-400 hover:underline ml-1" id="signUpLinkText">Sign Up</a>
             </p>
         </div>
     </div>
@@ -192,41 +169,41 @@
         <div class="flex justify-between items-end mb-4">
             <div>
                 <div class="flex items-center gap-1 text-gray-300 text-lg">
-                    <span id="greetingDay">Hola,</span>
+                    <span id="greetingDay">Hello,</span>
                     <span id="userGreetingName" class="font-bold text-white">Alejandro</span>
                 </div>
-                <p class="text-gray-400 text-xs mt-0.5" id="dateLabel">Miércoles 22 de mayo, 2024</p>
+                <p class="text-gray-400 text-xs mt-0.5" id="dateLabel">Wednesday, July 16, 2026</p>
             </div>
             <button onclick="logout()" class="bg-gray-900 bg-opacity-40 text-gray-400 hover:text-white text-xs px-3 py-1 rounded border border-gray-700">Logout</button>
         </div>
 
         <div class="flex justify-between items-center mb-3">
-            <span class="text-sm font-semibold text-gray-200" id="lblProducts">Mis productos</span>
-            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll1">Ver todos</span>
+            <span class="text-sm font-semibold text-gray-200" id="lblProducts">My Products</span>
+            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll1">See all</span>
         </div>
 
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 mb-5 relative overflow-hidden shadow-xl modern-card subtle-glow">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-5 mb-5 relative overflow-hidden shadow-xl premium-card">
             <div class="flex justify-between items-start">
                 <div>
-                    <h3 class="text-sm font-medium text-white" id="cardLabel">Cuenta de Cheques</h3>
+                    <h3 class="text-sm font-medium text-white" id="cardLabel">Checking Account</h3>
                     <p class="text-xs text-gray-400 mt-0.5">• • 1234</p>
                 </div>
                 <i class="fa-solid fa-ellipsis-vertical text-gray-400 cursor-pointer"></i>
             </div>
             <div class="mt-4">
-                <p class="text-[11px] text-gray-400" id="availableLabel">Saldo disponible</p>
+                <p class="text-[11px] text-gray-400" id="availableLabel">Available balance</p>
                 <div class="flex items-baseline mt-0.5">
                     <p class="text-3xl font-bold tracking-tight text-white" id="dashBalance">$ 0.00</p>
                     <button onclick="toggleBalanceVisibility()" id="eyeIcon" class="ml-3 text-gray-400 hover:text-white"><i class="fa-solid fa-eye"></i></button>
                 </div>
-                <p class="text-[11px] text-gray-400 mt-1" id="actualLabel">Saldo actual: $ 0.00</p>
+                <p class="text-[11px] text-gray-400 mt-1" id="actualLabel">Current balance: $ 0.00</p>
             </div>
-            <p onclick="showMovementsHistory()" class="text-xs text-blue-400 font-semibold mt-4 cursor-pointer" id="lblMovementsLink">Ver movimientos</p>
+            <p class="text-xs text-blue-400 font-semibold mt-4 cursor-pointer" id="lblMovementsLink" onclick="loadMovements()">View transactions</p>
             
             <div class="absolute right-4 bottom-8 w-24 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-1.5 flex flex-col justify-between opacity-95 shadow-md border border-blue-500">
                 <div class="flex justify-between items-center">
                     <span class="text-[6px] font-bold tracking-widest text-white">BBVA</span>
-                    <span class="text-[5px] text-blue-300">Débito</span>
+                    <span class="text-[5px] text-blue-300">Debit</span>
                 </div>
                 <div class="w-3.5 h-2.5 bg-yellow-400 bg-opacity-90 rounded-sm"></div>
                 <div class="flex justify-between items-center">
@@ -237,124 +214,86 @@
         </div>
 
         <div class="grid grid-cols-5 gap-2 mb-6 text-center">
-            <div onclick="openStandardOverlay('transferOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-action">
+            <div onclick="openStandardOverlay('transferOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-card">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-arrow-right-arrow-left text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">Transferir</span>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actTransfer">Transfer</span>
             </div>
-            <div onclick="openStandardOverlay('payServicesOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-action">
+            <div onclick="openStandardOverlay('payServicesOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-card">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-receipt text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actPay">Pagar servicios</span>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actPay">Pay Services</span>
             </div>
-            <div onclick="openStandardOverlay('cardlessCashOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-action">
+            <div onclick="openStandardOverlay('cardlessCashOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-card">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-mobile-screen text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actWithdraw">Retirar sin tarjeta</span>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actWithdraw">Cardless Cash</span>
             </div>
-            <div onclick="openStandardOverlay('investmentsOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-action">
+            <div onclick="openStandardOverlay('investmentsOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-card">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-chart-pie text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actInvest">Inversiones</span>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actInvest">Investments</span>
             </div>
-            <div onclick="openStandardOverlay('loansOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-action">
+            <div onclick="openStandardOverlay('loansOverlay')" class="bg-[#072146] bg-opacity-60 border border-blue-950 p-2 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/30 transition premium-card">
                 <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center mb-1"><i class="fa-solid fa-hand-holding-dollar text-blue-400 text-xs"></i></div>
-                <span class="text-[9px] font-medium tracking-tight leading-3" id="actLoans">Préstamos</span>
+                <span class="text-[9px] font-medium tracking-tight leading-3" id="actLoans">Loans</span>
             </div>
         </div>
 
         <div class="flex justify-between items-center mb-3">
-            <span class="text-sm font-semibold text-gray-200" id="lblCards">Tarjetas</span>
-            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll2">Ver todas</span>
+            <span class="text-sm font-semibold text-gray-200" id="lblCards">Cards</span>
+            <span class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll2">See all</span>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="card-glow-blue p-3.5 rounded-xl border border-blue-900 flex flex-col justify-between h-24 relative shadow-md modern-card subtle-glow">
-                <div class="flex justify-between items-start"><span class="text-[9px] font-bold">BBVA</span><span class="text-[8px] text-gray-300" id="cardDeb">Débito</span></div>
+            <div class="card-glow-blue p-3.5 rounded-xl border border-blue-900 flex flex-col justify-between h-24 relative shadow-md premium-card">
+                <div class="flex justify-between items-start"><span class="text-[9px] font-bold">BBVA</span><span class="text-[8px] text-gray-300" id="cardDeb">Debit</span></div>
                 <div class="flex justify-between items-end"><span class="text-[10px] text-gray-300">• • 1234</span><span class="text-xs italic font-bold">VISA</span></div>
             </div>
-            <div class="card-glow-gold p-3.5 rounded-xl border border-yellow-700/30 flex flex-col justify-between h-24 relative shadow-md modern-card subtle-glow">
-                <div class="flex justify-between items-start"><span class="text-[9px] font-bold text-amber-100">BBVA</span><span class="text-[8px] text-amber-200 font-medium" id="cardCred">Crédito</span></div>
+            <div class="card-glow-gold p-3.5 rounded-xl border border-yellow-700/30 flex flex-col justify-between h-24 relative shadow-md premium-card">
+                <div class="flex justify-between items-start"><span class="text-[9px] font-bold text-amber-100">BBVA</span><span class="text-[8px] text-amber-200 font-medium" id="cardCred">Credit</span></div>
                 <div class="flex justify-between items-end"><span class="text-[10px] text-amber-100">• • 5678</span><span class="text-xs italic font-bold text-amber-100">VISA</span></div>
             </div>
         </div>
 
         <div class="flex justify-between items-center mb-3">
-            <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Movimientos recientes</span>
-            <span onclick="showMovementsHistory()" class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">Ver todas</span>
+            <span class="text-sm font-semibold text-gray-200" id="lblRecentMovements">Recent movements</span>
+            <span onclick="loadMovements()" class="text-xs text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAllMovements">See all</span>
         </div>
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md modern-card subtle-glow" id="movementsList">
-            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-emerald-950 flex items-center justify-center text-emerald-400 text-sm"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <div>
-                        <p class="text-xs font-semibold text-white">Supermercado Chedraui</p>
-                        <p class="text-[10px] text-gray-400">21 mayo 2024</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-white">-$1,200.00</span>
-                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
-                </div>
-            </div>
-            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-emerald-950 flex items-center justify-center text-emerald-400 text-sm"><i class="fa-solid fa-coffee"></i></div>
-                    <div>
-                        <p class="text-xs font-semibold text-white">Starbucks</p>
-                        <p class="text-[10px] text-gray-400">20 mayo 2024</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-white">-$95.00</span>
-                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
-                </div>
-            </div>
-            <div class="flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-sm"><i class="fa-solid fa-arrow-down-long"></i></div>
-                    <div>
-                        <p class="text-xs font-semibold text-white" id="movRecTxt">Transferencia recibida</p>
-                        <p class="text-[10px] text-gray-400">20 mayo 2024</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-emerald-400">+$5,800.00</span>
-                    <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
-                </div>
-            </div>
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-2.5 mb-6 space-y-3 shadow-md premium-card" id="movementsList">
+            <!-- Dynamically populated -->
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between modern-card subtle-glow">
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between premium-card">
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-semibold text-gray-200" id="lblApartados">Apartados</span>
-                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll3">Ver todos</span>
+                        <span class="text-xs font-semibold text-gray-200" id="lblApartados">Vaults</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll3">See all</span>
                     </div>
                     <div class="flex items-center gap-2 my-2">
                         <div class="w-7 h-7 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-xs"><i class="fa-solid fa-piggy-bank"></i></div>
                         <div>
-                            <p class="text-[9px] text-gray-400">Vacaciones Europa</p>
+                            <p class="text-[9px] text-gray-400">Europe Vacation</p>
                             <p class="text-sm font-bold">$ 25,000.00</p>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <p class="text-[8px] text-gray-400 mb-1" id="apartadoSub">de $ 50,000.00</p>
+                    <p class="text-[8px] text-gray-400 mb-1" id="apartadoSub">of $ 50,000.00</p>
                     <div class="w-full bg-blue-950 h-1 rounded-full overflow-hidden">
                         <div class="bg-blue-500 h-full w-1/2"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between modern-card subtle-glow">
+            <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 shadow-md flex flex-col justify-between premium-card">
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-semibold text-gray-200" id="lblInvestments">Inversiones</span>
-                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll4">Ver todos</span>
+                        <span class="text-xs font-semibold text-gray-200" id="lblInvestments">Investments</span>
+                        <span class="text-[10px] text-blue-400 cursor-pointer standard-see-all-trigger" id="lblSeeAll4">See all</span>
                     </div>
-                    <p class="text-[9px] text-gray-400" id="lblPortfolio">Portafolio Total</p>
+                    <p class="text-[9px] text-gray-400" id="lblPortfolio">Total Portfolio</p>
                     <p class="text-base font-bold text-white mt-0.5" id="dashInvestments">$ 0.00</p>
                 </div>
                 <div class="mt-2 flex items-center justify-between">
                     <div>
-                        <p class="text-[8px] text-gray-400" id="lblAnnualYield">Rendimiento anual</p>
+                        <p class="text-[8px] text-gray-400" id="lblAnnualYield">Annual Yield</p>
                         <p class="text-[10px] text-emerald-400 font-bold" id="dashYield">+12.35%</p>
                     </div>
                     <i class="fa-solid fa-chart-line text-emerald-400 text-lg opacity-85"></i>
@@ -362,12 +301,12 @@
             </div>
         </div>
 
-        <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 flex justify-between items-center shadow-md mb-8 cursor-pointer hover:bg-blue-950/20 transition modern-card subtle-glow">
+        <div class="bg-[#072146] border border-blue-900 rounded-xl p-4 flex justify-between items-center shadow-md mb-8 cursor-pointer hover:bg-blue-950/20 transition premium-card">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full flex items-center justify-center text-blue-400 text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
                 <div>
-                    <p class="text-xs font-bold text-white" id="secTitle">Centro de Seguridad</p>
-                    <p class="text-[10px] text-gray-400 mt-0.5" id="secDesc">Protege tu información y tus operaciones.</p>
+                    <p class="text-xs font-bold text-white" id="secTitle">Security Center</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5" id="secDesc">Protect your information and operations.</p>
                 </div>
             </div>
             <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
@@ -376,8 +315,9 @@
     </div>
 
     <!-- Live Chat Icon -->
-    <button onclick="goToChat()" class="chat-icon">
+    <button onclick="goToChat()" class="chat-icon relative">
         💬
+        <span id="unreadBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md hidden">0</span>
     </button>
 
     <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
@@ -430,7 +370,49 @@
             <input type="text" id="transferName" placeholder="Recipient Full Name" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             <input type="number" id="transferAmount" placeholder="Amount ($)" class="w-full p-3 rounded premium-input text-white text-sm placeholder-gray-500">
             
-            <button onclick="executeTransferFlow()" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-4 transition tracking-wide text-sm uppercase">Continue Transfer</button>
+            <button onclick="showReminderScreen()" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-4 transition tracking-wide text-sm uppercase">Continue Transfer</button>
+        </div>
+    </div>
+
+    <!-- REMINDER SCREEN -->
+    <div id="reminderOverlay" class="fixed inset-0 z-[60] bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="closeReminderScreen()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-lg font-bold tracking-wide text-blue-400">Transfer Reminder</h2>
+            <div></div>
+        </div>
+        <div class="reminder-screen bg-[#072146] border border-blue-900 rounded-2xl p-6 text-center">
+            <div class="w-16 h-16 mx-auto bg-blue-900/50 rounded-2xl flex items-center justify-center mb-6">
+                <i class="fa-solid fa-exclamation-triangle text-3xl text-amber-400"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Please Review Details</h3>
+            <div class="space-y-4 text-left bg-[#041530] rounded-xl p-5">
+                <div class="flex justify-between"><span class="text-gray-400">To:</span><span id="reminderTo" class="font-medium"></span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Bank:</span><span id="reminderBank" class="font-medium"></span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Amount:</span><span id="reminderAmount" class="font-semibold text-emerald-400"></span></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-6">This action is irreversible. Ensure all details are correct.</p>
+            <button onclick="proceedToPinFromReminder()" class="w-full bbva-btn text-white py-3.5 rounded-xl font-semibold mt-8 tracking-wide">Confirm & Continue</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS RECEIPT -->
+    <div id="successReceiptOverlay" class="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center p-4 hidden">
+        <div class="success-receipt w-full max-w-md rounded-3xl p-8 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <i class="fa-solid fa-check-circle text-6xl text-emerald-400 mb-4"></i>
+            <h2 class="text-2xl font-bold mb-1">Transfer Successful</h2>
+            <p class="text-emerald-400 text-sm mb-8">BBVA • Secure Transaction</p>
+            
+            <div class="bg-[#041530]/70 rounded-2xl p-6 space-y-4 text-left mb-8">
+                <div class="flex justify-between text-sm"><span class="text-gray-400">Date</span><span id="receiptDate" class="font-medium"></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-400">To</span><span id="receiptTo" class="font-medium"></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-400">Amount</span><span id="receiptAmount" class="font-semibold text-white"></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-400">Reference</span><span id="receiptRef" class="font-mono text-xs text-blue-400"></span></div>
+            </div>
+            
+            <button onclick="closeSuccessReceipt()" class="w-full py-4 bg-white text-[#041530] font-bold rounded-2xl text-sm tracking-widest">DONE</button>
+            <p class="text-[10px] text-gray-500 mt-4">Transaction recorded securely • BBVA</p>
         </div>
     </div>
 
@@ -442,19 +424,19 @@
             <div></div>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40 premium-card">
                 <i class="fa-solid fa-lightbulb text-yellow-400 text-2xl mb-2"></i>
                 <span class="text-xs font-semibold">Electricity (CFE)</span>
             </div>
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40 premium-card">
                 <i class="fa-solid fa-droplet text-blue-400 text-2xl mb-2"></i>
                 <span class="text-xs font-semibold">Water Supply</span>
             </div>
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40 premium-card">
                 <i class="fa-solid fa-house-signal text-purple-400 text-2xl mb-2"></i>
                 <span class="text-xs font-semibold">Internet / TV</span>
             </div>
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-900/40 premium-card">
                 <i class="fa-solid fa-mobile-retro text-emerald-400 text-2xl mb-2"></i>
                 <span class="text-xs font-semibold">Telephone Plan</span>
             </div>
@@ -493,14 +475,14 @@
             <div></div>
         </div>
         <div class="space-y-3">
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center premium-card">
                 <div>
                     <h4 class="text-xs font-bold text-white">Fixed Term Funds (Pagaré)</h4>
                     <p class="text-[10px] text-emerald-400 mt-0.5">Yield up to 11.50% APR</p>
                 </div>
                 <button onclick="triggerFreezeAlert()" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-semibold">Invest</button>
             </div>
-            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center">
+            <div class="bg-[#072146] border border-blue-900 p-4 rounded-xl flex justify-between items-center premium-card">
                 <div>
                     <h4 class="text-xs font-bold text-white">Mutual Global Strategy</h4>
                     <p class="text-[10px] text-gray-400 mt-0.5">High Performance Variable Index</p>
@@ -517,7 +499,7 @@
             <h2 class="text-lg font-bold tracking-wide text-blue-400">Pre-Approved Credits</h2>
             <div></div>
         </div>
-        <div class="bg-gradient-to-r from-amber-600/20 to-yellow-600/10 border border-yellow-700/40 p-5 rounded-xl mb-6">
+        <div class="bg-gradient-to-r from-amber-600/20 to-yellow-600/10 border border-yellow-700/40 p-5 rounded-xl mb-6 premium-card">
             <div class="flex justify-between items-start">
                 <div>
                     <span class="bg-yellow-500/20 text-yellow-400 text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">Immediate Delivery</span>
@@ -556,97 +538,6 @@
         </ul>
     </div>
 
-    <!-- TRANSACTION REMINDER / DETAILS SCREEN (NOW IN ENGLISH) -->
-    <div id="transactionReminderOverlay" class="fixed inset-0 z-[60] bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6">
-            <button onclick="closeReminderAndReturn()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-            <h2 class="text-lg font-bold tracking-wide text-blue-400">Transaction Details</h2>
-            <div></div>
-        </div>
-        <div class="glow-box p-6 rounded-2xl">
-            <div class="flex justify-between items-center py-4 border-b border-blue-900">
-                <span class="text-sm text-gray-400">From</span>
-                <span class="font-semibold">BBVA Account ••••1234</span>
-            </div>
-            <div class="flex justify-between items-center py-4 border-b border-blue-900">
-                <span class="text-sm text-gray-400">To</span>
-                <span id="reminderRecipient" class="font-semibold text-right"></span>
-            </div>
-            <div class="flex justify-between items-center py-4 border-b border-blue-900">
-                <span class="text-sm text-gray-400">Bank</span>
-                <span id="reminderBank" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between items-center py-4 border-b border-blue-900">
-                <span class="text-sm text-gray-400">Amount</span>
-                <span id="reminderAmount" class="font-bold text-xl"></span>
-            </div>
-            <div class="flex justify-between items-center py-4 border-b border-blue-900">
-                <span class="text-sm text-gray-400">Fee</span>
-                <span class="font-semibold text-emerald-400">$0.00</span>
-            </div>
-            <div class="flex justify-between items-center py-4">
-                <span class="text-sm font-bold">Total to debit</span>
-                <span id="reminderTotal" class="font-bold text-xl text-white"></span>
-            </div>
-        </div>
-        <div class="mt-8 flex gap-4">
-            <button onclick="closeReminderAndReturn()" class="flex-1 border border-blue-500 text-blue-400 py-4 rounded-xl font-semibold">Recheck</button>
-            <button onclick="proceedToPinFromReminder()" class="flex-1 bbva-btn py-4 rounded-xl font-semibold">Continue</button>
-        </div>
-    </div>
-
-    <!-- SUCCESS RECEIPT OVERLAY (NOW IN ENGLISH) -->
-    <div id="successReceiptOverlay" class="fixed inset-0 z-[70] bg-[#041530] max-w-md mx-auto overflow-y-auto p-6 hidden flex flex-col">
-        <div class="flex justify-center mt-8 mb-6">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-xl">
-                <i class="fa-solid fa-check text-4xl text-white"></i>
-            </div>
-        </div>
-        <div class="text-center">
-            <h2 class="text-3xl font-bold text-emerald-400">Transfer Successful!</h2>
-            <p class="text-gray-400 mt-1">Your money has been sent successfully</p>
-        </div>
-        <div class="mt-10 glow-box p-6 rounded-3xl text-center">
-            <div class="text-xs uppercase tracking-widest text-blue-400 mb-1">BBVA México</div>
-            <div id="receiptAmount" class="text-4xl font-bold text-white mb-6"></div>
-            
-            <div class="space-y-5 text-left text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-400">Date</span>
-                    <span id="receiptDate" class="font-medium"></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-400">Reference</span>
-                    <span id="receiptRef" class="font-medium"></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-400">To</span>
-                    <span id="receiptTo" class="font-medium text-right"></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-400">Destination Bank</span>
-                    <span id="receiptBank" class="font-medium"></span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-auto mb-8">
-            <button onclick="closeSuccessReceipt()" class="w-full bbva-btn py-4 rounded-2xl font-semibold text-lg">Close</button>
-            <button onclick="downloadReceipt()" class="w-full mt-3 border border-blue-400 text-blue-400 py-4 rounded-2xl font-semibold">Download Receipt</button>
-        </div>
-    </div>
-
-    <!-- MOVEMENTS HISTORY OVERLAY -->
-    <div id="movementsHistoryOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
-        <div class="flex justify-between items-center mb-6">
-            <button onclick="closeStandardOverlay('movementsHistoryOverlay')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="text-lg font-bold tracking-wide text-blue-400">Transaction History</h2>
-            <div></div>
-        </div>
-        <div id="fullMovementsList" class="space-y-4">
-            <!-- Populated dynamically with full details from Google Sheets -->
-        </div>
-    </div>
-
     <!-- DYNAMIC TRANSACTION SECURITY PIN SETUP MODALS -->
     <div id="transactionPinSetupModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#072146] border border-blue-900 rounded-xl p-6 w-full max-w-xs text-center shadow-2xl">
@@ -680,27 +571,27 @@
     </div>
 
     <div id="stickyBottomNav" class="fixed bottom-0 left-0 right-0 z-40 hidden flex justify-around items-center h-16 bottom-nav max-w-md mx-auto">
-        <div onclick="goHome()" class="flex flex-col items-center justify-center cursor-pointer text-blue-400">
+        <div onclick="goHome()" class="flex flex-col items-center justify-center cursor-pointer text-blue-400 nav-item">
             <i class="fa-solid fa-house text-sm"></i>
-            <span class="text-[9px] mt-1" id="navStart">Inicio</span>
+            <span class="text-[9px] mt-1" id="navStart">Home</span>
         </div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400 nav-item">
             <i class="fa-solid fa-wallet text-sm"></i>
-            <span class="text-[9px] mt-1" id="navProducts">Productos</span>
+            <span class="text-[9px] mt-1" id="navProducts">Products</span>
         </div>
         <div class="flex flex-col items-center justify-center -mt-6 cursor-pointer">
             <div onclick="openStandardOverlay('seeAllOverlay')" class="w-12 h-12 rounded-full operar-btn flex items-center justify-center text-white text-lg">
                 <i class="fa-solid fa-dollar-sign"></i>
             </div>
-            <span class="text-[9px] mt-1 text-gray-300 font-medium" id="navOperate">Operar</span>
+            <span class="text-[9px] mt-1 text-gray-300 font-medium" id="navOperate">Operate</span>
         </div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400 nav-item">
             <i class="fa-solid fa-circle-question text-sm"></i>
-            <span class="text-[9px] mt-1" id="navHelp">Ayuda</span>
+            <span class="text-[9px] mt-1" id="navHelp">Help</span>
         </div>
-        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400">
+        <div class="flex flex-col items-center justify-center cursor-pointer text-gray-400 nav-item">
             <i class="fa-solid fa-bars text-sm"></i>
-            <span class="text-[9px] mt-1" id="navMenu">Menú</span>
+            <span class="text-[9px] mt-1" id="navMenu">Menu</span>
         </div>
     </div>
 
@@ -708,12 +599,10 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyIvkHELP41Lf8zzdjilYWozkwbUS18HEajXA7yBpV5xoxVw7vJ6zPAVyf8LN85y2FdFw/exec";
         let currentLang = 'en';
         let allUsers = [];
-        let allMovements = [];
+        let movements = [];
         let loggedInUser = null;
         let transactionPinCode = "";
-        let balanceVisible = true;
-        let currentTransferData = null;
-        let unreadAdminMessages = 1; // Demo value for new admin message notification
+        let balanceVisible = true; // For eye toggle
 
         const translations = {
             es: {
@@ -812,10 +701,6 @@
             if (loggedInUser) {
                 localStorage.setItem("userId", loggedInUser.username);
                 localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-                // Clear unread badge when opening chat
-                const badge = document.querySelector('.unread-badge');
-                if (badge) badge.remove();
-                localStorage.setItem('unreadChatCount', '0');
                 window.location.href = "messages.html";
             } else {
                 alert("Please log in first");
@@ -828,7 +713,7 @@
             const eyeIcon = document.getElementById('eyeIcon');
             if (balanceVisible) {
                 const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-                balanceEl.innerText = fmt.format(loggedInUser.balance);
+                balanceEl.innerText = fmt.format(loggedInUser.balance || 0);
                 eyeIcon.innerHTML = '<i class="fa-solid fa-eye"></i>';
             } else {
                 balanceEl.innerText = '****';
@@ -862,56 +747,44 @@
             }
         }
 
-        function executeTransferFlow() {
+        let currentTransferData = {};
+
+        function showReminderScreen() {
             const amount = parseFloat(document.getElementById('transferAmount').value);
-            
             if(!amount || amount <= 0) {
                 alert(currentLang === 'es' ? "Ingresa un monto válido." : "Please enter a valid amount.");
                 return;
             }
-
-            if (loggedInUser && amount > loggedInUser.balance) {
-                alert(currentLang === 'es' ? "Fondos Insuficientes: Tu saldo disponible es menor que el monto solicitado." : "Insufficient Funds: Your available balance is less than the requested transfer amount.");
+            if (loggedInUser && amount > (loggedInUser.balance || 0)) {
+                alert(currentLang === 'es' ? "Fondos Insuficientes." : "Insufficient Funds.");
                 return;
             }
 
             const bankSelect = document.getElementById('transferBankSelect');
             const bankName = bankSelect.options[bankSelect.selectedIndex].text;
-            const recipientName = document.getElementById('transferName').value || "Recipient";
-            const account = document.getElementById('transferAccount').value;
+            const recipient = document.getElementById('transferName').value || "Recipient";
 
             currentTransferData = {
                 amount: amount,
                 bank: bankName,
-                recipient: recipientName,
-                account: account,
-                date: new Date().toLocaleDateString('en-US')
+                recipient: recipient,
+                account: document.getElementById('transferAccount').value
             };
 
+            document.getElementById('reminderTo').textContent = recipient;
+            document.getElementById('reminderBank').textContent = bankName;
+            document.getElementById('reminderAmount').textContent = '$' + amount.toFixed(2);
+
             closeStandardOverlay('transferOverlay');
-            showTransactionReminder();
+            openStandardOverlay('reminderOverlay');
         }
 
-        function showTransactionReminder() {
-            if (!currentTransferData) return;
-            
-            document.getElementById('reminderRecipient').innerText = `${currentTransferData.recipient}\n${currentTransferData.account}`;
-            document.getElementById('reminderBank').innerText = currentTransferData.bank;
-            
-            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-            document.getElementById('reminderAmount').innerText = fmt.format(currentTransferData.amount);
-            document.getElementById('reminderTotal').innerText = fmt.format(currentTransferData.amount);
-            
-            openStandardOverlay('transactionReminderOverlay');
-        }
-
-        function closeReminderAndReturn() {
-            closeStandardOverlay('transactionReminderOverlay');
-            openStandardOverlay('transferOverlay');
+        function closeReminderScreen() {
+            closeStandardOverlay('reminderOverlay');
         }
 
         function proceedToPinFromReminder() {
-            closeStandardOverlay('transactionReminderOverlay');
+            closeReminderScreen();
             if(!transactionPinCode) {
                 document.getElementById('transactionPinSetupModal').classList.remove('hidden');
             } else {
@@ -926,40 +799,44 @@
                 return;
             }
             transactionPinCode = pinVal;
-            if (loggedInUser) {
-                localStorage.setItem(`txPin_${loggedInUser.username}`, pinVal);
-            }
+            localStorage.setItem('transactionPin_' + (loggedInUser ? loggedInUser.username : ''), pinVal);
             document.getElementById('transactionPinSetupModal').classList.add('hidden');
             document.getElementById('newSetupPinInput').value = "";
             document.getElementById('transactionPinVerifyModal').classList.remove('hidden');
         }
 
-        async function verifyTransactionPinAndProceed() {
+        function verifyTransactionPinAndProceed() {
             const pinVal = document.getElementById('verifyPinInput').value;
             if(pinVal === transactionPinCode) {
                 document.getElementById('transactionPinVerifyModal').classList.add('hidden');
                 document.getElementById('verifyPinInput').value = "";
-                
-                await recordMovementToSheets();
-                showSuccessReceipt();
+                processSuccessfulTransfer();
             } else {
                 alert(currentLang === 'es' ? "Código de transacción incorrecto." : "Incorrect security transaction code.");
             }
         }
 
-        async function recordMovementToSheets() {
-            if (!loggedInUser || !currentTransferData) return;
-            
-            const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-            const movement = {
+        function closePinVerification() {
+            document.getElementById('transactionPinVerifyModal').classList.add('hidden');
+            document.getElementById('verifyPinInput').value = "";
+        }
+
+        async function processSuccessfulTransfer() {
+            if (!loggedInUser) return;
+
+            const amount = currentTransferData.amount;
+            loggedInUser.balance = (parseFloat(loggedInUser.balance) || 0) - amount;
+
+            // Record to Sheets (Movements) with initial Processing status
+            const movementPayload = {
+                action: "addMovement",
                 username: loggedInUser.username,
-                type: "Transfer sent",
-                description: `Transfer to ${currentTransferData.recipient}`,
-                recipient: currentTransferData.recipient,
-                bank: currentTransferData.bank,
-                amount: -currentTransferData.amount,
-                date: new Date().toISOString().split('T')[0],
-                status: "Processing"
+                type: "Transfer Sent",
+                description: `Transfer to ${currentTransferData.recipient} - ${currentTransferData.bank}`,
+                amount: -amount,
+                date: new Date().toISOString(),
+                status: "Processing",
+                recipient: currentTransferData.recipient
             };
 
             try {
@@ -967,55 +844,34 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: "addMovement", movement: movement })
+                    body: JSON.stringify(movementPayload)
                 });
-                
-                loggedInUser.balance = (parseFloat(loggedInUser.balance) - currentTransferData.amount);
-                const fmt2 = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-                document.getElementById('dashBalance').innerText = fmt2.format(loggedInUser.balance);
-                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt2.format(loggedInUser.balance)}`;
-                
-            } catch(e) {
-                console.error("Failed to record movement", e);
-            }
-        }
+            } catch(e) {}
 
-        function showSuccessReceipt() {
-            if (!currentTransferData) return;
-            
+            // Update UI balance
             const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-            document.getElementById('receiptAmount').innerText = fmt.format(currentTransferData.amount);
-            document.getElementById('receiptDate').innerText = currentTransferData.date;
-            document.getElementById('receiptRef').innerText = "TX" + Date.now().toString().slice(-8);
-            document.getElementById('receiptTo').innerText = currentTransferData.recipient;
-            document.getElementById('receiptBank').innerText = currentTransferData.bank;
-            
-            document.getElementById('successReceiptOverlay').classList.remove('hidden');
-            document.getElementById('successReceiptOverlay').classList.add('flex');
+            document.getElementById('dashBalance').innerText = fmt.format(loggedInUser.balance);
+            document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(loggedInUser.balance)}`;
+
+            // Show receipt
+            const now = new Date();
+            document.getElementById('receiptDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('receiptTo').textContent = currentTransferData.recipient;
+            document.getElementById('receiptAmount').textContent = '$' + amount.toFixed(2);
+            document.getElementById('receiptRef').textContent = 'TX-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+            openStandardOverlay('successReceiptOverlay');
+
+            // Refresh movements
+            loadMovements();
         }
 
         function closeSuccessReceipt() {
-            document.getElementById('successReceiptOverlay').classList.add('hidden');
-            document.getElementById('successReceiptOverlay').classList.remove('flex');
+            closeStandardOverlay('successReceiptOverlay');
+            // Clear transfer fields
             document.getElementById('transferAmount').value = '';
             document.getElementById('transferName').value = '';
             document.getElementById('transferAccount').value = '';
-            currentTransferData = null;
-            loadRecentMovements();
-            // Refresh full history if open
-            const historyOverlay = document.getElementById('movementsHistoryOverlay');
-            if (!historyOverlay.classList.contains('hidden')) {
-                renderFullMovements();
-            }
-        }
-
-        function downloadReceipt() {
-            alert(currentLang === 'es' ? "Comprobante descargado (simulado)" : "Receipt downloaded (simulated)");
-        }
-
-        function closePinVerification() {
-            document.getElementById('transactionPinVerifyModal').classList.add('hidden');
-            document.getElementById('verifyPinInput').value = "";
         }
 
         function triggerFreezeAlert() {
@@ -1057,7 +913,6 @@
             document.getElementById('loginPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
 
             document.getElementById('greetingDay').innerText = translations[lang].greetingDay;
-            document.getElementById('dateLabel').innerText = translations[lang].dateLabel;
             document.getElementById('lblProducts').innerText = translations[lang].lblProducts;
             document.getElementById('lblSeeAll1').innerText = translations[lang].lblSeeAll1;
             document.getElementById('cardLabel').innerText = translations[lang].cardLabel;
@@ -1074,7 +929,6 @@
             document.getElementById('cardCred').innerText = translations[lang].cardCred;
             document.getElementById('lblRecentMovements').innerText = translations[lang].lblRecentMovements;
             document.getElementById('lblSeeAllMovements').innerText = translations[lang].lblSeeAllMovements;
-            document.getElementById('movRecTxt').innerText = translations[lang].movRecTxt;
             document.getElementById('lblApartados').innerText = translations[lang].lblApartados;
             document.getElementById('lblSeeAll3').innerText = translations[lang].lblSeeAll3;
             document.getElementById('apartadoSub').innerText = translations[lang].apartadoSub;
@@ -1115,103 +969,58 @@
             }
         }
 
-        async function fetchMovements() {
+        async function loadMovements() {
+            if (!loggedInUser) return;
             try {
-                const res = await fetch(API_URL + "?tab=Movements");
+                const res = await fetch(API_URL + `?action=getMovements&username=${loggedInUser.username}`);
                 const data = await res.json();
-                allMovements = data || [];
-            } catch (err) {
-                console.error("Failed to fetch movements:", err);
-                allMovements = [];
+                movements = (data || []).map(mov => ({
+                    ...mov,
+                    amount: parseFloat(mov.amount) || 0,
+                    date: mov.date || new Date().toISOString()
+                }));
+                renderMovements();
+            } catch (e) {
+                console.error(e);
+                // Fallback demo data
+                renderMovements();
             }
         }
 
-        async function loadRecentMovements() {
-            await fetchMovements();
+        function renderMovements() {
             const container = document.getElementById('movementsList');
             container.innerHTML = '';
             
-            const recent = allMovements.filter(m => m.username === loggedInUser?.username).slice(0, 3);
-            
-            if (recent.length === 0) {
-                container.innerHTML = `<div class="p-4 text-center text-gray-400 text-xs">No recent transactions</div>`;
+            if (movements.length === 0) {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center p-4 text-gray-400 text-xs italic">
+                        No recent movements. Your transfers will appear here instantly.
+                    </div>`;
                 return;
             }
-            
-            recent.forEach(mov => {
-                const sign = mov.amount > 0 ? '+' : '';
-                const color = mov.amount > 0 ? 'text-emerald-400' : 'text-white';
+
+            movements.slice(0, 5).forEach(mov => {
                 const div = document.createElement('div');
-                div.className = "flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition smooth-anim";
+                div.className = `flex justify-between items-center p-1.5 hover:bg-blue-950/40 rounded-lg transition movement-item`;
+                const isCredit = mov.amount > 0;
+                const status = mov.status || 'Completed';
+                const recipient = mov.recipient || 'Unknown';
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-blue-400 text-sm"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                        <div class="w-8 h-8 rounded-full ${isCredit ? 'bg-blue-950 text-blue-400' : 'bg-emerald-950 text-emerald-400'} flex items-center justify-center text-sm">
+                            <i class="fa-solid ${isCredit ? 'fa-arrow-down-long' : 'fa-cart-shopping'}"></i>
+                        </div>
                         <div>
-                            <p class="text-xs font-semibold text-white">${mov.description || 'Transfer'}</p>
-                            <p class="text-[10px] text-gray-400">${mov.date}</p>
+                            <p class="text-xs font-semibold text-white">${mov.description || 'Transaction'}</p>
+                            <p class="text-[10px] text-gray-400">${recipient} • ${new Date(mov.date).toLocaleDateString('en-US', {month:'short', day:'numeric'})}</p>
+                            <p class="text-[9px] text-blue-400">${status}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold ${color}">${sign}$${Math.abs(mov.amount).toFixed(2)}</span>
+                        <span class="text-xs font-bold ${isCredit ? 'text-emerald-400' : 'text-white'}">
+                            ${isCredit ? '+' : '-'}$${Math.abs(mov.amount).toFixed(2)}
+                        </span>
                         <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function showMovementsHistory() {
-            if (!loggedInUser) return;
-            openStandardOverlay('movementsHistoryOverlay');
-            renderFullMovements();
-        }
-
-        function getEffectiveStatus(movement) {
-            if (!movement || !movement.date) return movement.status || "Processing";
-            const movDate = new Date(movement.date);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            if (movDate.getTime() < today.getTime()) {
-                return "Pending";
-            }
-            return movement.status || "Processing";
-        }
-
-        function renderFullMovements() {
-            const container = document.getElementById('fullMovementsList');
-            container.innerHTML = '';
-            
-            const userMovs = allMovements.filter(m => m.username === loggedInUser?.username);
-            
-            if (userMovs.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-gray-400">No transactions to display</div>`;
-                return;
-            }
-            
-            userMovs.forEach(mov => {
-                const sign = mov.amount > 0 ? '+' : '';
-                const color = mov.amount > 0 ? 'text-emerald-400' : 'text-red-400';
-                const effectiveStatus = getEffectiveStatus(mov);
-                const statusColor = effectiveStatus === 'Pending' ? 'text-yellow-400' : 'text-emerald-400';
-                
-                const div = document.createElement('div');
-                div.className = "bg-[#072146] border border-blue-900 p-4 rounded-2xl modern-card subtle-glow";
-                
-                let extraDetails = '';
-                if (mov.recipient) extraDetails += `<p class="text-xs text-gray-400 mt-0.5">Recipient: ${mov.recipient}</p>`;
-                if (mov.bank) extraDetails += `<p class="text-xs text-gray-400">Bank: ${mov.bank}</p>`;
-                
-                div.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="font-semibold text-white">${mov.description || 'Transaction'}</p>
-                            ${extraDetails}
-                            <p class="text-xs text-gray-400 mt-1">${mov.date}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold ${color}">${sign}$${Math.abs(mov.amount).toFixed(2)}</p>
-                            <p class="text-[10px] font-medium ${statusColor} mt-1">${effectiveStatus}</p>
-                        </div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1256,7 +1065,7 @@
 
             if (user) {
                 loggedInUser = user;
-                transactionPinCode = localStorage.getItem(`txPin_${user.username}`) || "";
+                transactionPinCode = localStorage.getItem('transactionPin_' + user.username) || "";
                 
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('dashboardContainer').classList.remove('hidden');
@@ -1265,16 +1074,12 @@
                 document.getElementById('userGreetingName').innerText = user.fullName;
                 
                 const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-                document.getElementById('dashBalance').innerText = fmt.format(user.balance);
-                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance)}`;
+                document.getElementById('dashBalance').innerText = fmt.format(user.balance || 0);
+                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(user.balance || 0)}`;
                 document.getElementById('dashInvestments').innerText = fmt.format(user.investments || 0);
-                
-                await loadRecentMovements();
-                
-                // ADDED: Premium UI, chat notification badge, real date
-                enhancePremiumUI();
-                addChatNotificationBadge(unreadAdminMessages);
-                setRealCurrentDate();
+
+                loadMovements();
+                loadUnreadCount();
             } else {
                 alert(currentLang === 'es' ? 'Credenciales incorrectas' : 'Invalid login credentials');
             }
@@ -1294,56 +1099,36 @@
             location.reload();
         }
 
-        // ========== NEW PREMIUM & FEATURE FUNCTIONS (ADDED) ==========
-        function enhancePremiumUI() {
-            const cards = document.querySelectorAll('#dashboardContainer .bg-\\[\\#072146\\]');
-            cards.forEach(card => {
-                if (!card.classList.contains('modern-card')) {
-                    card.classList.add('modern-card', 'subtle-glow', 'smooth-anim');
-                }
-            });
-            
-            const actionItems = document.querySelectorAll('#dashboardContainer .grid-cols-5 > div');
-            actionItems.forEach(item => item.classList.add('premium-action'));
-            
-            const chatIcon = document.querySelector('.chat-icon');
-            if (chatIcon) {
-                chatIcon.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
-            }
-        }
-
-        function addChatNotificationBadge(count = 1) {
-            const chatIcon = document.querySelector('.chat-icon');
-            if (!chatIcon) return;
-            
-            const existing = chatIcon.querySelector('.unread-badge');
-            if (existing) existing.remove();
-            
-            if (count > 0) {
-                const badge = document.createElement('div');
-                badge.className = 'unread-badge absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-[#041530]';
-                badge.innerHTML = count > 9 ? '9+' : count;
-                chatIcon.style.position = 'relative';
-                chatIcon.appendChild(badge);
-            }
-        }
-
-        function setRealCurrentDate() {
+        function updateRealDate() {
             const dateEl = document.getElementById('dateLabel');
-            if (!dateEl) return;
-            
             const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                month: 'long', 
-                day: 'numeric',
-                year: 'numeric'
-            });
-            dateEl.innerText = dateStr;
+            const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+            dateEl.textContent = now.toLocaleDateString('en-US', options);
         }
-        // ========== END OF ADDED FUNCTIONS ==========
+
+        // New: Load unread admin messages count for chat notification badge
+        async function loadUnreadCount() {
+            if (!loggedInUser) return;
+            try {
+                const res = await fetch(API_URL + `?action=getUnreadMessages&username=${loggedInUser.username}`);
+                const data = await res.json();
+                const count = parseInt(data.unreadCount || 0);
+                const badge = document.getElementById('unreadBadge');
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            } catch (e) {
+                console.error("Could not load unread count", e);
+                // Hide badge on error
+                document.getElementById('unreadBadge').classList.add('hidden');
+            }
+        }
 
         window.onload = () => {
+            // Restore login from localStorage
             const savedUser = localStorage.getItem("loggedInUser");
             if (savedUser) {
                 loggedInUser = JSON.parse(savedUser);
@@ -1354,22 +1139,24 @@
                 document.getElementById('userGreetingName').innerText = loggedInUser.fullName;
                 
                 const fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-                document.getElementById('dashBalance').innerText = fmt.format(loggedInUser.balance);
-                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(loggedInUser.balance)}`;
+                document.getElementById('dashBalance').innerText = fmt.format(loggedInUser.balance || 0);
+                document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt.format(loggedInUser.balance || 0)}`;
                 document.getElementById('dashInvestments').innerText = fmt.format(loggedInUser.investments || 0);
-                
-                loadRecentMovements();
-                
-                // ADDED: Load persisted PIN + premium enhancements + badge + real date
-                transactionPinCode = localStorage.getItem(`txPin_${loggedInUser.username}`) || "";
-                enhancePremiumUI();
-                const savedUnread = parseInt(localStorage.getItem('unreadChatCount') || '1');
-                addChatNotificationBadge(savedUnread);
-                setRealCurrentDate();
+
+                loadMovements();
+                loadUnreadCount();
             }
 
             autoDetectLanguage();
             fetchUsers();
+            updateRealDate();
+            // Auto refresh movements every 10s for real-time feel
+            setInterval(() => {
+                if (loggedInUser) {
+                    loadMovements();
+                    loadUnreadCount();
+                }
+            }, 10000);
         };
     </script>
 </body>
