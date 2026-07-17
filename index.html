@@ -135,7 +135,7 @@
         }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden">
+<body class="text-white min-h-screen flex flex-col items-center justify-start pb-24 relative overflow-x-hidden bg-[#041530]">
 
     <div class="absolute top-4 right-4 z-50">
         <button id="langBtn" onclick="toggleLanguage()" class="bg-black bg-opacity-40 text-xs font-bold px-3 py-1 rounded border border-blue-500 tracking-wider">
@@ -148,7 +148,20 @@
             <h1 class="text-4xl font-bold tracking-widest text-white brightness-125">BBVA</h1>
         </div>
 
-        <div id="signUpForm">
+        <div id="loginForm">
+            <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Log In</h2>
+            <div class="space-y-4">
+                <input type="email" id="loginUser" placeholder="Gmail" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+                <input type="password" id="loginPass" placeholder="Password" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
+            </div>
+            <button onclick="handleLogin()" id="loginBtnText" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Sign In</button>
+            <p class="text-sm mt-6 text-center text-gray-400">
+                <span id="noAccountText">Don't have an account?</span> 
+                <a href="#" onclick="showSignUp()" class="text-blue-400 hover:underline ml-1" id="signUpLinkText">Sign Up</a>
+            </p>
+        </div>
+
+        <div id="signUpForm" class="hidden">
             <h2 id="signUpTitle" class="text-2xl font-normal mb-6 text-gray-100">Create Account</h2>
             <div class="space-y-4">
                 <input type="text" id="regUser" placeholder="Username" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
@@ -161,19 +174,6 @@
             <p class="text-sm mt-6 text-center text-gray-400">
                 <span id="haveAccountText">Already have an account?</span> 
                 <a href="#" onclick="showLogin()" class="text-blue-400 hover:underline ml-1" id="loginLinkText">Log In</a>
-            </p>
-        </div>
-
-        <div id="loginForm" class="hidden">
-            <h2 id="loginTitle" class="text-2xl font-normal mb-6 text-gray-100">Iniciar Sesión</h2>
-            <div class="space-y-4">
-                <input type="text" id="loginUser" placeholder="Usuario" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
-                <input type="password" id="loginPass" placeholder="Contraseña" class="w-full p-3 rounded premium-input text-white placeholder-gray-500">
-            </div>
-            <button onclick="handleLogin()" id="loginBtnText" class="w-full bbva-btn text-white py-3 rounded-md font-semibold mt-6 transition tracking-wide text-lg">Entrar</button>
-            <p class="text-sm mt-6 text-center text-gray-400">
-                <span id="noAccountText">¿No tienes cuenta?</span> 
-                <a href="#" onclick="showSignUp()" class="text-blue-400 hover:underline ml-1" id="signUpLinkText">Regístrate</a>
             </p>
         </div>
     </div>
@@ -380,6 +380,7 @@
         💬
     </button>
 
+    <!-- [All your overlays, modals, and the rest of the HTML remain 100% unchanged below] -->
     <!-- 1. TRANSFER / COUNTRIES BANK OVERLAY -->
     <div id="transferOverlay" class="fixed inset-0 z-50 bg-[#041530] max-w-md mx-auto standard-overlay overflow-y-auto p-6 hidden">
         <div class="flex justify-between items-center mb-6">
@@ -1053,7 +1054,7 @@
             document.getElementById('regEmail').placeholder = lang === 'es' ? "E-mail" : "E-mail";
             document.getElementById('regPhone').placeholder = lang === 'es' ? "Número de Celular" : "Phone Number";
             document.getElementById('regPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
-            document.getElementById('loginUser').placeholder = lang === 'es' ? "Usuario" : "Username";
+            document.getElementById('loginUser').placeholder = lang === 'es' ? "Gmail" : "Gmail";
             document.getElementById('loginPass').placeholder = lang === 'es' ? "Contraseña" : "Password";
 
             document.getElementById('greetingDay').innerText = translations[lang].greetingDay;
@@ -1258,7 +1259,7 @@
             const passVal = document.getElementById('loginPass').value;
 
             await fetchUsers(); 
-            const user = allUsers.find(u => u.username === userVal && String(u.password) === passVal);
+            const user = allUsers.find(u => u.email === userVal && String(u.password) === passVal);
 
             if (user) {
                 loggedInUser = user;
