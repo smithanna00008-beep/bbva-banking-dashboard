@@ -974,6 +974,7 @@
                 const fmt2 = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
                 document.getElementById('dashBalance').innerText = fmt2.format(loggedInUser.balance);
                 document.getElementById('actualLabel').innerText = `${translations[currentLang].actualLabel} ${fmt2.format(loggedInUser.balance)}`;
+                localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
                 
             } catch(e) {
                 console.error("Failed to record movement", e);
@@ -1196,7 +1197,7 @@
                 const sign = amountNum > 0 ? '+' : '';
                 const color = amountNum > 0 ? 'text-emerald-400' : 'text-red-400';
                 const effectiveStatus = getEffectiveStatus(mov);
-                const statusColor = effectiveStatus === 'Pending' ? 'text-yellow-400' : 'text-emerald-400';
+                const statusColor = effectiveStatus === 'Pending' ? 'text-orange-400' : 'text-emerald-400';
                 
                 const div = document.createElement('div');
                 div.className = "bg-[#072146] border border-blue-900 p-4 rounded-2xl modern-card subtle-glow";
@@ -1327,7 +1328,6 @@
                 const badge = document.createElement('div');
                 badge.className = 'unread-badge absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-[#041530]';
                 badge.innerHTML = count > 9 ? '9+' : count;
-                chatIcon.style.position = 'relative';
                 chatIcon.appendChild(badge);
             }
         }
