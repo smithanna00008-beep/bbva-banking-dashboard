@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBVA - Transaction History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #041530; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .transaction-card { background: #072146; border: 1px solid #1e3a8a; }
+    </style>
+</head>
+<body class="min-h-screen p-4">
+    <div class="max-w-md mx-auto">
+        <div class="flex items-center justify-between mb-6">
+            <button onclick="goBack()" class="text-blue-400">← Back</button>
+            <h1 class="text-xl font-bold">Transaction History</h1>
+            <div></div>
+        </div>
+
+        <div id="transactionsList" class="space-y-4">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzGhGUVwBDdqtKpfJnEjibTqybwua-5FEjRRKzsXLknXSbgpA84ssFw2jd8X5vX7QYoYQ/exec";
+        const userId = localStorage.getItem("userId") || prompt("Enter your username");
+
+        async function loadTransactions() {
+            const list = document.getElementById('transactionsList');
+            list.innerHTML = '<div class="text-center py-8 text-blue-400">Loading transactions...</div>';
+
+            try {
+                const res = await fetch(API_URL + `?action=getTransactionHistory&userId=${userId}`);
+                const data = await res.json();
+
+                if (data.transactions && data.transactions.length > 0) {
+                    list.innerHTML = data.transactions.map(tx => `
+                        <div class="transaction-card rounded-2xl p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-semibold">${tx.description || 'Transfer'}</p>
+                                    <p class="text-xs text-gray-400">${tx.recipient || 'N/A'} • ${tx.date}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'} font-bold">
+                                        ${tx.type === 'income' ? '+' : '-'}$${parseFloat(tx.amount).toFixed(2)}
+                                    </p>
+                                    <p class="text-xs ${tx.status === 'Processing' ? 'text-yellow-400' : 'text-emerald-400'}">${tx.status}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<div class="text-center py-12 text-gray-400">No transactions yet.</div>';
+                }
+            } catch (e) {
+                list.innerHTML = '<div class="text-center py-8 text-red-400">Could not load history. Check connection.</div>';
+            }
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        // Load on page open
+        loadTransactions();
+    </script>
+</body>
+</html>
 
