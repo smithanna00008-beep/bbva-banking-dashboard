@@ -2,71 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBVA - Transaction History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BBVA - Transactions</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #041530; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .transaction-card { background: #072146; border: 1px solid #1e3a8a; }
+        body {
+            background: #041530; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .glow-box {
+            background: linear-gradient(145deg, rgba(10, 58, 118, 0.4) 0%, rgba(4, 21, 48, 0.6) 100%);
+            box-shadow: 0 0 40px rgba(20, 117, 217, 0.25);
+        }
     </style>
 </head>
-<body class="min-h-screen p-4">
-    <div class="max-w-md mx-auto">
-        <div class="flex items-center justify-between mb-6">
-            <button onclick="goBack()" class="text-blue-400">← Back</button>
-            <h1 class="text-xl font-bold">Transaction History</h1>
+<body class="text-white min-h-screen pb-24">
+    <div class="max-w-md mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="window.history.back()" class="text-blue-400"><i class="fa-solid fa-arrow-left"></i></button>
+            <h1 class="text-2xl font-bold">Transaction History</h1>
             <div></div>
         </div>
-
         <div id="transactionsList" class="space-y-4">
-            <!-- Loaded dynamically -->
+            <!-- Populated by JS -->
         </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzGhGUVwBDdqtKpfJnEjibTqybwua-5FEjRRKzsXLknXSbgpA84ssFw2jd8X5vX7QYoYQ/exec";
-        const userId = localStorage.getItem("userId") || prompt("Enter your username");
+        let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
         async function loadTransactions() {
-            const list = document.getElementById('transactionsList');
-            list.innerHTML = '<div class="text-center py-8 text-blue-400">Loading transactions...</div>';
-
+            if (!loggedInUser) return;
             try {
-                const res = await fetch(API_URL + `?action=getTransactionHistory&userId=${userId}`);
+                const res = await fetch(API_URL + "?tab=Movements");
                 const data = await res.json();
-
-                if (data.transactions && data.transactions.length > 0) {
-                    list.innerHTML = data.transactions.map(tx => `
-                        <div class="transaction-card rounded-2xl p-4">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="font-semibold">${tx.description || 'Transfer'}</p>
-                                    <p class="text-xs text-gray-400">${tx.recipient || 'N/A'} • ${tx.date}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'} font-bold">
-                                        ${tx.type === 'income' ? '+' : '-'}$${parseFloat(tx.amount).toFixed(2)}
-                                    </p>
-                                    <p class="text-xs ${tx.status === 'Processing' ? 'text-yellow-400' : 'text-emerald-400'}">${tx.status}</p>
-                                </div>
+                const userMovs = data.filter(m => m.username === loggedInUser.username || m.user_id === loggedInUser.username);
+                const container = document.getElementById('transactionsList');
+                container.innerHTML = '';
+                userMovs.forEach(mov => {
+                    const amount = parseFloat(mov.amount) || 0;
+                    const sign = amount > 0 ? '+' : '';
+                    const color = amount > 0 ? 'text-emerald-400' : 'text-red-400';
+                    const div = document.createElement('div');
+                    div.className = "bg-[#072146] p-4 rounded-2xl";
+                    div.innerHTML = `
+                        <div class="flex justify-between">
+                            <div>
+                                <p>${mov.description || mov.type || 'Transaction'}</p>
+                                <p class="text-xs text-gray-400">${mov.date}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="${color} font-bold">${sign}$${Math.abs(amount).toFixed(2)}</p>
                             </div>
                         </div>
-                    `).join('');
-                } else {
-                    list.innerHTML = '<div class="text-center py-12 text-gray-400">No transactions yet.</div>';
-                }
-            } catch (e) {
-                list.innerHTML = '<div class="text-center py-8 text-red-400">Could not load history. Check connection.</div>';
-            }
+                    `;
+                    container.appendChild(div);
+                });
+            } catch(e) {}
         }
 
-        function goBack() {
-            window.location.href = "index.html";
-        }
-
-        // Load on page open
-        loadTransactions();
+        window.onload = loadTransactions;
     </script>
 </body>
 </html>
-
